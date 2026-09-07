@@ -33,15 +33,13 @@ button,input,select,textarea{font:inherit}button{cursor:pointer}
 <div class="app">
 <header class="top"><div class="brand"><span class="logo">⚡</span><div><h1>PRIME PROTOCOL</h1><small>PRIVATE INJECTION TRACKER · LOCAL DATA</small></div></div><div class="actions"><button class="btn" onclick="openStock()">+ STOCK</button><button class="btn primary" onclick="openProtocol()">+ PROTOCOL</button></div></header>
 
-<div class="view active" id="dashboard"><div class="grid4"><div class="stat"><label>ACTIEVE PROTOCOLLEN</label><b id="sActive">0</b></div><div class="stat warn"><label>ACTIE NODIG VANDAAG</label><b id="sDue">0</b></div><div class="stat"><label>KLANTEN</label><b id="sCustomers">0</b></div><div class="stat"><label>LOGS</label><b id="sLogs">0</b></div></div><div id="dashboardAlerts"></div><div class="layout"><section class="card"><div class="section-head"><h2>⚡ VANDAAG</h2><button class="btn" onclick="openProtocol()">+ Toevoegen</button></div><div id="today"></div></section><section class="card"><div class="section-head"><h2>👤 KLANTEN</h2><button class="btn" onclick="showView('customers')">Alles</button></div><div id="customerDash"></div></section><section class="card"><div class="section-head"><h2>📦 VOORRAAD</h2><button class="btn" onclick="showView('stock')">Beheren</button></div><div id="stockDash"></div></section><section class="card"><div class="section-head"><h2>🕘 LAATSTE LOGS</h2><button class="btn" onclick="showView('history')">Alles</button></div><div id="recent"></div></section></div></div>
+<div class="view active" id="dashboard"><div class="grid4"><div class="stat warn"><label>ACTIE NODIG VANDAAG</label><b id="sDue">0</b></div><div class="stat"><label>KLANTEN</label><b id="sCustomers">0</b></div></div><div id="dashboardAlerts"></div><div class="layout"><section class="card"><div class="section-head"><h2>⚡ VANDAAG</h2><button class="btn" onclick="openProtocol()">+ Toevoegen</button></div><div id="today"></div></section><section class="card"><div class="section-head"><h2>👤 KLANTEN</h2><button class="btn" onclick="showView('customers')">Alles</button></div><div id="customerDash"></div></section><section class="card"><div class="section-head"><h2>📦 VOORRAAD</h2><button class="btn" onclick="showView('stock')">Beheren</button></div><div id="stockDash"></div></section></div></div>
 
 <div class="view" id="protocols"><section class="card"><div class="section-head"><h2>💉 MIJN INJECTIES</h2><button class="btn primary" onclick="openProtocol()">+ Protocol</button></div><div class="notice">Jouw eigen planning. Interval kan Daily/elke X dagen zijn of op vaste weekdagen.</div><div id="protocolList"></div></section></div>
 
 <div class="view" id="customers"><section class="card"><div class="section-head"><h2>👤 KLANTEN</h2><button class="btn primary" onclick="openCustomer()">+ Klant</button></div><div class="notice">Geef de datum van het bezoek in. De standaard opvolging staat op 30 dagen. Bij een geregistreerd bezoek kan voorraad automatisch worden afgetrokken.</div><div id="customerList"></div></section></div>
 
 <div class="view" id="stock"><section class="card"><div class="section-head"><h2>📦 VOORRAAD</h2><button class="btn primary" onclick="openStock()">+ Product</button></div><div id="stockList"></div></section></div>
-
-<div class="view" id="history"><section class="card"><div class="section-head"><h2>🕘 HISTORY</h2><button class="btn danger" onclick="clearLogs()">Wissen</button></div><div id="historyList"></div></section></div>
 
 <div class="view" id="settings"><section class="card"><h2>⚙ SETTINGS</h2><div class="field" style="margin-top:10px"><label>STANDAARD KLANT OPVOLGING (DAGEN)</label><input id="customerInterval" type="number" min="1" value="30"></div><div class="row"><button class="btn primary" onclick="saveSettings()">Opslaan</button></div><p class="notice">Gegevens blijven lokaal in deze browser. Deze tracker geeft geen medische doseringsadviezen.</p></section></div>
 </div>
@@ -95,14 +93,42 @@ function showView(id){document.querySelectorAll('.view').forEach(v=>v.classList.
 
 function nextDue(p){
  if(!p.active)return '';
- const start=p.start||todayISO(), now=new Date(todayISO()+'T12:00:00'), s=new Date(start+'T12:00:00');
- if(now<s)return start;
+
+ /* Zodra een injectie is gelogd, is die datum het nieuwe startpunt.
+    Daardoor blijft de melding van vandaag niet opnieuw verschijnen. */
+ const anchor=p.lastDone||p.start||todayISO();
+ const now=new Date(todayISO()+'T12:00:00');
+ const s=new Date(anchor+'T12:00:00');
+
+ if(p.lastDone){
+   if(p.mode==='days'){
+     const chosen=Array.isArray(p.days)?p.days:[];
+     for(let i=1;i<=370;i++){
+       let d=new Date(s);
+       d.setDate(s.getDate()+i);
+       if(chosen.includes(d.getDay()))return d.toISOString().slice(0,10);
+     }
+     return '';
+   }
+   return addDays(anchor,Math.max(1,Number(p.interval||1)));
+ }
+
+ if(now<s)return anchor;
+
  if(p.mode==='days'){
    const chosen=Array.isArray(p.days)?p.days:[];
-   for(let i=0;i<370;i++){let d=new Date(now);d.setDate(now.getDate()+i);if(chosen.includes(d.getDay()))return d.toISOString().slice(0,10)}
+   for(let i=0;i<370;i++){
+     let d=new Date(now);
+     d.setDate(now.getDate()+i);
+     if(chosen.includes(d.getDay()))return d.toISOString().slice(0,10);
+   }
    return '';
  }
- const interval=Math.max(1,Number(p.interval||1));const diff=Math.floor((now-s)/86400000);const add=Math.ceil(Math.max(0,diff)/interval)*interval;return addDays(start,add);
+
+ const interval=Math.max(1,Number(p.interval||1));
+ const diff=Math.floor((now-s)/86400000);
+ const add=Math.ceil(Math.max(0,diff)/interval)*interval;
+ return addDays(anchor,add);
 }
 function dueToday(p){return !!p.active&&nextDue(p)===todayISO()}
 function dueLabel(date){if(!date)return['',''];let d=dayDiff(todayISO(),date);if(d===0)return['due','VANDAAG'];if(d<0)return['due','TE LAAT'];if(d<=7)return['soon','BINNEN '+d+' DAGEN'];return['','GEPLAND']}
@@ -127,7 +153,28 @@ function pickInterval(n){document.getElementById('pfInterval').value=n;document.
 function saveProtocol(id){const mode=document.getElementById('modeDays').classList.contains('active')?'days':'interval';const old=data.protocols.find(x=>x.id===id);const p={id:id||crypto.randomUUID(),productId:document.getElementById('pfProduct').value,label:document.getElementById('pfLabel').value.trim(),start:document.getElementById('pfStart').value,time:document.getElementById('pfTime').value,mode,interval:Number(document.getElementById('pfInterval').value||1),days:[...document.querySelectorAll('#daysField .day.active')].map(x=>Number(x.dataset.day)),dose:document.getElementById('pfDose').value.trim(),note:document.getElementById('pfNote').value.trim(),active:old?old.active:true};if(mode==='days'&&!p.days.length)return alert('Kies minstens één weekdag.');const i=data.protocols.findIndex(x=>x.id===id);if(i>=0)data.protocols[i]=p;else data.protocols.push(p);save();closeModal();showView('protocols')}
 function toggleProtocol(id){let p=data.protocols.find(x=>x.id===id);if(p)p.active=!p.active;save();closeModal();showView('protocols')}
 function deleteProtocol(id){if(confirm('Protocol verwijderen?')){data.protocols=data.protocols.filter(x=>x.id!==id);save();closeModal();showView('protocols')}}
-function logProtocol(id){let p=data.protocols.find(x=>x.id===id);if(!p)return;const pr=product(p.productId);if(pr&&p.stockDeduct&&Number(p.stockDeduct)>0&&pr.stock<Number(p.stockDeduct))return alert('Onvoldoende voorraad.');if(pr&&p.stockDeduct)pr.stock=Math.max(0,pr.stock-Number(p.stockDeduct));data.logs.unshift({id:crypto.randomUUID(),type:'protocol',protocolId:id,date:todayISO(),time:new Date().toLocaleTimeString('nl-BE',{hour:'2-digit',minute:'2-digit'}),dose:p.dose||''});save()}
+function logProtocol(id){
+ let p=data.protocols.find(x=>x.id===id);
+ if(!p)return;
+ const pr=product(p.productId);
+ if(pr&&p.stockDeduct&&Number(p.stockDeduct)>0&&pr.stock<Number(p.stockDeduct))return alert('Onvoldoende voorraad.');
+
+ if(pr&&p.stockDeduct)pr.stock=Math.max(0,pr.stock-Number(p.stockDeduct));
+
+ /* Dit is de belangrijke fix: de uitgevoerde datum wordt opgeslagen. */
+ p.lastDone=todayISO();
+
+ data.logs.unshift({
+   id:crypto.randomUUID(),
+   type:'protocol',
+   protocolId:id,
+   date:todayISO(),
+   time:new Date().toLocaleTimeString('nl-BE',{hour:'2-digit',minute:'2-digit'}),
+   dose:p.dose||''
+ });
+
+ save();
+}
 
 function openCustomer(editId=null){
  const c=data.customers.find(x=>x.id===editId);const interval=c?.interval||data.settings.customerInterval||30;
@@ -190,17 +237,14 @@ function protocolHTML(p){const n=nextDue(p),[cls,label]=dueLabel(n),pr=product(p
 function stockHTML(x){const cls=x.stock<=0?'due':x.stock<=2?'soon':'';return `<div class="product-row"><div><b>${esc(x.name)}</b><div class="bar"><i style="width:${Math.min(100,Math.max(3,Number(x.stock)*10))}%"></i></div></div><div style="display:flex;gap:5px;align-items:center"><div class="qty"><button onclick="adjustStock('${x.id}',-1)">−</button><b>${x.stock}</b><button onclick="adjustStock('${x.id}',1)">+</button></div><button class="btn" onclick="openStock('${x.id}')">Edit</button></div></div>`}
 function logHTML(l){const p=product(l.productId),c=customer(l.customerId);return `<div class="product-row"><div><b>${esc(l.text||l.name||p?.name||'Log')}</b><div class="notice">${new Date(l.date).toLocaleString('nl-BE')}${l.use?` · ${l.use}`:''}</div></div><span class="badge blue">LOG</span></div>`}
 function render(){
- const due=data.protocols.filter(dueToday);const dueCustomers=data.customers.filter(c=>dayDiff(todayISO(),c.next)<=0);
- document.getElementById('sActive').textContent=data.protocols.filter(x=>x.active).length;document.getElementById('sDue').textContent=due.length+dueCustomers.length;document.getElementById('sCustomers').textContent=data.customers.length;
+ const due=data.protocols.filter(dueToday);const dueCustomers=data.customers.filter(c=>dayDiff(todayISO(),c.next)<=0);document.getElementById('sDue').textContent=due.length+dueCustomers.length;document.getElementById('sCustomers').textContent=data.customers.length;
  document.getElementById('dashboardAlerts').innerHTML=(due.length+dueCustomers.length)?`<div class="duebox"><h3>🔴 ACTIE NODIG</h3><div>${due.length+dueCustomers.length} item${due.length+dueCustomers.length===1?'':'s'} vraagt vandaag aandacht.</div></div>`:'';
  document.getElementById('today').innerHTML=due.length?due.map(p=>{const pr=product(p.productId);return `<div class="duebox"><h3>⚠ ${esc(p.label||pr?.name||'Injectie')}</h3><div>${esc(pr?.strength||'')} · ${esc(p.time||'')}${p.dose?' · '+esc(p.dose):''}</div><div class="row"><button class="btn ok" onclick="logProtocol('${p.id}')">✓ GEDAAN / LOG</button></div></div>`}).join(''):'<div class="empty">Geen eigen injectie gepland voor vandaag.</div>';
  document.getElementById('customerDash').innerHTML=dueCustomers.length?dueCustomers.slice(0,4).map(customerHTML).join(''):(data.customers.length?data.customers.slice().sort((a,b)=>a.next.localeCompare(b.next)).slice(0,3).map(customerHTML).join(''):'<div class="empty">Nog geen klanten.</div>');
  document.getElementById('stockDash').innerHTML=data.products.length?data.products.slice(0,6).map(stockHTML).join(''):'<div class="empty">Nog geen voorraad.</div>';
- document.getElementById('recent').innerHTML=data.logs.length?data.logs.slice(0,5).map(logHTML).join(''):'<div class="empty">Nog geen logs.</div>';
  document.getElementById('protocolList').innerHTML=data.protocols.length?data.protocols.map(protocolHTML).join(''):'<div class="empty">Voeg je eerste eigen injectie toe.</div>';
  document.getElementById('customerList').innerHTML=data.customers.length?data.customers.slice().sort((a,b)=>a.next.localeCompare(b.next)).map(customerHTML).join(''):'<div class="empty">Voeg je eerste klant toe.</div>';
  document.getElementById('stockList').innerHTML=data.products.length?data.products.map(stockHTML).join(''):'<div class="empty">Voeg je eerste product toe.</div>';
- document.getElementById('historyList').innerHTML=data.logs.length?data.logs.map(logHTML).join(''):'<div class="empty">Nog geen geschiedenis.</div>';
 }
 render();
 </script>
