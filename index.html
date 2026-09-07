@@ -49,7 +49,14 @@ button,input,select,textarea{font:inherit}button{cursor:pointer}
 <script>
 const KEY='primeProtocolMobileV6';
 const DAYS=['Zo','Ma','Di','Wo','Do','Vr','Za'];
-const DEFAULT_PRODUCTS=[['Retatrutide 10mg','10 mg'],['Retatrutide 20mg','20 mg'],['Tirzepatide 10mg','10 mg'],['HGH 36 IU','36 IU'],['BAC Water 10ml','10 ml'],['Testosterone Enanthate','250 mg/ml · 10 ml']];
+const DEFAULT_PRODUCTS=[
+ ['Retatrutide 10mg',''],
+ ['Retatrutide 20mg',''],
+ ['Tirzepatide 10mg',''],
+ ['HGH 36 IU',''],
+ ['BAC Water 10ml',''],
+ ['Testosterone Enanthate 250mg/ml · 10ml','']
+];
 function fresh(){return{customers:[],products:DEFAULT_PRODUCTS.map(x=>({id:crypto.randomUUID(),name:x[0],strength:x[1],stock:0})),protocols:[],logs:[],settings:{customerInterval:30}}}
 let data=load();
 function load(){try{let d=JSON.parse(localStorage.getItem(KEY));if(!d)d=fresh();d.customers=d.customers||[];d.products=d.products||[];d.protocols=d.protocols||[];d.logs=d.logs||[];d.settings=Object.assign({customerInterval:30},d.settings||{});return d}catch(e){return fresh()}}
@@ -194,7 +201,7 @@ function markCustomerDone(id){const c=customer(id);if(!c)return;const oldNext=c.
 
 function openStock(editId=null){
  const x=data.products.find(p=>p.id===editId);
- const options=data.products.map(p=>`<option value="${p.id}" ${x?.id===p.id?'selected':''}>${esc(p.name)} · ${esc(p.strength)}</option>`).join('');
+ const options=data.products.map(p=>`<option value="${p.id}" ${x?.id===p.id?'selected':''}>${esc(p.name)}</option>`).join('');
  openModal(`<h2>${x?'Voorraad aanpassen':'Voorraad toevoegen'}</h2><div class="formgrid">
  <div class="field full"><label>PRODUCT KIEZEN</label><select id="sfProduct">${options}</select></div>
  <div class="field full"><label>PRODUCT / STERKTE</label><input id="sfInfo" readonly value="${esc(x?`${x.name} · ${x.strength}`:'Kies een product')}"></div>
