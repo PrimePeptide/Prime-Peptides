@@ -1,6 +1,7 @@
 <!doctype html>
 <html lang="nl">
 <head>
+<meta name="prime-version" content="v5">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#070708">
@@ -56,4 +57,5 @@ function saveS(id){let o={id:id||crypto.randomUUID(),name:$("#sn").value.trim(),
 const products=[["Retatrudite 10mg","0","vials","10 mg"],["Retatrudite 20mg","0","vials","20 mg"],["Tirzepatide 10mg","0","vials","10 mg"],["HGH 36 IU","0","vials","36 IU"],["BAC Water 10ml","0","vials","10 ml"],["Testosterone Enanthate","0","vials","250 mg/ml"]];
 if(!localStorage.getItem(KEY)){data.stock=products.map(x=>({id:crypto.randomUUID(),name:x[0],amount:x[1],unit:x[2],concentration:x[3],low:"1"}));save()}
 if("serviceWorker"in navigator)navigator.serviceWorker.register("./sw.js").catch(()=>{});page("dashboard");
-</script></body></html>
+</script><div style="text-align:center;padding:12px 0 90px;color:#666;font:11px system-ui;letter-spacing:.12em">PRIME PROTOCOL V5</div>
+</body></html>
