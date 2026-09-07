@@ -37,7 +37,7 @@ label{display:block;color:#b5b5bc;font-size:12px;letter-spacing:1.3px;margin:15p
 <div class="modal" id="modal"><div class="sheet" id="sheet"></div></div>
 <script>
 const KEY="prime_protocol_data_v2";
-let data=JSON.parse(localStorage.getItem(KEY)||'{"protocols":[],"logs":[],"settings":{"confirm":true}}');
+let data=JSON.parse(localStorage.getItem(KEY)||'{"protocols":[],"logs":[],"stock":[],"settings":{"confirm":true}}'); data.stock=data.stock||[];
 const $=s=>document.querySelector(s);
 const esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 const save=()=>localStorage.setItem(KEY,JSON.stringify(data));
@@ -52,13 +52,15 @@ function nextDate(p){
   return d.toISOString().slice(0,10);
 }
 function renderNav(active){
- const items=[["dashboard","Dashboard"],["protocols","Protocols"],["history","History"],["settings","Settings"]];
+ const items=[["dashboard","Dashboard"],["protocols","Protocols"],["calendar","Calendar"],["stock","Stock"],["history","History"],["settings","Settings"]];
  $("#nav").innerHTML=items.map(([id,label])=>`<button class="navbtn ${active===id?"active":""}" onclick="page('${id}')">${label}</button>`).join("");
 }
 function page(which="dashboard"){
  if(which==="dashboard")dashboard();
  if(which==="protocols")protocols();
  if(which==="history")history();
+ if(which==="calendar")calendar();
+ if(which==="stock")stock();
  if(which==="settings")settings();
  renderNav(which);
  window.scrollTo(0,0);
@@ -94,6 +96,53 @@ function history(){
  $("#app").innerHTML=`<main class="app"><div class="top"><div><div class="brand">HISTORY</div><div class="sub">WHAT YOU ACTUALLY LOGGED</div></div></div>
  ${logs.length?`<div class="card">${logs.map(x=>`<div class="history-item"><div><b>${esc(x.name)}</b><div class="meta">${fmt(x.date)}${x.time?" · "+esc(x.time):""}${x.note?" · "+esc(x.note):""}</div></div><div><span class="pill">${esc(x.amount)} ${esc(x.unit)}</span><button class="btn danger" style="margin-left:6px;padding:6px 9px" onclick="deleteLog('${x.id}')">×</button></div></div>`).join("")}</div>`:`<div class="empty">No doses logged yet.</div>`}</main>`;
 }
+
+function calendar(){
+ const active=data.protocols.filter(p=>p.active), start=new Date();
+ start.setHours(12,0,0,0);
+ let days=[];
+ for(let i=0;i<14;i++){
+   let d=new Date(start); d.setDate(start.getDate()+i);
+   let s=d.toISOString().slice(0,10);
+   let due=active.filter(p=>nextDate(p)===s);
+   let logged=data.logs.filter(x=>x.date===s);
+   days.push(`<div class="card"><div class="row"><div><b>${fmt(s)}</b><div class="meta">${i===0?"Today":""}</div></div><span class="pill">${due.length} due · ${logged.length} logged</span></div>${due.map(p=>`<div class="meta" style="margin-top:12px">• ${esc(p.name)} — ${esc(p.amount)} ${esc(p.unit)}</div>`).join("")}</div>`);
+ }
+ $("#app").innerHTML=`<main class="app"><div class="top"><div><div class="brand">CALENDAR</div><div class="sub">NEXT 14 DAYS</div></div></div>${days.join("")}</main>`;
+}
+function stock(){
+ const items=data.stock||[];
+ $("#app").innerHTML=`<main class="app"><div class="top"><div><div class="brand">STOCK</div><div class="sub">PERSONAL INVENTORY</div></div><button class="btn" onclick="openStock()">+ Add</button></div>
+ ${items.length?items.map(s=>`<div class="card"><div class="row"><div><div class="name">${esc(s.name)}</div><div class="meta">${esc(s.amount)} ${esc(s.unit)}${s.concentration?" · "+esc(s.concentration):""}${s.expiry?" · Exp "+fmt(s.expiry):""}</div></div><span class="pill">${Number(s.amount)===0?"EMPTY":"IN STOCK"}</span></div>
+ <div class="actions"><button class="btn" onclick="adjustStock('${s.id}',-1)">−</button><button class="btn" onclick="adjustStock('${s.id}',1)">+</button><button class="btn" onclick="editStock('${s.id}')">Edit</button></div></div>`).join(""):`<div class="empty">No stock added yet.</div>`}
+ <div class="note">Personal inventory only. Stock quantities are manually controlled; no purchasing, sales, or dosing recommendations.</div></main>`;
+}
+function openStock(s=null){
+ $("#sheet").innerHTML=`<h2>${s?"Edit stock":"Add stock item"}</h2>
+ <label>PRODUCT</label><input id="s_name" value="${esc(s?.name||"")}">
+ <div class="grid2"><div><label>QUANTITY</label><input id="s_amount" inputmode="decimal" value="${esc(s?.amount||"")}"></div><div><label>UNIT</label><select id="s_unit">${["vials","units","mg","IU","mcg","ml","custom"].map(u=>`<option ${s?.unit===u?"selected":""}>${u}</option>`).join("")}</select></div></div>
+ <label>CONCENTRATION (OPTIONAL)</label><input id="s_concentration" value="${esc(s?.concentration||"")}"><label>EXPIRY (OPTIONAL)</label><input id="s_expiry" type="date" value="${s?.expiry||""}">
+ <label>NOTE (OPTIONAL)</label><textarea id="s_note">${esc(s?.note||"")}</textarea>
+ <div class="modal-actions"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn primary" onclick="saveStock('${s?.id||""}')">Save</button></div>
+ ${s?`<div class="actions"><button class="btn danger" onclick="deleteStock('${s.id}')">Delete</button></div>`:""}`;
+ $("#modal").classList.add("show");
+}
+function saveStock(id){
+ const name=$("#s_name").value.trim(); if(!name){alert("Enter a product name.");return}
+ const obj={id:id||crypto.randomUUID(),name,amount:$("#s_amount").value.trim()||"0",unit:$("#s_unit").value,concentration:$("#s_concentration").value.trim(),expiry:$("#s_expiry").value,note:$("#s_note").value.trim()};
+ if(id){const i=data.stock.findIndex(s=>s.id===id);data.stock[i]=obj}else data.stock.push(obj);
+ save();closeModal();page("stock");
+}
+function editStock(id){openStock(data.stock.find(s=>s.id===id))}
+function adjustStock(id,delta){
+ const s=data.stock.find(s=>s.id===id); if(!s)return;
+ let n=Number(s.amount); if(Number.isNaN(n))return;
+ s.amount=String(Math.max(0,n+delta)); save(); stock();
+}
+function deleteStock(id){
+ if(confirm("Delete this stock item?")){data.stock=data.stock.filter(s=>s.id!==id);save();closeModal();page("stock")}
+}
+
 function settings(){
  $("#app").innerHTML=`<main class="app"><div class="top"><div><div class="brand">SETTINGS</div><div class="sub">PRIVATE · LOCAL STORAGE</div></div></div>
  <div class="card">
@@ -140,6 +189,20 @@ function exportData(){
 }
 function clearData(){if(confirm("This clears all protocols and history from this device. Continue?")){localStorage.removeItem(KEY);location.reload()}}
 $("#modal").addEventListener("click",e=>{if(e.target.id==="modal")closeModal()});
+if("serviceWorker" in navigator) navigator.serviceWorker.register("./sw.js").catch(()=>{});
+
+if(data.stock.length===0){
+ data.stock=[
+  {id:crypto.randomUUID(),name:"Retatrudite 10mg",amount:"0",unit:"vials",expiry:"",note:""},
+  {id:crypto.randomUUID(),name:"Retatrudite 20mg",amount:"0",unit:"vials",expiry:"",note:""},
+  {id:crypto.randomUUID(),name:"Tirzepatide 10mg",amount:"0",unit:"vials",expiry:"",note:""},
+  {id:crypto.randomUUID(),name:"HGH 36 IU",amount:"0",unit:"vials",expiry:"",note:""},
+  {id:crypto.randomUUID(),name:"BAC Water 10ml",amount:"0",unit:"vials",expiry:"",note:""},
+  {id:crypto.randomUUID(),name:"Testosterone Enanthate",amount:"0",unit:"vials",concentration:"250 mg/ml",expiry:"",note:""}
+ ];
+ save();
+}
+
 page("dashboard");
 </script>
 </body></html>
