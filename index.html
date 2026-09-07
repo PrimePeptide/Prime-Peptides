@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b0b0c">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icon.svg">
+<title>PRIME PROTOCOL</title>
+<style>
+:root{--bg:#070708;--panel:#111113;--panel2:#171719;--line:#29292d;--text:#f4f4f5;--muted:#9b9ba3;--accent:#fff;--ok:#a7f3d0;--danger:#fca5a5}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display",Inter,Arial,sans-serif}
+.app{max-width:760px;margin:auto;padding:22px 16px 100px}.brand{display:flex;justify-content:space-between;align-items:center;margin-bottom:24px}.logo{font-weight:800;letter-spacing:.14em;font-size:15px}.sub{color:var(--muted);font-size:11px;letter-spacing:.12em;margin-top:4px}.btn{border:1px solid var(--line);background:var(--panel);color:var(--text);padding:10px 13px;border-radius:12px;font-weight:700}.hero{border:1px solid var(--line);background:linear-gradient(145deg,#161618,#0d0d0f);border-radius:22px;padding:20px;margin-bottom:14px}.eyebrow{font-size:11px;letter-spacing:.16em;color:var(--muted);text-transform:uppercase}.hero h1{margin:7px 0 4px;font-size:28px}.hero p{margin:0;color:var(--muted);font-size:13px}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:14px 0}.card{background:var(--panel);border:1px solid var(--line);border-radius:17px;padding:15px}.label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em}.value{font-size:23px;font-weight:800;margin-top:6px}.section{margin-top:22px}.section h2{font-size:17px;margin:0 0 10px}.item{display:flex;justify-content:space-between;align-items:center;gap:12px;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:14px;margin:8px 0}.item strong{font-size:15px}.meta{color:var(--muted);font-size:12px;margin-top:4px}.pill{font-size:11px;border:1px solid var(--line);padding:6px 9px;border-radius:999px;color:var(--muted);white-space:nowrap}.done{color:var(--ok);border-color:#24513f}.tabs{position:fixed;bottom:0;left:0;right:0;background:rgba(7,7,8,.94);backdrop-filter:blur(16px);border-top:1px solid var(--line);display:flex;justify-content:center;gap:6px;padding:10px 12px env(safe-area-inset-bottom)}.tab{background:none;border:0;color:var(--muted);padding:9px 16px;border-radius:12px}.tab.active{background:var(--panel2);color:#fff}.modal{position:fixed;inset:0;background:rgba(0,0,0,.7);display:none;align-items:flex-end;justify-content:center;padding:12px}.modal.open{display:flex}.sheet{width:min(760px,100%);background:#111113;border:1px solid var(--line);border-radius:22px;padding:18px;max-height:88vh;overflow:auto}.sheet h2{margin:0 0 14px}label{display:block;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.08em;margin:12px 0 6px}input,select,textarea{width:100%;background:#09090a;border:1px solid var(--line);color:#fff;border-radius:12px;padding:12px;font:inherit}textarea{min-height:80px}.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}.actions{display:flex;gap:8px;margin-top:16px}.actions>*{flex:1}.primary{background:#fff;color:#000;border:0}.danger{color:var(--danger)}.empty{color:var(--muted);padding:18px;text-align:center;border:1px dashed var(--line);border-radius:16px}
+@media(max-width:480px){.grid{grid-template-columns:1fr 1fr}.value{font-size:20px}}
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="brand"><div><div class="logo">PRIME PROTOCOL</div><div class="sub">PRIVATE INJECTION TRACKER</div></div><button class="btn" onclick="openModal()">＋ Add</button></header>
+
+  <main id="screen"></main>
+</div>
+<nav class="tabs">
+  <button class="tab active" data-tab="dashboard">Dashboard</button>
+  <button class="tab" data-tab="protocols">Protocols</button>
+  <button class="tab" data-tab="history">History</button>
+  <button class="tab" data-tab="settings">Settings</button>
+</nav>
+
+<div class="modal" id="modal"><div class="sheet">
+<h2 id="modalTitle">New protocol</h2>
+<form id="form">
+<label>Name</label><input id="name" required placeholder="e.g. Reta">
+<div class="row"><div><label>Strength</label><input id="strength" placeholder="e.g. 10"></div><div><label>Unit</label><select id="unit"><option>mg</option><option>mcg</option><option>IU</option><option>mL</option><option>other</option></select></div></div>
+<label>Logged dose</label><input id="dose" placeholder="e.g. 2">
+<div class="row"><div><label>Frequency</label><select id="freq"><option value="daily">Daily</option><option value="2week">2× / week</option><option value="weekly">Weekly</option><option value="custom">Custom interval</option></select></div><div><label>Interval (days)</label><input id="interval" type="number" min="1" value="7"></div></div>
+<div class="row"><div><label>Start</label><input id="start" type="date"></div><div><label>End (optional)</label><input id="end" type="date"></div></div>
+<label>Notes</label><textarea id="notes" placeholder="Optional notes"></textarea>
+<div class="actions"><button type="button" class="btn" onclick="closeModal()">Cancel</button><button class="btn primary">Save</button></div>
+</form>
+</div></div>
+
+<script>
+const KEY="prime_protocol_v1";
+let state=JSON.parse(localStorage.getItem(KEY)||'null')||{protocols:[],logs:[],tab:"dashboard"};
+let editing=null;
+const $=id=>document.getElementById(id);
+function save(){localStorage.setItem(KEY,JSON.stringify(state));render()}
+function fmtDate(d){return new Date(d+"T12:00:00").toLocaleDateString("nl-BE",{day:"numeric",month:"short",year:"numeric"})}
+function today(){return new Date().toISOString().slice(0,10)}
+function due(p){
+  if(!p.start)return false;
+  const t=today(), s=p.start;
+  if(t<s || (p.end&&t>p.end))return false;
+  const diff=Math.floor((new Date(t)-new Date(s))/86400000);
+  if(p.freq==="daily")return true;
+  if(p.freq==="weekly")return diff%7===0;
+  if(p.freq==="2week")return diff%3===0; // simple twice-weekly reminder cadence
+  return diff%(Number(p.interval)||7)===0;
+}
+function loggedToday(id){return state.logs.some(x=>x.pid===id&&x.date===today())}
+function render(){
+  document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b.dataset.tab===state.tab));
+  const s=$("screen");
+  if(state.tab==="dashboard")dashboard(s);
+  if(state.tab==="protocols")protocols(s);
+  if(state.tab==="history")history(s);
+  if(state.tab==="settings")settings(s);
+}
+function dashboard(s){
+ const active=state.protocols.filter(p=>!p.end||p.end>=today());
+ const dueNow=active.filter(due);
+ const done=state.logs.filter(x=>x.date===today()).length;
+ s.innerHTML=`<section class="hero"><div class="eyebrow">Prime Protocol</div><h1>Today's protocol</h1><p>Log what you actually took. This tracker does not recommend doses.</p></section>
+ <div class="grid"><div class="card"><div class="label">Active</div><div class="value">${active.length}</div></div><div class="card"><div class="label">Logged today</div><div class="value">${done}</div></div></div>
+ <section class="section"><h2>Today</h2>${dueNow.length?dueNow.map(p=>card(p)).join(""):'<div class="empty">Nothing scheduled today.</div>'}</section>
+ <section class="section"><h2>All active</h2>${active.length?active.map(p=>card(p,false)).join(""):'<div class="empty">Add your first protocol.</div>'}</section>`;
+}
+function card(p,showAction=true){
+ const done=loggedToday(p.id);
+ return `<div class="item"><div><strong>${esc(p.name)}</strong><div class="meta">${esc(p.dose||"—")} ${esc(p.unit)} · ${freqText(p)}</div></div>${showAction?`<button class="btn ${done?'done':''}" onclick="logDose('${p.id}')">${done?'✓ Logged':'Log'}</button>`:`<span class="pill">${p.end?'Until '+fmtDate(p.end):'Active'}</span>`}</div>`;
+}
+function freqText(p){return p.freq==="daily"?"daily":p.freq==="weekly"?"weekly":p.freq==="2week"?"2× / week":"every "+p.interval+" days"}
+function protocols(s){
+ s.innerHTML=`<section class="hero"><div class="eyebrow">Protocols</div><h1>Your stack</h1><p>Personal records only. Add, edit or remove entries.</p></section>
+ <section class="section">${state.protocols.length?state.protocols.map(p=>`<div class="item"><div><strong>${esc(p.name)}</strong><div class="meta">${esc(p.strength||"")} ${esc(p.unit)} · logged dose ${esc(p.dose||"—")} · ${freqText(p)}</div><div class="meta">${p.start?fmtDate(p.start):"No start date"}${p.end?" → "+fmtDate(p.end):""}</div></div><div><button class="btn" onclick="edit('${p.id}')">Edit</button> <button class="btn danger" onclick="removeP('${p.id}')">Delete</button></div></div>`).join(""):'<div class="empty">No protocols yet.</div>'}</section>`;
+}
+function history(s){
+ const logs=[...state.logs].sort((a,b)=>b.ts-a.ts);
+ s.innerHTML=`<section class="hero"><div class="eyebrow">History</div><h1>Injection log</h1><p>Every entry is stored locally in this browser.</p></section>
+ <section class="section">${logs.length?logs.map(l=>`<div class="item"><div><strong>${esc(l.name)}</strong><div class="meta">${fmtDate(l.date)} · ${new Date(l.ts).toLocaleTimeString("nl-BE",{hour:"2-digit",minute:"2-digit"})}</div></div><span class="pill">${esc(l.dose||"—")} ${esc(l.unit)}</span></div>`).join(""):'<div class="empty">No logged injections yet.</div>'}</section>`;
+}
+function settings(s){
+ s.innerHTML=`<section class="hero"><div class="eyebrow">Settings</div><h1>Private by design</h1><p>Your data is kept in local browser storage in this first version.</p></section>
+ <section class="section"><div class="item"><div><strong>Export backup</strong><div class="meta">Download your protocols and history as JSON.</div></div><button class="btn" onclick="exportData()">Export</button></div>
+ <div class="item"><div><strong>Reset data</strong><div class="meta">Permanently erase this device's local tracker data.</div></div><button class="btn danger" onclick="resetData()">Reset</button></div></section>`;
+}
+function openModal(p=null){editing=p?.id||null;$("modalTitle").textContent=p?"Edit protocol":"New protocol";$("name").value=p?.name||"";$("strength").value=p?.strength||"";$("unit").value=p?.unit||"mg";$("dose").value=p?.dose||"";$("freq").value=p?.freq||"weekly";$("interval").value=p?.interval||7;$("start").value=p?.start||today();$("end").value=p?.end||"";$("notes").value=p?.notes||"";$("modal").classList.add("open")}
+function closeModal(){$("modal").classList.remove("open")}
+$("form").onsubmit=e=>{e.preventDefault();const p={id:editing||crypto.randomUUID(),name:$("name").value.trim(),strength:$("strength").value,unit:$("unit").value,dose:$("dose").value,freq:$("freq").value,interval:$("interval").value,start:$("start").value,end:$("end").value,notes:$("notes").value};if(editing)state.protocols=state.protocols.map(x=>x.id===editing?p:x);else state.protocols.push(p);closeModal();save()}
+function edit(id){openModal(state.protocols.find(p=>p.id===id))}
+function removeP(id){if(confirm("Delete this protocol?")){state.protocols=state.protocols.filter(p=>p.id!==id);save()}}
+function logDose(id){const p=state.protocols.find(x=>x.id===id);if(!p)return;if(!loggedToday(id)){state.logs.push({pid:id,name:p.name,dose:p.dose,unit:p.unit,date:today(),ts:Date.now()});save()}}
+function exportData(){const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify(state,null,2)],{type:"application/json"}));a.download="prime-protocol-backup.json";a.click()}
+function resetData(){if(confirm("Erase all PRIME PROTOCOL data from this device?")){localStorage.removeItem(KEY);location.reload()}}
+function esc(x){return String(x??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+document.querySelectorAll(".tab").forEach(b=>b.onclick=()=>{state.tab=b.dataset.tab;save()});
+render();
+</script><script>if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js');</script>
+</body>
+</html>
