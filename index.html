@@ -33,7 +33,7 @@ button,input,select,textarea{font:inherit}button{cursor:pointer}
 <div class="app">
 <header class="top"><div class="brand"><span class="logo">⚡</span><div><h1>PRIME PROTOCOL</h1><small>PRIVATE INJECTION TRACKER · LOCAL DATA</small></div></div><div class="actions"><button class="btn" onclick="openStock()">+ STOCK</button><button class="btn primary" onclick="openProtocol()">+ PROTOCOL</button></div></header>
 
-<div class="view active" id="dashboard"><div class="grid4"><div class="stat"><label>ACTIEVE PROTOCOLLEN</label><b id="sActive">0</b></div><div class="stat warn"><label>ACTIE NODIG VANDAAG</label><b id="sDue">0</b></div><div class="stat"><label>KLANTEN</label><b id="sCustomers">0</b></div><div class="stat"><label>LOGS</label><b id="sLogs">0</b></div></div><div id="dashboardAlerts"></div><div class="layout"><section class="card"><div class="section-head"><h2>⚡ VANDAAG</h2><button class="btn" onclick="openProtocol()">+ Toevoegen</button></div><div id="today"></div></section><section class="card"><div class="section-head"><h2>👤 KLANTEN</h2><button class="btn" onclick="showView('customers')">Alles</button></div><div id="customerDash"></div></section><section class="card"><div class="section-head"><h2>📦 VOORRAAD</h2><button class="btn" onclick="showView('stock')">Beheren</button></div><div id="stockDash"></div></section><section class="card"><div class="section-head"><h2>🕘 LAATSTE LOGS</h2><button class="btn" onclick="showView('history')">Alles</button></div><div id="recent"></div></section></div></div>
+<div class="view active" id="dashboard"><div class="grid4"><div class="stat"><label>ACTIEVE PROTOCOLLEN</label><b id="sActive">0</b></div><div class="stat warn"><label>ACTIE NODIG VANDAAG</label><b id="sDue">0</b></div><div class="stat"><label>KLANTEN</label><b id="sCustomers">0</b></div></div><div id="dashboardAlerts"></div><div class="layout"><section class="card"><div class="section-head"><h2>⚡ VANDAAG</h2><button class="btn" onclick="openProtocol()">+ Toevoegen</button></div><div id="today"></div></section><section class="card"><div class="section-head"><h2>👤 KLANTEN</h2><button class="btn" onclick="showView('customers')">Alles</button></div><div id="customerDash"></div></section><section class="card"><div class="section-head"><h2>📦 VOORRAAD</h2><button class="btn" onclick="showView('stock')">Beheren</button></div><div id="stockDash"></div></section></div></div>
 
 <div class="view" id="protocols"><section class="card"><div class="section-head"><h2>💉 MIJN INJECTIES</h2><button class="btn primary" onclick="openProtocol()">+ Protocol</button></div><div class="notice">Jouw eigen planning. Interval kan Daily/elke X dagen zijn of op vaste weekdagen.</div><div id="protocolList"></div></section></div>
 
@@ -41,9 +41,6 @@ button,input,select,textarea{font:inherit}button{cursor:pointer}
 
 <div class="view" id="stock"><section class="card"><div class="section-head"><h2>📦 VOORRAAD</h2><button class="btn primary" onclick="openStock()">+ Product</button></div><div id="stockList"></div></section></div>
 
-<div class="view" id="history"><section class="card"><div class="section-head"><h2>🕘 HISTORY</h2><button class="btn danger" onclick="clearLogs()">Wissen</button></div><div id="historyList"></div></section></div>
-
-<div class="view" id="settings"><section class="card"><h2>⚙ SETTINGS</h2><div class="field" style="margin-top:10px"><label>STANDAARD KLANT OPVOLGING (DAGEN)</label><input id="customerInterval" type="number" min="1" value="30"></div><div class="row"><button class="btn primary" onclick="saveSettings()">Opslaan</button></div><p class="notice">Gegevens blijven lokaal in deze browser. Deze tracker geeft geen medische doseringsadviezen.</p></section></div>
 </div>
 
 <nav class="nav"><button class="active" data-view="dashboard" onclick="showView('dashboard')">Dashboard</button><button data-view="protocols" onclick="showView('protocols')">Mijn Injecties</button><button data-view="customers" onclick="showView('customers')">Klanten</button><button data-view="stock" onclick="showView('stock')">Stock</button><button data-view="history" onclick="showView('history')">History</button><button data-view="settings" onclick="showView('settings')">Settings</button></nav>
@@ -70,14 +67,44 @@ function showView(id){document.querySelectorAll('.view').forEach(v=>v.classList.
 
 function nextDue(p){
  if(!p.active)return '';
- const start=p.start||todayISO(), now=new Date(todayISO()+'T12:00:00'), s=new Date(start+'T12:00:00');
+ const today=todayISO();
+ const start=p.start||todayISO();
+ const now=new Date(today+'T12:00:00');
+ const s=new Date(start+'T12:00:00');
+
+ /* Na een gelogde injectie moet de huidige melding verdwijnen.
+    lastDone is de nieuwe ankerdatum voor het volgende moment. */
+ if(p.lastDone){
+   const done=new Date(p.lastDone+'T12:00:00');
+   if(p.mode==='days'){
+     const chosen=Array.isArray(p.days)?p.days:[];
+     for(let i=1;i<=370;i++){
+       let d=new Date(done);
+       d.setDate(done.getDate()+i);
+       if(chosen.includes(d.getDay()))return d.toISOString().slice(0,10);
+     }
+     return '';
+   }
+   const interval=Math.max(1,Number(p.interval||1));
+   return addDays(p.lastDone,interval);
+ }
+
  if(now<s)return start;
+
  if(p.mode==='days'){
    const chosen=Array.isArray(p.days)?p.days:[];
-   for(let i=0;i<370;i++){let d=new Date(now);d.setDate(now.getDate()+i);if(chosen.includes(d.getDay()))return d.toISOString().slice(0,10)}
+   for(let i=0;i<370;i++){
+     let d=new Date(now);
+     d.setDate(now.getDate()+i);
+     if(chosen.includes(d.getDay()))return d.toISOString().slice(0,10);
+   }
    return '';
  }
- const interval=Math.max(1,Number(p.interval||1));const diff=Math.floor((now-s)/86400000);const add=Math.ceil(Math.max(0,diff)/interval)*interval;return addDays(start,add);
+
+ const interval=Math.max(1,Number(p.interval||1));
+ const diff=Math.floor((now-s)/86400000);
+ const add=Math.ceil(Math.max(0,diff)/interval)*interval;
+ return addDays(start,add);
 }
 function dueToday(p){return !!p.active&&nextDue(p)===todayISO()}
 function dueLabel(date){if(!date)return['',''];let d=dayDiff(todayISO(),date);if(d===0)return['due','VANDAAG'];if(d<0)return['due','TE LAAT'];if(d<=7)return['soon','BINNEN '+d+' DAGEN'];return['','GEPLAND']}
@@ -102,7 +129,29 @@ function pickInterval(n){document.getElementById('pfInterval').value=n;document.
 function saveProtocol(id){const mode=document.getElementById('modeDays').classList.contains('active')?'days':'interval';const old=data.protocols.find(x=>x.id===id);const p={id:id||crypto.randomUUID(),productId:document.getElementById('pfProduct').value,label:document.getElementById('pfLabel').value.trim(),start:document.getElementById('pfStart').value,time:document.getElementById('pfTime').value,mode,interval:Number(document.getElementById('pfInterval').value||1),days:[...document.querySelectorAll('#daysField .day.active')].map(x=>Number(x.dataset.day)),dose:document.getElementById('pfDose').value.trim(),note:document.getElementById('pfNote').value.trim(),active:old?old.active:true};if(mode==='days'&&!p.days.length)return alert('Kies minstens één weekdag.');const i=data.protocols.findIndex(x=>x.id===id);if(i>=0)data.protocols[i]=p;else data.protocols.push(p);save();closeModal();showView('protocols')}
 function toggleProtocol(id){let p=data.protocols.find(x=>x.id===id);if(p)p.active=!p.active;save();closeModal();showView('protocols')}
 function deleteProtocol(id){if(confirm('Protocol verwijderen?')){data.protocols=data.protocols.filter(x=>x.id!==id);save();closeModal();showView('protocols')}}
-function logProtocol(id){let p=data.protocols.find(x=>x.id===id);if(!p)return;const pr=product(p.productId);if(pr&&p.stockDeduct&&Number(p.stockDeduct)>0&&pr.stock<Number(p.stockDeduct))return alert('Onvoldoende voorraad.');if(pr&&p.stockDeduct)pr.stock=Math.max(0,pr.stock-Number(p.stockDeduct));data.logs.unshift({id:crypto.randomUUID(),type:'protocol',protocolId:id,date:todayISO(),time:new Date().toLocaleTimeString('nl-BE',{hour:'2-digit',minute:'2-digit'}),dose:p.dose||''});save()}
+function logProtocol(id){
+ let p=data.protocols.find(x=>x.id===id);
+ if(!p)return;
+ const pr=product(p.productId);
+ if(pr&&p.stockDeduct&&Number(p.stockDeduct)>0&&pr.stock<Number(p.stockDeduct))return alert('Onvoldoende voorraad.');
+ if(pr&&p.stockDeduct)pr.stock=Math.max(0,pr.stock-Number(p.stockDeduct));
+
+ /* Markeer dit protocol als uitgevoerd. Hierdoor wordt de
+    vandaag-melding direct vervangen door het volgende moment. */
+ p.lastDone=todayISO();
+
+ data.logs.unshift({
+   id:crypto.randomUUID(),
+   type:'protocol',
+   protocolId:id,
+   date:todayISO(),
+   time:new Date().toLocaleTimeString('nl-BE',{hour:'2-digit',minute:'2-digit'}),
+   dose:p.dose||'',
+   text:`${p.label||pr?.name||'Injectie'} · gedaan / gelogd`
+ });
+
+ save();
+}
 
 function openCustomer(editId=null){
  const c=data.customers.find(x=>x.id===editId);const interval=c?.interval||data.settings.customerInterval||30;
@@ -132,7 +181,15 @@ function saveCustomer(id){
  const i=data.customers.findIndex(x=>x.id===c.id);if(i>=0)data.customers[i]=c;else data.customers.push(c);
  data.logs.unshift({id:crypto.randomUUID(),type:'customer',customerId:c.id,productId:c.productId,use:c.use,date:new Date().toISOString(),text:`${c.name} · klantregistratie${c.use?` · ${c.use} ${c.unit} voorraad verbruikt`:''}`});save();closeModal();showView('customers')
 }
-function deleteCustomer(id){if(confirm('Klant verwijderen?')){data.customers=data.customers.filter(x=>x.id!==id);save()}}
+function deleteCustomer(id){
+ const c=customer(id);
+ if(!c)return;
+ /* Geen browser-confirm() meer: die kan in een mobiele/PWA-context
+    onbetrouwbaar reageren. De rode WIS-knop voert de actie direct uit. */
+ data.customers=data.customers.filter(x=>x.id!==id);
+ save();
+ showView('customers');
+}
 function markCustomerDone(id){const c=customer(id);if(!c)return;const oldNext=c.next;c.date=oldNext;c.next=addDays(oldNext,c.interval);data.logs.unshift({id:crypto.randomUUID(),type:'followup',customerId:id,date:new Date().toISOString(),text:`${c.name} · opvolging gemarkeerd`});save()}
 
 function openStock(editId=null){const x=data.products.find(p=>p.id===editId);openModal(`<h2>${x?'Product aanpassen':'Product toevoegen'}</h2><div class="formgrid"><div class="field"><label>PRODUCT</label><input id="sfName" value="${esc(x?.name||'')}"></div><div class="field"><label>STERKTE / INHOUD</label><input id="sfStrength" value="${esc(x?.strength||'')}"></div><div class="field"><label>VOORRAAD</label><input id="sfStock" type="number" min="0" step="0.01" value="${x?.stock??0}"></div></div><div class="row"><button class="btn" onclick="closeModal()">Annuleren</button><button class="btn primary" onclick="saveStock('${editId||''}')">Opslaan</button></div>`)}
