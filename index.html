@@ -28,12 +28,12 @@ button,input,select,textarea{font:inherit}button{cursor:pointer}
 .days{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}.day{border:1px solid #234155;background:#0a111c;color:#8190a5;border-radius:9px;padding:9px 4px;font-size:11px;font-weight:800}.day.active{background:#10384a;border-color:#00cfee;color:#fff;box-shadow:0 0 0 1px #00cfee33 inset}
 .segment{display:flex;background:#09111d;border:1px solid #223d50;border-radius:10px;padding:3px}.segment button{flex:1;border:0;background:transparent;color:#8190a5;padding:8px;border-radius:8px}.segment button.active{background:#1a2a3b;color:#fff}
 .modal{position:fixed;inset:0;background:rgba(0,0,0,.68);display:none;align-items:center;justify-content:center;padding:18px;z-index:10}.modal.show{display:flex}.modalbox{width:min(680px,100%);max-height:90vh;overflow:auto;background:#0d1624;border:1px solid #1b536b;border-radius:18px;padding:18px}.modalbox h2{margin-top:0}.row{display:flex;gap:8px;justify-content:flex-end;margin-top:14px}
-.notice{color:#8e9bae;font-size:12px;line-height:1.5;margin:10px 0}.duebox{border:1px solid #ff4054;background:linear-gradient(120deg,#291018,#111723);padding:13px;border-radius:13px;margin-bottom:10px}.duebox h3{margin:0 0 5px;color:#ff6876}.product-row{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid #183043}.qty{display:flex;align-items:center;gap:8px}.qty button{width:32px;height:32px;border-radius:8px;border:1px solid #27465a;background:#101d2c;color:#fff}.qty b{min-width:34px;text-align:center}
+.notice{color:#8e9bae;font-size:12px;line-height:1.5;margin:10px 0}.duebox{border:1px solid #ff4054;background:linear-gradient(120deg,#291018,#111723);padding:13px;border-radius:13px;margin-bottom:10px}.duebox h3{margin:0 0 5px;color:#ff6876}.product-row{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center;padding:12px 0;border-bottom:1px solid #183043}.qty{display:flex;align-items:center;gap:8px}.qty button{width:32px;height:32px;border-radius:8px;border:1px solid #27465a;background:#101d2c;color:#fff}.qty b{min-width:34px;text-align:center}
 @media(max-width:900px){.grid4{grid-template-columns:repeat(2,1fr)}.layout{grid-template-columns:1fr}}
 @media(max-width:600px){
  .app{padding:10px 10px 82px}.top{padding:13px;border-radius:14px}.brand h1{font-size:17px}.brand small{font-size:9px}.logo{font-size:21px}.actions .btn{padding:9px 10px;font-size:11px}
  .grid4{gap:8px;margin-top:10px}.stat{padding:12px;border-radius:12px}.stat b{font-size:25px}.layout{gap:10px;margin-top:10px}.card{padding:12px;border-radius:13px}.table th,.table td{padding:8px 5px;font-size:11px}.table th:nth-child(3),.table td:nth-child(3){display:none}
- .nav button{font-size:11px;padding:9px 9px}.formgrid{grid-template-columns:1fr}.full{grid-column:auto}.days{gap:4px}.day{padding:8px 2px;font-size:10px}
+ .nav button{font-size:10px;padding:9px 6px}.formgrid{grid-template-columns:1fr}.full{grid-column:auto}.days{gap:4px}.day{padding:8px 2px;font-size:10px}
 }
 </style>
 </head>
@@ -48,7 +48,7 @@ button,input,select,textarea{font:inherit}button{cursor:pointer}
   <div class="grid4">
     <div class="stat"><label>ACTIEVE PROTOCOLLEN</label><b id="sActive">0</b></div>
     <div class="stat warn"><label>ACTIE NODIG VANDAAG</label><b id="sDue">0</b></div>
-    <div class="stat"><label>PRODUCTEN IN STOCK</label><b id="sProducts">0</b></div>
+    <div class="stat"><label>KLANTEN</label><b id="sCustomers">0</b></div>
     <div class="stat"><label>LOGS</label><b id="sLogs">0</b></div>
   </div>
   <div class="layout">
@@ -60,6 +60,17 @@ button,input,select,textarea{font:inherit}button{cursor:pointer}
 
 <div class="view" id="protocols">
   <section class="card"><div class="section-head"><h2>PROTOCOLLEN</h2><button class="btn primary" onclick="openProtocol()">+ Protocol</button></div><div id="protocolList"></div></section>
+</div>
+
+
+<div class="view" id="customers">
+  <section class="card">
+    <div class="section-head">
+      <h2>👤 KLANTEN</h2>
+      <button class="btn primary" onclick="openCustomer()">+ Klant</button>
+    </div>
+    <div id="customerList"></div>
+  </section>
 </div>
 
 <div class="view" id="stock">
@@ -78,7 +89,7 @@ button,input,select,textarea{font:inherit}button{cursor:pointer}
 <nav class="nav">
 <button class="active" data-view="dashboard" onclick="showView('dashboard')">Dashboard</button>
 <button data-view="protocols" onclick="showView('protocols')">Protocol</button>
-<button data-view="stock" onclick="showView('stock')">Stock</button>
+<button data-view="customers" onclick="showView('customers')">Klanten</button><button data-view="stock" onclick="showView('stock')">Stock</button>
 <button data-view="history" onclick="showView('history')">History</button>
 <button data-view="settings" onclick="showView('settings')">Settings</button>
 </nav>
@@ -89,6 +100,7 @@ button,input,select,textarea{font:inherit}button{cursor:pointer}
 const KEY='primeProtocolV2';
 const DAYS=['Zo','Ma','Di','Wo','Do','Vr','Za'];
 const defaultData={
+ customers:[],
  products:[
   {id:crypto.randomUUID(),name:'Retatrutide',strength:'10 mg',stock:0},
   {id:crypto.randomUUID(),name:'Retatrutide',strength:'20 mg',stock:0},
@@ -99,7 +111,16 @@ const defaultData={
  ], protocols:[], logs:[]
 };
 let data=load();
-function load(){try{return JSON.parse(localStorage.getItem(KEY))||defaultData}catch(e){return defaultData}}
+function load(){
+  try{
+    const d=JSON.parse(localStorage.getItem(KEY))||defaultData;
+    d.customers=d.customers||[];
+    d.products=d.products||[];
+    d.protocols=d.protocols||[];
+    d.logs=d.logs||[];
+    return d;
+  }catch(e){return defaultData}
+}
 function save(){localStorage.setItem(KEY,JSON.stringify(data));render()}
 function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
 function todayISO(){return new Date().toISOString().slice(0,10)}
@@ -124,11 +145,39 @@ function openModal(html){document.getElementById('modalbox').innerHTML=html;docu
 function closeModal(){document.getElementById('modal').classList.remove('show')}
 document.getElementById('modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});
 
+
+function customer(id){return data.customers.find(x=>x.id===id)}
+function openCustomer(editId=null){
+ const c=data.customers.find(x=>x.id===editId);
+ openModal(`<h2>${c?'Klant aanpassen':'Nieuwe klant'}</h2>
+ <div class="formgrid">
+  <div class="field"><label>NAAM</label><input id="cfName" value="${esc(c?.name||'')}" placeholder="Naam"></div>
+  <div class="field"><label>CONTACT / REFERENTIE</label><input id="cfContact" value="${esc(c?.contact||'')}" placeholder="optioneel"></div>
+  <div class="field full"><label>NOTITIE</label><textarea id="cfNote" placeholder="optionele notitie">${esc(c?.note||'')}</textarea></div>
+ </div>
+ <div class="row"><button class="btn" onclick="closeModal()">Annuleren</button><button class="btn primary" onclick="saveCustomer('${editId||''}')">Opslaan</button></div>`);
+}
+function saveCustomer(id){
+ const c={id:id||crypto.randomUUID(),name:document.getElementById('cfName').value.trim(),contact:document.getElementById('cfContact').value.trim(),note:document.getElementById('cfNote').value.trim()};
+ if(!c.name)return;
+ const i=data.customers.findIndex(x=>x.id===c.id);
+ if(i>=0)data.customers[i]=c;else data.customers.push(c);
+ save();closeModal();
+}
+function deleteCustomer(id){
+ if(confirm('Klant verwijderen? Protocollen en logs blijven bewaard, maar worden ontkoppeld van deze klant.')){
+   data.protocols.forEach(p=>{if(p.customerId===id)p.customerId=''});
+   data.customers=data.customers.filter(x=>x.id!==id);
+   save();
+ }
+}
+
 function openProtocol(editId=null){
  const p=data.protocols.find(x=>x.id===editId);
  const days=p?.days||[];
  openModal(`<h2>${p?'Protocol aanpassen':'Nieuw protocol'}</h2>
  <div class="formgrid">
+  <div class="field"><label>KLANT</label><select id="pfCustomer"><option value="">— Geen klant —</option>${data.customers.map(x=>`<option value="${x.id}" ${p?.customerId===x.id?'selected':''}>${esc(x.name)}</option>`).join('')}</select></div>
   <div class="field"><label>PRODUCT</label><select id="pfProduct">${data.products.map(x=>`<option value="${x.id}" ${p?.productId===x.id?'selected':''}>${esc(x.name)} · ${esc(x.strength)}</option>`).join('')}</select></div>
   <div class="field"><label>NAAM / LABEL</label><input id="pfLabel" value="${esc(p?.label||'')} " placeholder="bv. HGH ochtend"></div>
   <div class="field"><label>STARTDATUM</label><input id="pfStart" type="date" value="${p?.start||todayISO()}"></div>
@@ -151,7 +200,7 @@ function setMode(mode){
 }
 function saveProtocol(id){
  const mode=document.getElementById('modeDays').classList.contains('active')?'days':'interval';
- const p={id:id||crypto.randomUUID(),productId:document.getElementById('pfProduct').value,label:document.getElementById('pfLabel').value.trim(),start:document.getElementById('pfStart').value,time:document.getElementById('pfTime').value,mode,interval:Number(document.getElementById('pfInterval').value||1),days:[...document.querySelectorAll('#daysField .day.active')].map(x=>Number(x.dataset.day)),dose:document.getElementById('pfDose').value.trim(),note:document.getElementById('pfNote').value.trim(),active:true};
+ const p={id:id||crypto.randomUUID(),customerId:document.getElementById('pfCustomer').value,productId:document.getElementById('pfProduct').value,label:document.getElementById('pfLabel').value.trim(),start:document.getElementById('pfStart').value,time:document.getElementById('pfTime').value,mode,interval:Number(document.getElementById('pfInterval').value||1),days:[...document.querySelectorAll('#daysField .day.active')].map(x=>Number(x.dataset.day)),dose:document.getElementById('pfDose').value.trim(),note:document.getElementById('pfNote').value.trim(),active:true};
  const i=data.protocols.findIndex(x=>x.id===p.id); if(i>=0)data.protocols[i]=p;else data.protocols.push(p); save();closeModal();
 }
 function logProtocol(id){
@@ -189,21 +238,37 @@ function render(){
  const due=data.protocols.filter(dueToday);
  document.getElementById('sActive').textContent=data.protocols.filter(x=>x.active).length;
  document.getElementById('sDue').textContent=due.length;
+ document.getElementById('sCustomers').textContent=data.customers.length;
  document.getElementById('sProducts').textContent=data.products.length;
  document.getElementById('sLogs').textContent=data.logs.length;
 
- document.getElementById('today').innerHTML=due.length?due.map(p=>`<div class="duebox"><h3>⚠ ${esc(p.label||product(p.productId)?.name||'Protocol')}</h3><div>${esc(product(p.productId)?.strength||'')} · ${esc(p.time||'')} ${p.dose?`· ${esc(p.dose)}`:''}</div><div class="row"><button class="btn ok" onclick="logProtocol('${p.id}')">✓ GEDAAN / LOG</button></div></div>`).join(''):`<div class="empty">Geen geplande actie voor vandaag.</div>`;
+ document.getElementById('today').innerHTML=due.length?due.map(p=>`<div class="duebox"><h3>⚠ ${esc(p.label||product(p.productId)?.name||'Protocol')}</h3><div>${p.customerId?`👤 ${esc(customer(p.customerId)?.name||'')}`:''} ${esc(product(p.productId)?.strength||'')} · ${esc(p.time||'')} ${p.dose?`· ${esc(p.dose)}`:''}</div><div class="row"><button class="btn ok" onclick="logProtocol('${p.id}')">✓ GEDAAN / LOG</button></div></div>`).join(''):`<div class="empty">Geen geplande actie voor vandaag.</div>`;
 
  const low=data.products.filter(x=>Number(x.stock)<=2);
  document.getElementById('stockDash').innerHTML=data.products.length?data.products.slice(0,6).map(x=>`<div class="product-row"><div><b>${esc(x.name)}</b><div class="notice">${esc(x.strength)}</div><div class="bar"><i style="width:${Math.min(100,Math.max(4,Number(x.stock)*10))}%"></i></div></div><div class="qty"><button onclick="adjustStock('${x.id}',-1)">−</button><b>${x.stock}</b><button onclick="adjustStock('${x.id}',1)">+</button></div></div>`).join(''):`<div class="empty">Nog geen producten.</div>`;
 
- document.getElementById('recent').innerHTML=data.logs.length?data.logs.slice(0,8).map(l=>{let p=data.protocols.find(x=>x.id===l.protocolId);return `<div class="product-row"><div><b>${esc(p?.label||product(p?.productId)?.name||'Protocol')}</b><div class="notice">${esc(l.date)} · ${esc(l.time)} ${l.dose?'· '+esc(l.dose):''}</div></div><span class="badge">Gelogd</span></div>`}).join(''):`<div class="empty">Nog geen logs.</div>`;
+ document.getElementById('recent').innerHTML=data.logs.length?data.logs.slice(0,8).map(l=>{let p=data.protocols.find(x=>x.id===l.protocolId);return `<div class="product-row"><div><b>${esc(p?.label||product(p?.productId)?.name||'Protocol')}</b><div class="notice">${p?.customerId?`👤 ${esc(customer(p.customerId)?.name||'')} · `:''}${esc(l.date)} · ${esc(l.time)} ${l.dose?'· '+esc(l.dose):''}</div></div><span class="badge">Gelogd</span></div>`}).join(''):`<div class="empty">Nog geen logs.</div>`;
 
- document.getElementById('protocolList').innerHTML=data.protocols.length?data.protocols.map(p=>{let n=nextDue(p),due=n===todayISO();return `<div class="product-row"><div><b>${esc(p.label||product(p.productId)?.name||'Protocol')}</b><div class="notice">${esc(product(p.productId)?.strength||'')} · ${p.mode==='days'?p.days.map(i=>DAYS[i]).join(', '):'Elke '+p.interval+' dag(en)'} · ${esc(p.time||'')}</div></div><div style="display:flex;gap:6px;align-items:center"><span class="badge ${due?'due':n<=new Date(Date.now()+7*86400000).toISOString().slice(0,10)?'soon':''}">${due?'VANDAAG':n}</span><button class="btn" onclick="openProtocol('${p.id}')">Aanpassen</button><button class="btn danger" onclick="deleteProtocol('${p.id}')">Wis</button></div></div>`}).join(''):`<div class="empty">Voeg je eerste protocol toe.</div>`;
+ 
+ document.getElementById('customerList').innerHTML=data.customers.length?data.customers.map(c=>{
+   const ps=data.protocols.filter(p=>p.customerId===c.id&&p.active);
+   const due=ps.filter(dueToday).length;
+   return `<div class="product-row">
+     <div><b>${esc(c.name)}</b><div class="notice">${esc(c.contact||'Geen contactgegevens')} · ${ps.length} actief protocol${ps.length===1?'':'len'}</div>
+     ${c.note?`<div class="notice">${esc(c.note)}</div>`:''}</div>
+     <div style="display:flex;gap:6px;align-items:center">
+       ${due?`<span class="badge due">${due} VANDAAG</span>`:`<span class="badge">OK</span>`}
+       <button class="btn" onclick="openCustomer('${c.id}')">Aanpassen</button>
+       <button class="btn danger" onclick="deleteCustomer('${c.id}')">Wis</button>
+     </div>
+   </div>`;
+ }).join(''):`<div class="empty">Voeg je eerste klant toe.</div>`;
+
+document.getElementById('protocolList').innerHTML=data.protocols.length?data.protocols.map(p=>{let n=nextDue(p),due=n===todayISO();return `<div class="product-row"><div><b>${esc(p.label||product(p.productId)?.name||'Protocol')}</b><div class="notice">${p.customerId?`👤 ${esc(customer(p.customerId)?.name||'')} · `:''}${esc(product(p.productId)?.strength||'')} · ${p.mode==='days'?p.days.map(i=>DAYS[i]).join(', '):'Elke '+p.interval+' dag(en)'} · ${esc(p.time||'')}</div></div><div style="display:flex;gap:6px;align-items:center"><span class="badge ${due?'due':n<=new Date(Date.now()+7*86400000).toISOString().slice(0,10)?'soon':''}">${due?'VANDAAG':n}</span><button class="btn" onclick="openProtocol('${p.id}')">Aanpassen</button><button class="btn danger" onclick="deleteProtocol('${p.id}')">Wis</button></div></div>`}).join(''):`<div class="empty">Voeg je eerste protocol toe.</div>`;
 
  document.getElementById('stockList').innerHTML=data.products.length?data.products.map(x=>`<div class="product-row"><div><b>${esc(x.name)}</b><div class="notice">${esc(x.strength)}</div></div><div style="display:flex;gap:6px;align-items:center"><div class="qty"><button onclick="adjustStock('${x.id}',-1)">−</button><b>${x.stock}</b><button onclick="adjustStock('${x.id}',1)">+</button></div><button class="btn" onclick="openStock('${x.id}')">Aanpassen</button><button class="btn danger" onclick="deleteStock('${x.id}')">Wis</button></div></div>`).join(''):`<div class="empty">Voeg je eerste product toe.</div>`;
 
- document.getElementById('historyList').innerHTML=data.logs.length?data.logs.map(l=>{let p=data.protocols.find(x=>x.id===l.protocolId);return `<div class="product-row"><div><b>${esc(p?.label||product(p?.productId)?.name||'Protocol')}</b><div class="notice">${esc(l.date)} · ${esc(l.time)} · ${esc(l.dose||'')}</div></div><span class="badge">Gelogd</span></div>`}).join(''):`<div class="empty">Nog geen geschiedenis.</div>`;
+ document.getElementById('historyList').innerHTML=data.logs.length?data.logs.map(l=>{let p=data.protocols.find(x=>x.id===l.protocolId);return `<div class="product-row"><div><b>${esc(p?.label||product(p?.productId)?.name||'Protocol')}</b><div class="notice">${p?.customerId?`👤 ${esc(customer(p.customerId)?.name||'')} · `:''}${esc(l.date)} · ${esc(l.time)} · ${esc(l.dose||'')}</div></div><span class="badge">Gelogd</span></div>`}).join(''):`<div class="empty">Nog geen geschiedenis.</div>`;
 }
 render();
 </script>
