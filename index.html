@@ -192,8 +192,25 @@ function deleteCustomer(id){
 }
 function markCustomerDone(id){const c=customer(id);if(!c)return;const oldNext=c.next;c.date=oldNext;c.next=addDays(oldNext,c.interval);data.logs.unshift({id:crypto.randomUUID(),type:'followup',customerId:id,date:new Date().toISOString(),text:`${c.name} · opvolging gemarkeerd`});save()}
 
-function openStock(editId=null){const x=data.products.find(p=>p.id===editId);openModal(`<h2>${x?'Product aanpassen':'Product toevoegen'}</h2><div class="formgrid"><div class="field"><label>PRODUCT</label><input id="sfName" value="${esc(x?.name||'')}"></div><div class="field"><label>STERKTE / INHOUD</label><input id="sfStrength" value="${esc(x?.strength||'')}"></div><div class="field"><label>VOORRAAD</label><input id="sfStock" type="number" min="0" step="0.01" value="${x?.stock??0}"></div></div><div class="row"><button class="btn" onclick="closeModal()">Annuleren</button><button class="btn primary" onclick="saveStock('${editId||''}')">Opslaan</button></div>`)}
-function saveStock(id){const p={id:id||crypto.randomUUID(),name:document.getElementById('sfName').value.trim(),strength:document.getElementById('sfStrength').value.trim(),stock:Math.max(0,Number(document.getElementById('sfStock').value||0))};if(!p.name)return alert('Vul een product in.');const i=data.products.findIndex(x=>x.id===p.id);if(i>=0)data.products[i]=p;else data.products.push(p);save();closeModal();showView('stock')}
+function openStock(editId=null){
+ const x=data.products.find(p=>p.id===editId);
+ const options=data.products.map(p=>`<option value="${p.id}" ${x?.id===p.id?'selected':''}>${esc(p.name)} · ${esc(p.strength)}</option>`).join('');
+ openModal(`<h2>${x?'Voorraad aanpassen':'Voorraad toevoegen'}</h2><div class="formgrid">
+ <div class="field full"><label>PRODUCT KIEZEN</label><select id="sfProduct">${options}</select></div>
+ <div class="field full"><label>PRODUCT / STERKTE</label><input id="sfInfo" readonly value="${esc(x?`${x.name} · ${x.strength}`:'Kies een product')}"></div>
+ <div class="field full"><label>VOORRAAD</label><input id="sfStock" type="number" min="0" step="0.01" value="${x?.stock??0}"></div>
+ </div><div class="notice">De standaardproducten staan al klaar. Je hoeft alleen het juiste product te kiezen en je huidige voorraad in te geven.</div><div class="row"><button class="btn" onclick="closeModal()">Annuleren</button><button class="btn primary" onclick="saveStock('${editId||''}')">Opslaan</button></div>`);
+ document.getElementById('sfProduct').addEventListener('change',()=>{
+   const p=product(document.getElementById('sfProduct').value);
+   if(p){document.getElementById('sfInfo').value=`${p.name} · ${p.strength}`;if(!editId)document.getElementById('sfStock').value=p.stock??0;}
+ });
+}
+function saveStock(id){
+ const selected=product(document.getElementById('sfProduct').value);
+ if(!selected)return alert('Kies een product.');
+ selected.stock=Math.max(0,Number(document.getElementById('sfStock').value||0));
+ save();closeModal();showView('stock');
+}
 function adjustStock(id,d){const p=product(id);if(!p)return;p.stock=Math.max(0,Number((Number(p.stock)+d).toFixed(3)));data.logs.unshift({id:crypto.randomUUID(),type:'stock',productId:id,date:new Date().toISOString(),text:`Voorraad ${d>0?'+':''}${d}`});save()}
 function deleteStock(id){if(confirm('Product verwijderen?')){data.products=data.products.filter(x=>x.id!==id);save()}}
 function clearLogs(){if(confirm('Alle logs wissen?')){data.logs=[];save()}}
