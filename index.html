@@ -1,61 +1,211 @@
 <!doctype html>
 <html lang="nl">
 <head>
-<meta name="prime-version" content="v5">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#070708">
+<meta name="theme-color" content="#080d16">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="manifest" href="manifest.webmanifest">
 <title>Prime Protocol</title>
 <style>
-:root{--bg:#070708;--card:#111113;--card2:#18181b;--line:#29292e;--txt:#f5f5f7;--muted:#8e8e96;--red:#ff5f61;--green:#55d58e;--amber:#f2b84b}
-*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--txt);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif}body{min-height:100vh}.app{width:min(100%,430px);margin:auto;padding:calc(12px + env(safe-area-inset-top)) 14px calc(82px + env(safe-area-inset-bottom))}
-.top{display:flex;justify-content:space-between;align-items:center;margin:4px 1px 16px}.brand{font-size:14px;font-weight:900;letter-spacing:2.5px}.sub{font-size:9px;color:var(--muted);letter-spacing:1.4px;margin-top:3px}
-button,input,select,textarea{font:inherit}button{cursor:pointer}.btn{border:1px solid var(--line);background:var(--card2);color:var(--txt);border-radius:12px;padding:9px 12px;font-weight:750;font-size:12px}.btn.primary{background:#f2f2f4;color:#080809;border-color:#f2f2f4}.btn.danger{color:var(--red)}
-.hero{border:1px solid var(--line);border-radius:20px;padding:17px;margin-bottom:9px;background:linear-gradient(145deg,#19191c,#0e0e10)}.eyebrow{font-size:8px;color:#a4a4aa;letter-spacing:1.7px}.hero h1{font-size:25px;line-height:1.05;margin:7px 0 5px}.hero p{margin:0;color:var(--muted);font-size:11px}
-.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-bottom:15px}.stat{background:var(--card);border:1px solid var(--line);border-radius:15px;padding:11px}.stat small{font-size:7px;color:var(--muted);letter-spacing:1px}.stat b{display:block;font-size:21px;margin-top:3px}.stat.due b{color:var(--red)}
-.head{display:flex;justify-content:space-between;align-items:center;margin:15px 2px 7px}.head h2{font-size:14px;margin:0}.muted{font-size:10px;color:var(--muted)}
-.dose,.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:13px;margin:7px 0}.dose{border-left:4px solid var(--line)}.dose.due{border-left-color:var(--red);background:linear-gradient(90deg,rgba(255,95,97,.10),var(--card) 36%)}.dose.upcoming{border-left-color:var(--amber)}.dose.done{border-left-color:var(--green)}.row{display:flex;justify-content:space-between;align-items:center;gap:9px}.name{font-size:14px;font-weight:850}.meta{font-size:10px;color:var(--muted);margin-top:4px}.badge{font-size:7px;letter-spacing:.8px;font-weight:900;border:1px solid var(--line);border-radius:999px;padding:5px 7px;white-space:nowrap}.badge.red{color:var(--red);border-color:#633336}.badge.green{color:var(--green);border-color:#2d5b45}.badge.amber{color:var(--amber);border-color:#604d28}.actions{display:flex;gap:6px;margin-top:9px}.actions>*{flex:1}.empty{border:1px dashed var(--line);border-radius:15px;padding:18px;text-align:center;color:var(--muted);font-size:11px}
-.nav{position:fixed;z-index:20;left:0;right:0;bottom:0;background:rgba(8,8,9,.95);backdrop-filter:blur(18px);border-top:1px solid var(--line)}.navin{width:min(430px,100%);margin:auto;display:grid;grid-template-columns:repeat(5,1fr);padding:6px 7px calc(6px + env(safe-area-inset-bottom));gap:2px}.navbtn{border:0;background:none;color:var(--muted);border-radius:11px;padding:6px 1px;font-size:8px}.navbtn.active{background:#19191c;color:#fff}.ico{display:block;font-size:16px;line-height:16px;margin-bottom:2px}
-.modal{display:none;position:fixed;z-index:30;inset:0;background:rgba(0,0,0,.72);align-items:flex-end}.modal.show{display:flex}.sheet{width:min(100%,430px);max-height:92vh;overflow:auto;background:#111113;border:1px solid var(--line);border-radius:22px 22px 0 0;padding:17px 14px calc(18px + env(safe-area-inset-bottom));margin:auto auto 0}.sheet h2{font-size:19px;margin:0 0 13px}label{display:block;font-size:8px;letter-spacing:1.2px;color:#aaaab0;margin:11px 0 5px}input,select,textarea{width:100%;background:#08080a;color:#fff;border:1px solid #34343a;border-radius:11px;padding:10px;font-size:13px}textarea{min-height:60px}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:7px}.intervals{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}.intervals button{border:1px solid var(--line);background:#09090b;color:#aaa;border-radius:9px;padding:9px 2px;font-size:9px}.intervals button.active{background:#ededf0;color:#080809;border-color:#ededf0;font-weight:850}.modal-actions{display:flex;gap:7px;margin-top:15px}.modal-actions>*{flex:1}.hint{font-size:9px;line-height:1.4;color:#707078;margin-top:8px}
-.calendar{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}.weekday{text-align:center;font-size:8px;color:var(--muted)}.day{min-height:52px;border:1px solid var(--line);background:var(--card);border-radius:9px;padding:5px;font-size:9px}.day.today{outline:1px solid #ddd}.dot{display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--red);margin:5px 2px 0 0}.dot.done{background:var(--green)}
-.bar{height:4px;background:#28282c;border-radius:99px;overflow:hidden;margin:9px 0 3px}.fill{height:100%;background:#bdbdc2}.low .fill{background:var(--amber)}.emptyStock .fill{background:var(--red)}
-.history{display:flex;justify-content:space-between;gap:7px;padding:10px 0;border-bottom:1px solid #252529}.history:last-child{border-bottom:0}
+:root{
+  --bg:#070b13;--panel:#0f1726;--panel2:#111c2d;--line:#18374b;--cyan:#08d9ff;
+  --cyan2:#1bc4df;--purple:#7668ff;--text:#f4f7fb;--muted:#8492a6;--green:#00d68f;
+  --amber:#ffb11b;--red:#ff4d5e;--shadow:0 14px 40px rgba(0,0,0,.28)
+}
+*{box-sizing:border-box}html,body{margin:0;background:radial-gradient(circle at 80% 0,#11233b 0,transparent 38%),var(--bg);color:var(--text);font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+button,input,select,textarea{font:inherit}button{cursor:pointer}
+.app{max-width:1440px;margin:auto;padding:18px 20px 90px}
+.top{border:1px solid #17445a;background:linear-gradient(135deg,#11192b,#0d1523);border-radius:18px;padding:18px 20px;display:flex;justify-content:space-between;align-items:center;gap:16px;box-shadow:var(--shadow)}
+.brand{display:flex;align-items:center;gap:12px}.logo{font-size:27px}.brand h1{font-size:21px;letter-spacing:1.8px;margin:0;color:#34cfff}.brand small{display:block;color:#8190a5;margin-top:3px;letter-spacing:.8px}
+.actions{display:flex;gap:10px}.btn{border:1px solid #1c526b;background:#101c2d;color:#fff;border-radius:11px;padding:10px 15px;font-weight:750}.btn.primary{background:linear-gradient(100deg,#04c9ed,#7b67ff);border:0}.btn.danger{border-color:#71303a;color:#ff7380}.btn.ok{border-color:#0b765b;color:#00e0a0}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:16px}.stat{background:linear-gradient(145deg,#111a2b,#0c1421);border:1px solid #164359;border-radius:16px;padding:15px 18px}.stat label{color:#8190a5;font-size:11px;font-weight:800;letter-spacing:1.1px}.stat b{display:block;font-size:34px;line-height:1;margin-top:9px;color:var(--cyan)}.stat.warn b{color:var(--amber)}
+.layout{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:16px}.card{background:linear-gradient(145deg,#101a2b,#0c1523);border:1px solid #164359;border-radius:17px;padding:16px;box-shadow:var(--shadow)}.card h2{margin:0 0 14px;color:#25d9fa;font-size:16px;letter-spacing:1px}.section-head{display:flex;align-items:center;justify-content:space-between;gap:10px}.table{width:100%;border-collapse:collapse}.table th,.table td{text-align:left;padding:11px 8px;border-bottom:1px solid #183043;font-size:13px}.table th{color:#7e8da1;font-size:10px;letter-spacing:.8px}.table td b{font-size:13px}.badge{display:inline-block;border:1px solid #1d826c;color:#00dba0;border-radius:999px;padding:4px 8px;font-size:11px;font-weight:800}.badge.due{border-color:#ff4d5e;color:#ff6d79;background:#32131a}.badge.soon{border-color:#a86e00;color:#ffbd2e}.empty{padding:32px 12px;text-align:center;color:#7f8ca0;border:1px dashed #26303e;border-radius:13px}
+.bar{height:8px;background:#172335;border-radius:99px;overflow:hidden}.bar i{display:block;height:100%;background:linear-gradient(90deg,#00d9ff,#7168ff);border-radius:99px}
+.nav{position:fixed;bottom:0;left:0;right:0;background:rgba(6,10,17,.94);backdrop-filter:blur(18px);border-top:1px solid #1a2a3a;display:flex;justify-content:center;gap:4px;padding:9px 10px env(safe-area-inset-bottom)}.nav button{background:transparent;border:0;color:#8190a5;padding:10px 14px;border-radius:12px}.nav button.active{background:#18202c;color:#fff}
+.view{display:none}.view.active{display:block}
+.formgrid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.field label{display:block;color:#8a98aa;font-size:11px;font-weight:800;margin-bottom:6px}.field input,.field select,.field textarea{width:100%;background:#0a111c;color:#f4f7fb;border:1px solid #234155;border-radius:10px;padding:11px;outline:none}.field textarea{min-height:80px;resize:vertical}.full{grid-column:1/-1}
+.days{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}.day{border:1px solid #234155;background:#0a111c;color:#8190a5;border-radius:9px;padding:9px 4px;font-size:11px;font-weight:800}.day.active{background:#10384a;border-color:#00cfee;color:#fff;box-shadow:0 0 0 1px #00cfee33 inset}
+.segment{display:flex;background:#09111d;border:1px solid #223d50;border-radius:10px;padding:3px}.segment button{flex:1;border:0;background:transparent;color:#8190a5;padding:8px;border-radius:8px}.segment button.active{background:#1a2a3b;color:#fff}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.68);display:none;align-items:center;justify-content:center;padding:18px;z-index:10}.modal.show{display:flex}.modalbox{width:min(680px,100%);max-height:90vh;overflow:auto;background:#0d1624;border:1px solid #1b536b;border-radius:18px;padding:18px}.modalbox h2{margin-top:0}.row{display:flex;gap:8px;justify-content:flex-end;margin-top:14px}
+.notice{color:#8e9bae;font-size:12px;line-height:1.5;margin:10px 0}.duebox{border:1px solid #ff4054;background:linear-gradient(120deg,#291018,#111723);padding:13px;border-radius:13px;margin-bottom:10px}.duebox h3{margin:0 0 5px;color:#ff6876}.product-row{display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid #183043}.qty{display:flex;align-items:center;gap:8px}.qty button{width:32px;height:32px;border-radius:8px;border:1px solid #27465a;background:#101d2c;color:#fff}.qty b{min-width:34px;text-align:center}
+@media(max-width:900px){.grid4{grid-template-columns:repeat(2,1fr)}.layout{grid-template-columns:1fr}}
+@media(max-width:600px){
+ .app{padding:10px 10px 82px}.top{padding:13px;border-radius:14px}.brand h1{font-size:17px}.brand small{font-size:9px}.logo{font-size:21px}.actions .btn{padding:9px 10px;font-size:11px}
+ .grid4{gap:8px;margin-top:10px}.stat{padding:12px;border-radius:12px}.stat b{font-size:25px}.layout{gap:10px;margin-top:10px}.card{padding:12px;border-radius:13px}.table th,.table td{padding:8px 5px;font-size:11px}.table th:nth-child(3),.table td:nth-child(3){display:none}
+ .nav button{font-size:11px;padding:9px 9px}.formgrid{grid-template-columns:1fr}.full{grid-column:auto}.days{gap:4px}.day{padding:8px 2px;font-size:10px}
+}
 </style>
 </head>
 <body>
-<div id="app"></div><div class="nav"><div id="nav" class="navin"></div></div>
-<div id="modal" class="modal"><div id="sheet" class="sheet"></div></div>
+<div class="app">
+<header class="top">
+  <div class="brand"><span class="logo">⚡</span><div><h1>PRIME PROTOCOL</h1><small>PRIVATE INJECTION TRACKER · LOCAL DATA</small></div></div>
+  <div class="actions"><button class="btn" onclick="openStock()">+ VOORRAAD</button><button class="btn primary" onclick="openProtocol()">+ PROTOCOL</button></div>
+</header>
+
+<div class="view active" id="dashboard">
+  <div class="grid4">
+    <div class="stat"><label>ACTIEVE PROTOCOLLEN</label><b id="sActive">0</b></div>
+    <div class="stat warn"><label>ACTIE NODIG VANDAAG</label><b id="sDue">0</b></div>
+    <div class="stat"><label>PRODUCTEN IN STOCK</label><b id="sProducts">0</b></div>
+    <div class="stat"><label>LOGS</label><b id="sLogs">0</b></div>
+  </div>
+  <div class="layout">
+    <section class="card"><div class="section-head"><h2>⚡ VANDAAG</h2><button class="btn" onclick="openProtocol()">+ Toevoegen</button></div><div id="today"></div></section>
+    <section class="card"><div class="section-head"><h2>📦 VOORRAAD</h2><button class="btn" onclick="showView('stock')">Beheren</button></div><div id="stockDash"></div></section>
+  </div>
+  <section class="card" style="margin-top:16px"><div class="section-head"><h2>🕘 LAATSTE LOGS</h2><button class="btn" onclick="showView('history')">Alles</button></div><div id="recent"></div></section>
+</div>
+
+<div class="view" id="protocols">
+  <section class="card"><div class="section-head"><h2>PROTOCOLLEN</h2><button class="btn primary" onclick="openProtocol()">+ Protocol</button></div><div id="protocolList"></div></section>
+</div>
+
+<div class="view" id="stock">
+  <section class="card"><div class="section-head"><h2>📦 VOORRAADBEHEER</h2><button class="btn primary" onclick="openStock()">+ Product</button></div><div id="stockList"></div></section>
+</div>
+
+<div class="view" id="history">
+  <section class="card"><div class="section-head"><h2>🕘 GESCHIEDENIS</h2><button class="btn danger" onclick="clearLogs()">Logs wissen</button></div><div id="historyList"></div></section>
+</div>
+
+<div class="view" id="settings">
+  <section class="card"><h2>⚙ INSTELLINGEN</h2><p class="notice">Deze versie bewaart gegevens lokaal in je browser via localStorage. Er wordt niets naar een server gestuurd. De tracker geeft geen doseringsadvies; je voert alleen je eigen gegevens en planning in.</p><button class="btn danger" onclick="resetAll()">Alles resetten</button></section>
+</div>
+</div>
+
+<nav class="nav">
+<button class="active" data-view="dashboard" onclick="showView('dashboard')">Dashboard</button>
+<button data-view="protocols" onclick="showView('protocols')">Protocol</button>
+<button data-view="stock" onclick="showView('stock')">Stock</button>
+<button data-view="history" onclick="showView('history')">History</button>
+<button data-view="settings" onclick="showView('settings')">Settings</button>
+</nav>
+
+<div class="modal" id="modal"><div class="modalbox" id="modalbox"></div></div>
+
 <script>
-const KEY="prime_protocol_v4";
-let data=JSON.parse(localStorage.getItem(KEY)||'{"protocols":[],"logs":[],"stock":[],"settings":{}}');
-data.protocols=data.protocols||[];data.logs=data.logs||[];data.stock=data.stock||[];data.settings=data.settings||{};
-const $=s=>document.querySelector(s), esc=s=>String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-const save=()=>localStorage.setItem(KEY,JSON.stringify(data)), iso=d=>d.toISOString().slice(0,10), today=()=>iso(new Date()), D=s=>new Date(s+"T12:00:00"), fmt=s=>D(s).toLocaleDateString("nl-BE",{day:"2-digit",month:"short"}), days=(a,b)=>Math.round((D(b)-D(a))/86400000);
-function last(p){return [...data.logs].filter(x=>x.protocolId===p.id).sort((a,b)=>b.timestamp-a.timestamp)[0]}
-function interval(p){return p.interval===1?"Daily":`Every ${p.interval} days`}
-function next(p){if(!p.start)return null;let l=last(p),d=D(l?.date||p.start),t=D(today());if(l&&l.date===today())d.setDate(d.getDate()+p.interval);else while(d<t)d.setDate(d.getDate()+p.interval);let s=iso(d);return p.end&&s>p.end?null:s}
-function state(p){let n=next(p);if(!n)return["none","—",null];let x=days(today(),n);return x===0?["due","DUE TODAY",n]:x<0?["due",`OVERDUE ${Math.abs(x)}D`,n]:["upcoming",x===1?"TOMORROW":`IN ${x} DAYS`,n]}
-function nav(active){let a=[["dashboard","⌂","Home"],["protocols","◈","Protocols"],["calendar","□","Calendar"],["stock","▣","Stock"],["history","≡","History"]];$("#nav").innerHTML=a.map(x=>`<button class="navbtn ${active===x[0]?"active":""}" onclick="page('${x[0]}')"><span class="ico">${x[1]}</span>${x[2]}</button>`).join("")}
-function page(x="dashboard"){({dashboard,protocols,calendar,stock,history}[x]||dashboard)();nav(x);scrollTo(0,0)}
-function card(p){let s=state(p),l=last(p);return `<div class="dose ${s[0]}"><div class="row"><div><div class="name">${esc(p.name)}</div><div class="meta">${esc(p.amount)} ${esc(p.unit)} · ${interval(p)}</div></div><span class="badge ${s[0]==="due"?"red":"amber"}">${s[1]}</span></div><div class="meta">Next: ${s[2]?fmt(s[2]):"—"}${l?" · Last: "+fmt(l.date):""}</div>${s[0]==="due"?`<div class="actions"><button class="btn primary" onclick="logDose('${p.id}')">✓ Mark completed</button><button class="btn" onclick="editProtocol('${p.id}')">Edit</button></div>`:`<div class="actions"><button class="btn" onclick="editProtocol('${p.id}')">Edit protocol</button></div>`}</div>`}
-function dashboard(){let a=data.protocols.filter(p=>p.active),due=a.filter(p=>state(p)[0]==="due"),up=a.filter(p=>state(p)[0]==="upcoming");$("#app").innerHTML=`<main class="app"><div class="top"><div><div class="brand">PRIME PROTOCOL</div><div class="sub">TODAY'S CONTROL CENTER</div></div><button class="btn primary" onclick="openProtocol()">+ Add</button></div><div class="hero"><div class="eyebrow">${new Date().toLocaleDateString("nl-BE",{weekday:"long",day:"numeric",month:"long"})}</div><h1>${due.length?"ACTION REQUIRED":"ALL CLEAR"}</h1><p>${due.length?`${due.length} item${due.length>1?"s are":" is"} due right now.`:"Nothing is due right now."}</p></div><div class="summary"><div class="stat due"><small>DUE NOW</small><b>${due.length}</b></div><div class="stat"><small>UP NEXT</small><b>${up.length}</b></div><div class="stat"><small>ACTIVE</small><b>${a.length}</b></div></div><div class="head"><h2>🔴 Needs attention</h2><span class="muted">${due.length}</span></div>${due.map(card).join("")||'<div class="empty">✓ Nothing due right now</div>'}<div class="head"><h2>Next up</h2><span class="muted">${up.length}</span></div>${up.sort((x,y)=>state(x)[2].localeCompare(state(y)[2])).slice(0,5).map(card).join("")||'<div class="empty">No upcoming protocols.</div>'}</main>`}
-function protocols(){$("#app").innerHTML=`<main class="app"><div class="top"><div><div class="brand">PROTOCOLS</div><div class="sub">SCHEDULES</div></div><button class="btn primary" onclick="openProtocol()">+ Add</button></div>${data.protocols.map(p=>{let s=state(p);return `<div class="card"><div class="row"><div><div class="name">${esc(p.name)}</div><div class="meta">${esc(p.amount)} ${esc(p.unit)} · ${interval(p)}</div></div><span class="badge ${s[0]==="due"?"red":s[0]==="upcoming"?"amber":"green"}">${s[1]}</span></div><div class="meta">Next: ${s[2]?fmt(s[2]):"—"} · ${p.active?"Active":"Paused"}</div><div class="actions"><button class="btn" onclick="logDose('${p.id}')">Log</button><button class="btn" onclick="editProtocol('${p.id}')">Edit</button></div></div>`}).join("")||'<div class="empty">No protocols yet.</div>'}</main>`}
-function calendar(){let z=new Date();z.setDate(1);z.setHours(12,0,0,0);let first=(z.getDay()+6)%7,total=new Date(z.getFullYear(),z.getMonth()+1,0).getDate(),c=["M","D","W","D","V","Z","Z"].map(x=>`<div class="weekday">${x}</div>`).join("");for(let i=0;i<first;i++)c+="<div></div>";for(let n=1;n<=total;n++){let s=iso(new Date(z.getFullYear(),z.getMonth(),n,12)),due=data.protocols.filter(p=>p.active&&next(p)===s),done=data.logs.filter(l=>l.date===s);c+=`<div class="day ${s===today()?"today":""}"><b>${n}</b>${due.map(()=>'<span class="dot"></span>').join("")}${done.map(()=>'<span class="dot done"></span>').join("")}</div>`}$("#app").innerHTML=`<main class="app"><div class="top"><div><div class="brand">CALENDAR</div><div class="sub">${z.toLocaleDateString("nl-BE",{month:"long",year:"numeric"})}</div></div></div><div class="calendar">${c}</div><div class="hint">Rood = gepland/due · groen = gelogd.</div></main>`}
-function stock(){$("#app").innerHTML=`<main class="app"><div class="top"><div><div class="brand">STOCK</div><div class="sub">PERSONAL INVENTORY</div></div><button class="btn primary" onclick="openStock()">+ Add</button></div>${data.stock.map(s=>{let q=Number(s.amount)||0,lo=Number(s.low)||1,p=Math.min(100,Math.max(0,q/Math.max(q,lo)*100));return `<div class="card ${q===0?"emptyStock":q<=lo?"low":""}"><div class="row"><div><div class="name">${esc(s.name)}</div><div class="meta">${esc(s.amount)} ${esc(s.unit)}${s.concentration?" · "+esc(s.concentration):""}</div></div><span class="badge ${q===0?"red":q<=lo?"amber":"green"}">${q===0?"EMPTY":q<=lo?"LOW":"OK"}</span></div><div class="bar"><div class="fill" style="width:${p}%"></div></div><div class="actions"><button class="btn" onclick="adjust('${s.id}',-1)">−</button><button class="btn" onclick="adjust('${s.id}',1)">+</button><button class="btn" onclick="editStock('${s.id}')">Edit</button></div></div>`}).join("")||'<div class="empty">No stock yet.</div>'}</main>`}
-function history(){let l=[...data.logs].sort((a,b)=>b.timestamp-a.timestamp);$("#app").innerHTML=`<main class="app"><div class="top"><div><div class="brand">HISTORY</div><div class="sub">COMPLETED LOGS</div></div></div><div class="card">${l.map(x=>`<div class="history"><div><b>${esc(x.name)}</b><div class="meta">${fmt(x.date)}${x.time?" · "+esc(x.time):""}</div></div><span class="badge green">${esc(x.amount)} ${esc(x.unit)}</span></div>`).join("")||'<div class="empty">No history yet.</div>'}</div></main>`}
-function openProtocol(p=null){let ints=[1,2,3,4,6,7,14];$("#sheet").innerHTML=`<h2>${p?"Edit protocol":"Add protocol"}</h2><label>NAME</label><input id="pn" value="${esc(p?.name||"")}"><div class="grid2"><div><label>AMOUNT</label><input id="pa" inputmode="decimal" value="${esc(p?.amount||"")}"></div><div><label>UNIT</label><select id="pu">${["mg","IU","mcg","ml","units"].map(u=>`<option ${p?.unit===u?"selected":""}>${u}</option>`).join("")}</select></div></div><label>INTERVAL</label><div class="intervals">${ints.map(n=>`<button id="i${n}" class="${(p?.interval||7)===n?"active":""}" onclick="pick(${n})">${n===1?"Daily":n+" days"}</button>`).join("")}</div><input type="hidden" id="pi" value="${p?.interval||7}"><div class="grid2"><div><label>START</label><input id="ps" type="date" value="${p?.start||today()}"></div><div><label>END (OPTIONAL)</label><input id="pe" type="date" value="${p?.end||""}"></div></div><label>NOTE</label><textarea id="pt">${esc(p?.notes||"")}</textarea><div class="modal-actions"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn primary" onclick="saveP('${p?.id||""}')">Save</button></div>${p?`<div class="actions"><button class="btn" onclick="toggle('${p.id}')">${p.active?"Pause":"Resume"}</button><button class="btn danger" onclick="delP('${p.id}')">Delete</button></div>`:""}<div class="hint">Tracker only: records your own entries and schedule; it does not provide medical dosing recommendations.</div>`;$("#modal").classList.add("show")}
-function pick(n){$("#pi").value=n;document.querySelectorAll(".intervals button").forEach(b=>b.classList.remove("active"));$("#i"+n).classList.add("active")}
-function saveP(id){let name=$("#pn").value.trim();if(!name)return alert("Vul een naam in.");let old=data.protocols.find(p=>p.id===id),o={id:id||crypto.randomUUID(),name,amount:$("#pa").value,unit:$("#pu").value,interval:Number($("#pi").value),start:$("#ps").value,end:$("#pe").value,notes:$("#pt").value,active:old?old.active:true};if(id)data.protocols[data.protocols.findIndex(p=>p.id===id)]=o;else data.protocols.push(o);save();closeModal();page("protocols")}
-function editProtocol(id){openProtocol(data.protocols.find(p=>p.id===id))}function toggle(id){let p=data.protocols.find(x=>x.id===id);p.active=!p.active;save();closeModal();page("protocols")}function delP(id){if(confirm("Protocol verwijderen?")){data.protocols=data.protocols.filter(p=>p.id!==id);save();closeModal();page("protocols")}}
-function logDose(id){let p=data.protocols.find(p=>p.id===id);$("#sheet").innerHTML=`<h2>Mark completed</h2><div class="meta">${esc(p.name)} · ${esc(p.amount)} ${esc(p.unit)}</div><label>DATE</label><input id="ld" type="date" value="${today()}"><label>TIME</label><input id="lt" type="time"><label>AMOUNT</label><input id="la" value="${esc(p.amount)}" inputmode="decimal"><label>NOTE</label><textarea id="ln"></textarea><div class="modal-actions"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn primary" onclick="saveL('${id}')">✓ Save</button></div>`;$("#modal").classList.add("show")}
-function saveL(id){let p=data.protocols.find(p=>p.id===id);data.logs.push({id:crypto.randomUUID(),protocolId:id,name:p.name,date:$("#ld").value,time:$("#lt").value,amount:$("#la").value,unit:p.unit,note:$("#ln").value,timestamp:Date.now()});save();closeModal();page("dashboard")}
-function openStock(s=null){$("#sheet").innerHTML=`<h2>${s?"Edit stock":"Add stock"}</h2><label>PRODUCT</label><input id="sn" value="${esc(s?.name||"")}"><div class="grid2"><div><label>QUANTITY</label><input id="sq" value="${esc(s?.amount||"0")}" inputmode="decimal"></div><div><label>UNIT</label><select id="su">${["vials","units","mg","IU","mcg","ml"].map(u=>`<option ${s?.unit===u?"selected":""}>${u}</option>`).join("")}</select></div></div><label>CONCENTRATION (OPTIONAL)</label><input id="sc" value="${esc(s?.concentration||"")}"><label>LOW STOCK AT</label><input id="sl" value="${esc(s?.low??"1")}" inputmode="decimal"><div class="modal-actions"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn primary" onclick="saveS('${s?.id||""}')">Save</button></div>`;$("#modal").classList.add("show")}
-function saveS(id){let o={id:id||crypto.randomUUID(),name:$("#sn").value.trim(),amount:$("#sq").value||"0",unit:$("#su").value,concentration:$("#sc").value.trim(),low:$("#sl").value};if(!o.name)return alert("Vul een product in.");if(id)data.stock[data.stock.findIndex(x=>x.id===id)]=o;else data.stock.push(o);save();closeModal();page("stock")}function editStock(id){openStock(data.stock.find(x=>x.id===id))}function adjust(id,d){let s=data.stock.find(x=>x.id===id);s.amount=String(Math.max(0,(Number(s.amount)||0)+d));save();stock()}function closeModal(){$("#modal").classList.remove("show")}$("#modal").onclick=e=>{if(e.target.id==="modal")closeModal()};
-const products=[["Retatrudite 10mg","0","vials","10 mg"],["Retatrudite 20mg","0","vials","20 mg"],["Tirzepatide 10mg","0","vials","10 mg"],["HGH 36 IU","0","vials","36 IU"],["BAC Water 10ml","0","vials","10 ml"],["Testosterone Enanthate","0","vials","250 mg/ml"]];
-if(!localStorage.getItem(KEY)){data.stock=products.map(x=>({id:crypto.randomUUID(),name:x[0],amount:x[1],unit:x[2],concentration:x[3],low:"1"}));save()}
-if("serviceWorker"in navigator)navigator.serviceWorker.register("./sw.js").catch(()=>{});page("dashboard");
-</script><div style="text-align:center;padding:12px 0 90px;color:#666;font:11px system-ui;letter-spacing:.12em">PRIME PROTOCOL V5</div>
-</body></html>
+const KEY='primeProtocolV2';
+const DAYS=['Zo','Ma','Di','Wo','Do','Vr','Za'];
+const defaultData={
+ products:[
+  {id:crypto.randomUUID(),name:'Retatrutide',strength:'10 mg',stock:0},
+  {id:crypto.randomUUID(),name:'Retatrutide',strength:'20 mg',stock:0},
+  {id:crypto.randomUUID(),name:'Tirzepatide',strength:'10 mg',stock:0},
+  {id:crypto.randomUUID(),name:'HGH',strength:'36 IU',stock:0},
+  {id:crypto.randomUUID(),name:'BAC water',strength:'10 ml',stock:0},
+  {id:crypto.randomUUID(),name:'Testosterone enanthate',strength:'250 mg/ml · 10 ml',stock:0}
+ ], protocols:[], logs:[]
+};
+let data=load();
+function load(){try{return JSON.parse(localStorage.getItem(KEY))||defaultData}catch(e){return defaultData}}
+function save(){localStorage.setItem(KEY,JSON.stringify(data));render()}
+function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function todayISO(){return new Date().toISOString().slice(0,10)}
+function dayIndex(date){return new Date(date+'T12:00:00').getDay()}
+function nextDue(p){
+ const start=new Date(p.start+'T12:00:00'), now=new Date(); now.setHours(12,0,0,0);
+ if(now<start)return p.start;
+ if(p.mode==='days'){
+   for(let i=0;i<370;i++){let d=new Date(now);d.setDate(now.getDate()+i);if(p.days.includes(d.getDay()))return d.toISOString().slice(0,10)}
+ }
+ const interval=Math.max(1,Number(p.interval||1));
+ const diff=Math.floor((now-start)/86400000);
+ const add=(Math.ceil(Math.max(0,diff)/interval)*interval);
+ let d=new Date(start);d.setDate(start.getDate()+add);
+ return d.toISOString().slice(0,10)
+}
+function dueToday(p){
+ if(!p.active)return false;
+ const n=nextDue(p); return n===todayISO();
+}
+function openModal(html){document.getElementById('modalbox').innerHTML=html;document.getElementById('modal').classList.add('show')}
+function closeModal(){document.getElementById('modal').classList.remove('show')}
+document.getElementById('modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()});
+
+function openProtocol(editId=null){
+ const p=data.protocols.find(x=>x.id===editId);
+ const days=p?.days||[];
+ openModal(`<h2>${p?'Protocol aanpassen':'Nieuw protocol'}</h2>
+ <div class="formgrid">
+  <div class="field"><label>PRODUCT</label><select id="pfProduct">${data.products.map(x=>`<option value="${x.id}" ${p?.productId===x.id?'selected':''}>${esc(x.name)} · ${esc(x.strength)}</option>`).join('')}</select></div>
+  <div class="field"><label>NAAM / LABEL</label><input id="pfLabel" value="${esc(p?.label||'')} " placeholder="bv. HGH ochtend"></div>
+  <div class="field"><label>STARTDATUM</label><input id="pfStart" type="date" value="${p?.start||todayISO()}"></div>
+  <div class="field"><label>TIJD</label><input id="pfTime" type="time" value="${p?.time||'09:00'}"></div>
+  <div class="field full"><label>INTERVAL</label><div class="segment"><button id="modeInterval" class="${p?.mode!=='days'?'active':''}" onclick="setMode('interval')">Interval</button><button id="modeDays" class="${p?.mode==='days'?'active':''}" onclick="setMode('days')">Dagen van de week</button></div></div>
+  <div class="field" id="intervalField"><label>ELKE X DAGEN</label><input id="pfInterval" type="number" min="1" value="${p?.interval||1}"></div>
+  <div class="field" id="daysField" style="display:none"><label>SPUITDAGEN</label><div class="days">${DAYS.map((d,i)=>`<button type="button" class="day ${days.includes(i)?'active':''}" data-day="${i}" onclick="this.classList.toggle('active')">${d}</button>`).join('')}</div></div>
+  <div class="field"><label>EIGEN DOSIS / HOEVEELHEID</label><input id="pfDose" value="${esc(p?.dose||'')}" placeholder="alleen wat jij zelf gebruikt"></div>
+  <div class="field"><label>NOTITIE</label><input id="pfNote" value="${esc(p?.note||'')}" placeholder="optioneel"></div>
+ </div>
+ <p class="notice">De app rekent alleen je ingevoerde planning uit en geeft geen doseringsadvies.</p>
+ <div class="row"><button class="btn" onclick="closeModal()">Annuleren</button><button class="btn primary" onclick="saveProtocol('${editId||''}')">Opslaan</button></div>`);
+ if(p?.mode==='days')setMode('days');
+}
+function setMode(mode){
+ document.getElementById('modeInterval')?.classList.toggle('active',mode==='interval');
+ document.getElementById('modeDays')?.classList.toggle('active',mode==='days');
+ document.getElementById('intervalField').style.display=mode==='interval'?'block':'none';
+ document.getElementById('daysField').style.display=mode==='days'?'block':'none';
+}
+function saveProtocol(id){
+ const mode=document.getElementById('modeDays').classList.contains('active')?'days':'interval';
+ const p={id:id||crypto.randomUUID(),productId:document.getElementById('pfProduct').value,label:document.getElementById('pfLabel').value.trim(),start:document.getElementById('pfStart').value,time:document.getElementById('pfTime').value,mode,interval:Number(document.getElementById('pfInterval').value||1),days:[...document.querySelectorAll('#daysField .day.active')].map(x=>Number(x.dataset.day)),dose:document.getElementById('pfDose').value.trim(),note:document.getElementById('pfNote').value.trim(),active:true};
+ const i=data.protocols.findIndex(x=>x.id===p.id); if(i>=0)data.protocols[i]=p;else data.protocols.push(p); save();closeModal();
+}
+function logProtocol(id){
+ const p=data.protocols.find(x=>x.id===id);if(!p)return;
+ data.logs.unshift({id:crypto.randomUUID(),protocolId:id,date:todayISO(),time:new Date().toLocaleTimeString('nl-BE',{hour:'2-digit',minute:'2-digit'}),dose:p.dose||''});
+ save();
+}
+function deleteProtocol(id){if(confirm('Protocol verwijderen?')){data.protocols=data.protocols.filter(x=>x.id!==id);save()}}
+function openStock(editId=null){
+ const x=data.products.find(p=>p.id===editId);
+ openModal(`<h2>${x?'Product aanpassen':'Product toevoegen'}</h2><div class="formgrid">
+ <div class="field"><label>PRODUCT</label><input id="sfName" value="${esc(x?.name||'')}"></div>
+ <div class="field"><label>STERKTE / INHOUD</label><input id="sfStrength" value="${esc(x?.strength||'')}"></div>
+ <div class="field"><label>VOORRAAD</label><input id="sfStock" type="number" step="0.01" value="${x?.stock??0}"></div>
+ </div><div class="row"><button class="btn" onclick="closeModal()">Annuleren</button><button class="btn primary" onclick="saveStock('${editId||''}')">Opslaan</button></div>`);
+}
+function saveStock(id){
+ const p={id:id||crypto.randomUUID(),name:document.getElementById('sfName').value.trim(),strength:document.getElementById('sfStrength').value.trim(),stock:Number(document.getElementById('sfStock').value||0)};
+ if(!p.name)return;
+ const i=data.products.findIndex(x=>x.id===p.id);if(i>=0)data.products[i]=p;else data.products.push(p);save();closeModal();
+}
+function adjustStock(id,delta){const p=data.products.find(x=>x.id===id);if(!p)return;p.stock=Math.max(0,Number(p.stock)+delta);save()}
+function deleteStock(id){if(confirm('Product verwijderen?')){data.products=data.products.filter(x=>x.id!==id);data.protocols=data.protocols.filter(x=>x.productId!==id);save()}}
+function clearLogs(){if(confirm('Alle logs wissen?')){data.logs=[];save()}}
+function resetAll(){if(confirm('Alles resetten? Dit kan niet ongedaan worden.')){localStorage.removeItem(KEY);location.reload()}}
+
+function showView(id){
+ document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===id));
+ document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.view===id));
+ render();
+ window.scrollTo({top:0,behavior:'smooth'});
+}
+function product(id){return data.products.find(x=>x.id===id)}
+function render(){
+ const due=data.protocols.filter(dueToday);
+ document.getElementById('sActive').textContent=data.protocols.filter(x=>x.active).length;
+ document.getElementById('sDue').textContent=due.length;
+ document.getElementById('sProducts').textContent=data.products.length;
+ document.getElementById('sLogs').textContent=data.logs.length;
+
+ document.getElementById('today').innerHTML=due.length?due.map(p=>`<div class="duebox"><h3>⚠ ${esc(p.label||product(p.productId)?.name||'Protocol')}</h3><div>${esc(product(p.productId)?.strength||'')} · ${esc(p.time||'')} ${p.dose?`· ${esc(p.dose)}`:''}</div><div class="row"><button class="btn ok" onclick="logProtocol('${p.id}')">✓ GEDAAN / LOG</button></div></div>`).join(''):`<div class="empty">Geen geplande actie voor vandaag.</div>`;
+
+ const low=data.products.filter(x=>Number(x.stock)<=2);
+ document.getElementById('stockDash').innerHTML=data.products.length?data.products.slice(0,6).map(x=>`<div class="product-row"><div><b>${esc(x.name)}</b><div class="notice">${esc(x.strength)}</div><div class="bar"><i style="width:${Math.min(100,Math.max(4,Number(x.stock)*10))}%"></i></div></div><div class="qty"><button onclick="adjustStock('${x.id}',-1)">−</button><b>${x.stock}</b><button onclick="adjustStock('${x.id}',1)">+</button></div></div>`).join(''):`<div class="empty">Nog geen producten.</div>`;
+
+ document.getElementById('recent').innerHTML=data.logs.length?data.logs.slice(0,8).map(l=>{let p=data.protocols.find(x=>x.id===l.protocolId);return `<div class="product-row"><div><b>${esc(p?.label||product(p?.productId)?.name||'Protocol')}</b><div class="notice">${esc(l.date)} · ${esc(l.time)} ${l.dose?'· '+esc(l.dose):''}</div></div><span class="badge">Gelogd</span></div>`}).join(''):`<div class="empty">Nog geen logs.</div>`;
+
+ document.getElementById('protocolList').innerHTML=data.protocols.length?data.protocols.map(p=>{let n=nextDue(p),due=n===todayISO();return `<div class="product-row"><div><b>${esc(p.label||product(p.productId)?.name||'Protocol')}</b><div class="notice">${esc(product(p.productId)?.strength||'')} · ${p.mode==='days'?p.days.map(i=>DAYS[i]).join(', '):'Elke '+p.interval+' dag(en)'} · ${esc(p.time||'')}</div></div><div style="display:flex;gap:6px;align-items:center"><span class="badge ${due?'due':n<=new Date(Date.now()+7*86400000).toISOString().slice(0,10)?'soon':''}">${due?'VANDAAG':n}</span><button class="btn" onclick="openProtocol('${p.id}')">Aanpassen</button><button class="btn danger" onclick="deleteProtocol('${p.id}')">Wis</button></div></div>`}).join(''):`<div class="empty">Voeg je eerste protocol toe.</div>`;
+
+ document.getElementById('stockList').innerHTML=data.products.length?data.products.map(x=>`<div class="product-row"><div><b>${esc(x.name)}</b><div class="notice">${esc(x.strength)}</div></div><div style="display:flex;gap:6px;align-items:center"><div class="qty"><button onclick="adjustStock('${x.id}',-1)">−</button><b>${x.stock}</b><button onclick="adjustStock('${x.id}',1)">+</button></div><button class="btn" onclick="openStock('${x.id}')">Aanpassen</button><button class="btn danger" onclick="deleteStock('${x.id}')">Wis</button></div></div>`).join(''):`<div class="empty">Voeg je eerste product toe.</div>`;
+
+ document.getElementById('historyList').innerHTML=data.logs.length?data.logs.map(l=>{let p=data.protocols.find(x=>x.id===l.protocolId);return `<div class="product-row"><div><b>${esc(p?.label||product(p?.productId)?.name||'Protocol')}</b><div class="notice">${esc(l.date)} · ${esc(l.time)} · ${esc(l.dose||'')}</div></div><span class="badge">Gelogd</span></div>`}).join(''):`<div class="empty">Nog geen geschiedenis.</div>`;
+}
+render();
+</script>
+</body>
+</html>
