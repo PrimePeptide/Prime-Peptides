@@ -179,22 +179,51 @@ function saveCustomer(id){
 }
 function deleteCustomer(id){if(confirm('Klant verwijderen?')){data.customers=data.customers.filter(x=>x.id!==id);save()}}
 function markCustomerDone(id){const c=customer(id);if(!c)return;const oldNext=c.next;c.date=oldNext;c.next=addDays(oldNext,c.interval);data.logs.unshift({id:crypto.randomUUID(),type:'followup',customerId:id,date:new Date().toISOString(),text:`${c.name} · opvolging gemarkeerd`});save()}
-function openStock(){
- const options=data.products.map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join('');
- openModal(`<h2>Voorraad toevoegen</h2><div class="formgrid">
-  <div class="field full"><label>PRODUCT KIEZEN</label><select id="sfProduct">${options}</select></div>
-  <div class="field full"><label>AANTAL TOEVOEGEN</label><input id="sfAdd" type="number" min="0" step="1" value="1"></div>
+function openStock(id){
+ const edit=!!id;
+ const options=data.products.map(p=>`<option value="${p.id}" ${p.id===id?'selected':''}>${esc(p.name)} · huidige voorraad ${Number(p.stock||0)}</option>`).join('');
+ if(!data.products.length)return alert('Er zijn nog geen voorraadproducten.');
+ openModal(`<h2>${edit?'Voorraad bewerken':'Voorraad toevoegen'}</h2><div class="formgrid">
+  <div class="field full"><label>PRODUCT KIEZEN</label><select id="sfProduct" onchange="refreshStockAmount()">${options}</select></div>
+  <div class="field full"><label>AANTAL</label><input id="sfAmount" type="number" min="1" step="1" value="${edit?Math.max(1,Number(product(id)?.stock||0)):1}"></div>
  </div>
- <div class="notice">Kies het product en geef aan hoeveel stuks je toevoegt. De bestaande voorraad blijft behouden en wordt verhoogd.</div>
- <div class="row"><button class="btn" onclick="closeModal()">Annuleren</button><button class="btn primary" onclick="saveStock()">Opslaan</button></div>`);
+ <div class="notice" id="sfInfo">${edit?`Huidige voorraad: <b>${Number(product(id)?.stock||0)}</b>. Je kunt hier in één keer meerdere stuks toevoegen of verwijderen.`:'Kies het product en geef aan hoeveel stuks je wilt toevoegen.'}</div>
+ <div class="row" style="display:flex;flex-wrap:wrap;gap:8px">
+  <button class="btn" onclick="closeModal()">Annuleren</button>
+  <button class="btn danger" onclick="changeStockByModal(-1)">− Verwijderen</button>
+  <button class="btn primary" onclick="changeStockByModal(1)">+ Toevoegen</button>
+ </div>
+ <div class="row"><button class="btn" onclick="setStockByModal()">Voorraad instellen</button></div>`);
 }
-function saveStock(){
- const selected=product(document.getElementById('sfProduct').value); const amount=Number(document.getElementById('sfAdd').value);
- if(!selected)return alert('Kies een product.');
- if(!Number.isFinite(amount)||amount<=0)return alert('Geef een aantal groter dan 0 in.');
- selected.stock=Number(selected.stock||0)+amount;
+function refreshStockAmount(){
+ const p=product(document.getElementById('sfProduct').value);
+ const info=document.getElementById('sfInfo');
+ if(p&&info)info.innerHTML=`Huidige voorraad: <b>${Number(p.stock||0)}</b>. Geef hierboven het aantal stuks in.`;
+}
+function getStockModalValues(){
+ const selected=product(document.getElementById('sfProduct')?.value);
+ const amount=Number(document.getElementById('sfAmount')?.value);
+ if(!selected)return [null,0];
+ if(!Number.isInteger(amount)||amount<=0){alert('Geef een heel aantal groter dan 0 in.');return [null,0];}
+ return [selected,amount];
+}
+function changeStockByModal(direction){
+ const [selected,amount]=getStockModalValues();
+ if(!selected)return;
+ const current=Number(selected.stock||0);
+ if(direction<0&&amount>current)return alert(`Je hebt maar ${current} stuk(s) op voorraad.`);
+ selected.stock=Math.max(0,current+(direction*amount));
  save(); closeModal(); showView('stock');
 }
+function setStockByModal(){
+ const selected=product(document.getElementById('sfProduct')?.value);
+ const amount=Number(document.getElementById('sfAmount')?.value);
+ if(!selected)return;
+ if(!Number.isInteger(amount)||amount<0)return alert('Geef een heel aantal van 0 of hoger in.');
+ selected.stock=amount;
+ save(); closeModal(); showView('stock');
+}
+function saveStock(){changeStockByModal(1)}
 function adjustStock(id,d){const p=product(id);if(!p)return;p.stock=Math.max(0,Number((Number(p.stock)+d).toFixed(3)));data.logs.unshift({id:crypto.randomUUID(),type:'stock',productId:id,date:new Date().toISOString(),text:`Voorraad ${d>0?'+':''}${d}`});save()}
 function deleteStock(id){if(confirm('Product verwijderen?')){data.products=data.products.filter(x=>x.id!==id);save()}}
 function clearLogs(){if(confirm('Alle logs wissen?')){data.logs=[];save()}}
