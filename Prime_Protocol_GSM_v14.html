@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="nl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#070b12">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="manifest.webmanifest">
+<title>Prime Protocol</title>
+<style>
+:root{--bg:#070b12;--panel:#101a2a;--panel2:#0c1420;--line:#154b66;--cyan:#18d7ff;--purple:#7567ff;--text:#f5f8ff;--muted:#8492a6;--green:#00d79d;--amber:#ffb21c;--red:#ff5364;--shadow:0 8px 24px rgba(0,0,0,.18)}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html{background:var(--bg);scroll-behavior:smooth}
+body{margin:0;min-height:100dvh;background:radial-gradient(circle at 92% -5%,#102b45 0,transparent 34%),var(--bg);color:var(--text);font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;overflow-x:hidden}
+button,input,select,textarea{font:inherit}button{cursor:pointer}
+.app{width:min(100%,520px);margin:0 auto;padding:calc(env(safe-area-inset-top) + 18px) 10px calc(82px + env(safe-area-inset-bottom))}
+.top{border:1px solid #15506a;background:linear-gradient(145deg,#111b2d,#0c1422);border-radius:16px;padding:10px 11px;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:8px;box-shadow:var(--shadow)}
+.brand{display:flex;align-items:center;gap:8px;min-width:0}.logo{font-size:21px;line-height:1}.brand h1{font-size:15px;line-height:1.05;letter-spacing:1.6px;margin:0;color:#2dd5fa;white-space:nowrap}.brand small{display:block;color:#7f8da2;margin-top:4px;letter-spacing:.65px;font-size:7px;line-height:1.2;max-width:155px}
+.actions{display:flex;gap:5px;flex-shrink:0}.btn{border:1px solid #1c5a75;background:#0d1b2b;color:#fff;border-radius:10px;padding:8px 9px;font-weight:800;font-size:10px;white-space:nowrap;min-height:34px}.btn.primary{background:linear-gradient(105deg,#09cbed,#7868ff);border:0}.btn.danger{border-color:#71303a;color:#ff7580}.btn.ok{border-color:#08795e;color:#00e3a4}
+.grid4{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin-top:8px}.stat{background:linear-gradient(145deg,#101a2b,#0c1421);border:1px solid #15465c;border-radius:13px;padding:9px 10px;min-height:68px}.stat label{display:block;color:#8391a6;font-size:9px;line-height:1.3;font-weight:850;letter-spacing:.8px}.stat b{display:block;font-size:23px;line-height:1;margin-top:6px;color:var(--cyan)}.stat.warn b{color:var(--amber)}
+.layout{display:grid;grid-template-columns:1fr;gap:8px;margin-top:8px}.card{background:linear-gradient(145deg,#0f192a,#0b1422);border:1px solid #15465c;border-radius:14px;padding:10px;box-shadow:var(--shadow)}.card h2{margin:0;color:#25d9fa;font-size:13px;letter-spacing:1px}.section-head{display:flex;align-items:center;justify-content:space-between;gap:7px}.notice{color:#8e9bae;font-size:10px;line-height:1.4;margin:5px 0}.empty{padding:16px 9px;text-align:center;color:#7f8ca0;border:1px dashed #263544;border-radius:11px;font-size:12px}
+.nav{position:fixed;z-index:20;bottom:0;left:0;right:0;background:rgba(5,9,15,.97);backdrop-filter:blur(18px);border-top:1px solid #1a2a3a;display:flex;justify-content:space-evenly;padding:5px 4px calc(5px + env(safe-area-inset-bottom));overflow-x:auto}.nav button{flex:1 1 auto;background:transparent;border:0;color:#8190a5;padding:8px 4px;border-radius:11px;font-size:9px;min-width:0;white-space:nowrap}.nav button.active{background:#182231;color:#fff}
+.view{display:none}.view.active{display:block}.formgrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px}.field{min-width:0}.field label{display:block;color:#8a98aa;font-size:9px;font-weight:850;margin-bottom:4px;letter-spacing:.45px}.field input,.field select,.field textarea{width:100%;max-width:100%;min-width:0;display:block;background:#0a111c;color:#f4f7fb;border:1px solid #234155;border-radius:9px;padding:9px;outline:none;font-size:13px}.field textarea{min-height:65px;resize:vertical}.full{grid-column:1/-1}
+.days{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}.day{border:1px solid #234155;background:#0a111c;color:#8190a5;border-radius:7px;padding:7px 2px;font-size:9px;font-weight:850}.day.active{background:#10384a;border-color:#00cfee;color:#fff;box-shadow:0 0 0 1px #00cfee33 inset}
+.segment{display:flex;background:#09111d;border:1px solid #223d50;border-radius:9px;padding:3px}.segment button{flex:1;border:0;background:transparent;color:#8190a5;padding:7px;border-radius:7px;font-size:11px}.segment button.active{background:#1a2a3b;color:#fff}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.72);display:none;align-items:flex-end;justify-content:center;padding:9px;z-index:30}.modal.show{display:flex}.modalbox{width:min(520px,100%);max-height:88dvh;overflow:auto;background:#0d1624;border:1px solid #1b536b;border-radius:17px;padding:13px}.modalbox h2{margin:0 0 10px;font-size:17px}.row{display:flex;gap:6px;justify-content:flex-end;margin-top:10px;flex-wrap:wrap}.badge{display:inline-block;border:1px solid #1d826c;color:#00dba0;border-radius:999px;padding:3px 6px;font-size:9px;font-weight:850;white-space:nowrap}.badge.due{border-color:var(--red);color:#ff7884;background:#32131a}.badge.soon{border-color:#a86e00;color:#ffbd2e}.badge.blue{border-color:#1b6684;color:#72dfff;background:#0a1e2a}
+.duebox{border:1px solid var(--red);background:linear-gradient(120deg,#291018,#101723);padding:10px;border-radius:11px;margin-top:7px}.duebox h3{margin:0 0 4px;color:#ff6876;font-size:13px}.product-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:7px;align-items:center;padding:8px 0;border-bottom:1px solid #183043}.qty{display:flex;align-items:center;gap:4px}.qty button{width:28px;height:28px;border-radius:7px;border:1px solid #27465a;background:#101d2c;color:#fff}.qty b{min-width:26px;text-align:center;font-size:11px}.bar{height:5px;background:#172335;border-radius:99px;overflow:hidden;margin-top:4px}.bar i{display:block;height:100%;background:linear-gradient(90deg,#00d9ff,#7168ff);border-radius:99px}.customer-card{padding:9px;border:1px solid #1d4055;border-radius:11px;background:#0a111b;margin-top:7px}.customer-card.due{border-color:var(--red);background:linear-gradient(120deg,#291018,#0a111b)}.customer-card.soon{border-color:#9a6a12}
+@media(max-width:600px){.field input,.field select,.field textarea{font-size:16px}.field input[type="date"]{min-width:0;width:100%}}
+@media(max-width:380px){.app{padding-left:9px;padding-right:9px}.brand h1{font-size:14px}.brand small{font-size:6.5px}.actions .btn{padding:7px 7px;font-size:9px}.nav button{padding-left:2px;padding-right:2px;font-size:8.5px}.card{padding:9px}.stat{padding:8px 9px;min-height:66px}.stat b{font-size:21px}.product-row{grid-template-columns:1fr}.product-row>div:last-child{justify-self:start}}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="top"><div class="brand"><span class="logo">⚡</span><div><h1>PRIME PROTOCOL</h1><small>PRIVATE INJECTION TRACKER · LOCAL DATA</small></div></div><div class="actions"><button class="btn" onclick="openStock()">+ STOCK</button><button class="btn primary" onclick="openProtocol()">+ PROTOCOL</button></div></header>
+
+<div class="view active" id="dashboard"><div class="grid4"><div class="stat"><label>ACTIEVE PROTOCOLLEN</label><b id="sActive">0</b></div><div class="stat warn"><label>ACTIE NODIG VANDAAG</label><b id="sDue">0</b></div><div class="stat"><label>KLANTEN</label><b id="sCustomers">0</b></div></div><div id="dashboardAlerts"></div><div class="layout"><section class="card"><div class="section-head"><h2>⚡ VANDAAG</h2><button class="btn" onclick="openProtocol()">+ Toevoegen</button></div><div id="today"></div></section><section class="card"><div class="section-head"><h2>👤 KLANTEN</h2><button class="btn" onclick="showView('customers')">Alles</button></div><div id="customerDash"></div></section><section class="card"><div class="section-head"><h2>📦 VOORRAAD</h2><button class="btn" onclick="showView('stock')">Beheren</button></div><div id="stockDash"></div></section></div></div>
+
+<div class="view" id="protocols"><section class="card"><div class="section-head"><h2>💉 MIJN INJECTIES</h2><button class="btn primary" onclick="openProtocol()">+ Protocol</button></div><div class="notice">Jouw eigen planning. Interval kan Daily/elke X dagen zijn of op vaste weekdagen.</div><div id="protocolList"></div></section></div>
+
+<div class="view" id="customers"><section class="card"><div class="section-head"><h2>👤 KLANTEN</h2><button class="btn primary" onclick="openCustomer()">+ Klant</button></div><div class="notice">Geef de datum van het bezoek in. De standaard opvolging staat op 30 dagen. Bij een geregistreerd bezoek kan voorraad automatisch worden afgetrokken.</div><div id="customerList"></div></section></div>
+
+<div class="view" id="stock"><section class="card"><div class="section-head"><h2>📦 VOORRAAD</h2><button class="btn primary" onclick="openStock()">+ Product</button></div><div id="stockList"></div></section></div>
+
+<div class="view" id="settings"><section class="card"><h2>⚙ SETTINGS</h2><div class="field" style="margin-top:10px"><label>STANDAARD KLANT OPVOLGING (DAGEN)</label><input id="customerInterval" type="number" min="1" value="30"></div><div class="row"><button class="btn primary" onclick="saveSettings()">Opslaan</button></div><p class="notice">Gegevens blijven lokaal in deze browser. Deze tracker geeft geen medische doseringsadviezen.</p></section></div>
+</div>
+
+<nav class="nav"><button class="active" data-view="dashboard" onclick="showView('dashboard')">Dashboard</button><button data-view="protocols" onclick="showView('protocols')">Mijn Injecties</button><button data-view="customers" onclick="showView('customers')">Klanten</button><button data-view="stock" onclick="showView('stock')">Stock</button></nav>
+<div class="modal" id="modal"><div class="modalbox" id="modalbox"></div></div>
+
+<script>
+const PRODUCT_CATALOG=[
+ {name:'Retatrutide 10mg',unit:'vial'},
+ {name:'Retatrutide 20mg',unit:'vial'},
+ {name:'Tirzepatide 10mg',unit:'vial'},
+ {name:'HGH 36 IU',unit:'vial'},
+ {name:'BAC Water 10ml',unit:'vial'},
+ {name:'Testosterone Enanthate 250mg/ml · 10ml',unit:'vial'}
+];
+const KEY='primeProtocolMobileV6';
+const DAYS=['Zo','Ma','Di','Wo','Do','Vr','Za'];
+const DEFAULT_PRODUCTS=[['Retatrutide 10mg','10 mg'],['Retatrutide 20mg','20 mg'],['Tirzepatide 10mg','10 mg'],['HGH 36 IU','36 IU'],['BAC Water 10ml','10 ml'],['Testosterone Enanthate','250 mg/ml · 10 ml']];
+function fresh(){return{customers:[],products:DEFAULT_PRODUCTS.map(x=>({id:crypto.randomUUID(),name:x[0],strength:x[1],stock:0})),protocols:[],logs:[],settings:{customerInterval:30}}}
+let data=load();
+function load(){try{let d=JSON.parse(localStorage.getItem(KEY));if(!d)d=fresh();d.customers=d.customers||[];d.products=d.products||[];d.protocols=d.protocols||[];d.logs=d.logs||[];d.settings=Object.assign({customerInterval:30},d.settings||{});return d}catch(e){return fresh()}}
+function save(){localStorage.setItem(KEY,JSON.stringify(data));render()}
+function migrateProducts(){
+ const map={
+  'Retatrutide 10mg':'Retatrutide 10mg',
+  'Retatrutide 20mg':'Retatrutide 20mg',
+  'Tirzepatide 10mg':'Tirzepatide 10mg',
+  'HGH 36 IU':'HGH 36 IU',
+  'BAC Water 10ml':'BAC Water 10ml',
+  'Testosterone Enanthate':'Testosterone Enanthate 250mg/ml · 10ml'
+ };
+ data.products=(data.products||[]).map(p=>{
+   const full=map[p.name]||p.name;
+   const cat=PRODUCT_CATALOG.find(x=>x.name===full);
+   return cat?{...p,name:cat.name,unit:cat.unit}:p;
+ });
+}
+migrateProducts();
+
+function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
+function todayISO(){return new Date().toISOString().slice(0,10)}
+function addDays(date,n){let d=new Date(date+'T12:00:00');d.setDate(d.getDate()+Number(n));return d.toISOString().slice(0,10)}
+function dayDiff(a,b){return Math.round((new Date(b+'T12:00:00')-new Date(a+'T12:00:00'))/86400000)}
+function product(id){return data.products.find(x=>x.id===id)}
+function customer(id){return data.customers.find(x=>x.id===id)}
+function openModal(html){document.getElementById('modalbox').innerHTML=html;document.getElementById('modal').classList.add('show')}
+function closeModal(){document.getElementById('modal').classList.remove('show')}
+document.getElementById('modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal()})
+function showView(id){document.querySelectorAll('.view').forEach(v=>v.classList.toggle('active',v.id===id));document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.view===id));render();window.scrollTo({top:0,behavior:'smooth'})}
+
+function nextDue(p){
+ if(!p.active)return '';
+
+ /* Zodra een injectie is gelogd, is die datum het nieuwe startpunt.
+    Daardoor blijft de melding van vandaag niet opnieuw verschijnen. */
+ const anchor=p.lastDone||p.start||todayISO();
+ const now=new Date(todayISO()+'T12:00:00');
+ const s=new Date(anchor+'T12:00:00');
+
+ if(p.lastDone){
+   if(p.mode==='days'){
+     const chosen=Array.isArray(p.days)?p.days:[];
+     for(let i=1;i<=370;i++){
+       let d=new Date(s);
+       d.setDate(s.getDate()+i);
+       if(chosen.includes(d.getDay()))return d.toISOString().slice(0,10);
+     }
+     return '';
+   }
+   return addDays(anchor,Math.max(1,Number(p.interval||1)));
+ }
+
+ if(now<s)return anchor;
+
+ if(p.mode==='days'){
+   const chosen=Array.isArray(p.days)?p.days:[];
+   for(let i=0;i<370;i++){
+     let d=new Date(now);
+     d.setDate(now.getDate()+i);
+     if(chosen.includes(d.getDay()))return d.toISOString().slice(0,10);
+   }
+   return '';
+ }
+
+ const interval=Math.max(1,Number(p.interval||1));
+ const diff=Math.floor((now-s)/86400000);
+ const add=Math.ceil(Math.max(0,diff)/interval)*interval;
+ return addDays(anchor,add);
+}
+function dueToday(p){return !!p.active&&nextDue(p)===todayISO()}
+function dueLabel(date){if(!date)return['',''];let d=dayDiff(todayISO(),date);if(d===0)return['due','VANDAAG'];if(d<0)return['due','TE LAAT'];if(d<=7)return['soon','BINNEN '+d+' DAGEN'];return['','GEPLAND']}
+
+function openProtocol(editId=null){
+ const p=data.protocols.find(x=>x.id===editId),days=p?.days||[];
+ openModal(`<h2>${p?'Protocol aanpassen':'Nieuw protocol'}</h2><div class="formgrid">
+ <div class="field"><label>PRODUCT</label><select id="pfProduct">${data.products.map(x=>`<option value="${x.id}" ${p?.productId===x.id?'selected':''}>${esc(x.name)} · ${esc(x.strength)}</option>`).join('')}</select></div>
+ <div class="field"><label>STARTDATUM</label><input id="pfStart" type="date" value="${p?.start||todayISO()}"></div>
+ <div class="field"><label>NAAM / LABEL</label><input id="pfLabel" value="${esc(p?.label||'')}" placeholder="bv. mijn schema"></div>
+ <div class="field"><label>TIJD</label><input id="pfTime" type="time" value="${p?.time||'09:00'}"></div>
+ <div class="field full"><label>INTERVAL</label><div class="segment"><button id="modeInterval" class="${p?.mode!=='days'?'active':''}" onclick="setMode('interval')">Interval</button><button id="modeDays" class="${p?.mode==='days'?'active':''}" onclick="setMode('days')">Weekdagen</button></div></div>
+ <div class="field" id="intervalField"><label>ELKE X DAGEN</label><div class="segment">${[1,2,3,4,5,6,7,14].map(n=>`<button type="button" id="int${n}" class="${(p?.interval||1)===n?'active':''}" onclick="pickInterval(${n})">${n===1?'Daily':n+' d'}</button>`).join('')}</div><input type="hidden" id="pfInterval" value="${p?.interval||1}"></div>
+ <div class="field full" id="daysField" style="display:none"><label>SPUITDAGEN</label><div class="days">${DAYS.map((d,i)=>`<button type="button" class="day ${days.includes(i)?'active':''}" data-day="${i}" onclick="this.classList.toggle('active')">${d}</button>`).join('')}</div></div>
+ <div class="field"><label>EIGEN DOSIS / HOEVEELHEID</label><input id="pfDose" value="${esc(p?.dose||'')}" placeholder="jouw ingevoerde waarde"></div>
+ <div class="field"><label>NOTITIE</label><input id="pfNote" value="${esc(p?.note||'')}" placeholder="optioneel"></div>
+ </div><p class="notice">De app registreert alleen jouw eigen planning en invoer.</p><div class="row"><button class="btn" onclick="closeModal()">Annuleren</button><button class="btn primary" onclick="saveProtocol('${editId||''}')">Opslaan</button></div>${p?`<div class="row"><button class="btn" onclick="toggleProtocol('${p.id}')">${p.active?'Pauzeren':'Activeren'}</button><button class="btn danger" onclick="deleteProtocol('${p.id}')">Verwijderen</button></div>`:''}`);
+ if(p?.mode==='days')setMode('days');
+}
+function setMode(mode){document.getElementById('modeInterval').classList.toggle('active',mode==='interval');document.getElementById('modeDays').classList.toggle('active',mode==='days');document.getElementById('intervalField').style.display=mode==='interval'?'block':'none';document.getElementById('daysField').style.display=mode==='days'?'block':'none'}
+function pickInterval(n){document.getElementById('pfInterval').value=n;document.querySelectorAll('#intervalField .segment button').forEach(b=>b.classList.remove('active'));document.getElementById('int'+n).classList.add('active')}
+function saveProtocol(id){const mode=document.getElementById('modeDays').classList.contains('active')?'days':'interval';const old=data.protocols.find(x=>x.id===id);const p={id:id||crypto.randomUUID(),productId:document.getElementById('pfProduct').value,label:document.getElementById('pfLabel').value.trim(),start:document.getElementById('pfStart').value,time:document.getElementById('pfTime').value,mode,interval:Number(document.getElementById('pfInterval').value||1),days:[...document.querySelectorAll('#daysField .day.active')].map(x=>Number(x.dataset.day)),dose:document.getElementById('pfDose').value.trim(),note:document.getElementById('pfNote').value.trim(),active:old?old.active:true};if(mode==='days'&&!p.days.length)return alert('Kies minstens één weekdag.');const i=data.protocols.findIndex(x=>x.id===id);if(i>=0)data.protocols[i]=p;else data.protocols.push(p);save();closeModal();showView('protocols')}
+function toggleProtocol(id){let p=data.protocols.find(x=>x.id===id);if(p)p.active=!p.active;save();closeModal();showView('protocols')}
+function deleteProtocol(id){if(confirm('Protocol verwijderen?')){data.protocols=data.protocols.filter(x=>x.id!==id);save();closeModal();showView('protocols')}}
+function logProtocol(id){
+ let p=data.protocols.find(x=>x.id===id);
+ if(!p)return;
+ const pr=product(p.productId);
+ if(pr&&p.stockDeduct&&Number(p.stockDeduct)>0&&pr.stock<Number(p.stockDeduct))return alert('Onvoldoende voorraad.');
+
+ if(pr&&p.stockDeduct)pr.stock=Math.max(0,pr.stock-Number(p.stockDeduct));
+
+ /* Dit is de belangrijke fix: de uitgevoerde datum wordt opgeslagen. */
+ p.lastDone=todayISO();
+
+ data.logs.unshift({
+   id:crypto.randomUUID(),
+   type:'protocol',
+   protocolId:id,
+   date:todayISO(),
+   time:new Date().toLocaleTimeString('nl-BE',{hour:'2-digit',minute:'2-digit'}),
+   dose:p.dose||''
+ });
+
+ save();
+}
+
+function openCustomer(editId=null){
+ const c=data.customers.find(x=>x.id===editId);const interval=c?.interval||data.settings.customerInterval||30;
+ openModal(`<h2>${c?'Klant aanpassen':'Nieuwe klant'}</h2><div class="formgrid">
+ <div class="field"><label>NAAM</label><input id="cfName" value="${esc(c?.name||'')}" placeholder="Naam"></div>
+ <div class="field"><label>CONTACT / REFERENTIE</label><input id="cfContact" value="${esc(c?.contact||'')}" placeholder="optioneel"></div>
+ <div class="field"><label>DATUM BEZOEK</label><input id="cfDate" type="date" value="${c?.date||todayISO()}"></div>
+ <div class="field"><label>TERUGKOMEN NA</label><input id="cfInterval" type="number" min="1" value="${interval}"></div>
+ <div class="field"><label>PRODUCT</label><select id="cfProduct">${data.products.map(x=>`<option value="${x.id}" ${c?.productId===x.id?'selected':''}>${esc(x.name)} · ${esc(x.strength)} · stock ${x.stock}</option>`).join('')}</select></div>
+ <div class="field"><label>VERBRUIK / AANTAL UIT STOCK</label><input id="cfUse" type="number" min="0" step="0.01" value="${c?.use??0}"></div>
+ <div class="field"><label>EENHEID</label><select id="cfUnit"><option ${c?.unit==='vial'?'selected':''}>vial</option><option ${c?.unit==='ml'?'selected':''}>ml</option><option ${c?.unit==='IU'?'selected':''}>IU</option><option ${c?.unit==='mg'?'selected':''}>mg</option><option ${c?.unit==='eenheid'?'selected':''}>eenheid</option></select></div>
+ <div class="field full"><label>NOTITIE</label><textarea id="cfNote">${esc(c?.note||'')}</textarea></div></div>
+ <div class="notice">Bij opslaan wordt het ingevoerde verbruik één keer van het gekozen voorraaditem afgetrokken. Bij een nieuwe datum wordt de volgende datum automatisch berekend.</div>
+ <div class="row"><button class="btn" onclick="closeModal()">Annuleren</button><button class="btn primary" onclick="saveCustomer('${editId||''}')">Opslaan</button></div>`);
+}
+function saveCustomer(id){
+ const name=document.getElementById('cfName').value.trim();if(!name)return alert('Vul een klantnaam in.');const productId=document.getElementById('cfProduct').value;const use=Math.max(0,Number(document.getElementById('cfUse').value||0));const pr=product(productId);const date=document.getElementById('cfDate').value||todayISO();const interval=Math.max(1,Number(document.getElementById('cfInterval').value||30));const old=data.customers.find(x=>x.id===id);
+ // Bij aanpassen alleen opnieuw voorraad afboeken als de nieuwe registratie nog niet eerder als voorraadverbruik is vastgelegd.
+ const previousUse=old?Number(old.use||0):0;const previousProduct=old?.productId;
+ if(!old && pr && use>pr.stock)return alert(`Onvoldoende voorraad. Beschikbaar: ${pr.stock}.`);
+ if(old && (previousUse!==use||previousProduct!==productId)){
+   if(previousProduct){let pp=product(previousProduct);if(pp)pp.stock+=previousUse;}
+   if(pr&&use>pr.stock)return alert(`Onvoldoende voorraad. Beschikbaar: ${pr.stock}.`);
+ }
+ if(pr && (!old || previousUse!==use || previousProduct!==productId))pr.stock=Math.max(0,Number(pr.stock)-use);
+ const c={id:id||crypto.randomUUID(),name,contact:document.getElementById('cfContact').value.trim(),date,interval,productId,use,unit:document.getElementById('cfUnit').value,note:document.getElementById('cfNote').value.trim(),next:addDays(date,interval)};
+ const i=data.customers.findIndex(x=>x.id===c.id);if(i>=0)data.customers[i]=c;else data.customers.push(c);
+ data.logs.unshift({id:crypto.randomUUID(),type:'customer',customerId:c.id,productId:c.productId,use:c.use,date:new Date().toISOString(),text:`${c.name} · klantregistratie${c.use?` · ${c.use} ${c.unit} voorraad verbruikt`:''}`});save();closeModal();showView('customers')
+}
+function deleteCustomer(id){if(confirm('Klant verwijderen?')){data.customers=data.customers.filter(x=>x.id!==id);save()}}
+function markCustomerDone(id){const c=customer(id);if(!c)return;const oldNext=c.next;c.date=oldNext;c.next=addDays(oldNext,c.interval);data.logs.unshift({id:crypto.randomUUID(),type:'followup',customerId:id,date:new Date().toISOString(),text:`${c.name} · opvolging gemarkeerd`});save()}
+
+function openStock(){
+ const options=data.products.map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join('');
+ openModal(`<h2>Voorraad toevoegen</h2><div class="formgrid">
+  <div class="field full"><label>PRODUCT KIEZEN</label><select id="sfProduct">${options}</select></div>
+  <div class="field full"><label>AANTAL TOEVOEGEN</label><input id="sfAdd" type="number" min="0" step="1" value="1"></div>
+ </div>
+ <div class="notice">Kies het product en geef aan hoeveel stuks je toevoegt. De bestaande voorraad blijft behouden en wordt verhoogd.</div>
+ <div class="row"><button class="btn" onclick="closeModal()">Annuleren</button><button class="btn primary" onclick="saveStock()">Opslaan</button></div>`);
+}
+function saveStock(){
+ const selected=product(document.getElementById('sfProduct').value);
+ const amount=Number(document.getElementById('sfAdd').value);
+ if(!selected)return alert('Kies een product.');
+ if(!Number.isFinite(amount)||amount<=0)return alert('Geef een aantal groter dan 0 in.');
+ selected.stock=Number(selected.stock||0)+amount;
+ save();
+ closeModal();
+ showView('stock');
+}
+function adjustStock(id,d){const p=product(id);if(!p)return;p.stock=Math.max(0,Number((Number(p.stock)+d).toFixed(3)));data.logs.unshift({id:crypto.randomUUID(),type:'stock',productId:id,date:new Date().toISOString(),text:`Voorraad ${d>0?'+':''}${d}`});save()}
+function deleteStock(id){if(confirm('Product verwijderen?')){data.products=data.products.filter(x=>x.id!==id);save()}}
+function clearLogs(){if(confirm('Alle logs wissen?')){data.logs=[];save()}}
+function saveSettings(){data.settings.customerInterval=Math.max(1,Number(document.getElementById('customerInterval').value||30));save();alert('Instellingen opgeslagen.')}
+function resetAll(){if(confirm('Alles resetten? Dit kan niet ongedaan worden.')){localStorage.removeItem(KEY);location.reload()}}
+
+function customerHTML(c){const p=product(c.productId),[cls,label]=dueLabel(c.next);return `<div class="customer-card ${cls==='due'?'due':cls==='soon'?'soon':''}"><div style="display:flex;justify-content:space-between;gap:7px;align-items:flex-start"><div><b>${esc(c.name)}</b><div class="notice">${esc(p?.name||'Product')} · bezoek ${esc(c.date)} · volgende ${esc(c.next)}</div><div class="notice">Interval ${c.interval} dagen${c.use?` · verbruik ${c.use} ${esc(c.unit)}`:''}</div>${c.note?`<div class="notice">📝 ${esc(c.note)}</div>`:''}</div><span class="badge ${cls}">${label}</span></div><div class="row"><button class="btn" onclick="openCustomer('${c.id}')">Aanpassen</button>${dayDiff(todayISO(),c.next)<=0?`<button class="btn ok" onclick="markCustomerDone('${c.id}')">✓ Opgevolgd</button>`:''}<button class="btn danger" onclick="deleteCustomer('${c.id}')">Wis</button></div></div>`}
+function protocolHTML(p){const n=nextDue(p),[cls,label]=dueLabel(n),pr=product(p.productId);return `<div class="product-row"><div><b>${esc(p.label||pr?.name||'Protocol')}</b><div class="notice">${p.mode==='days'?p.days.map(i=>DAYS[i]).join(', '):p.interval===1?'Daily':'Elke '+p.interval+' dagen'} · ${esc(p.time||'')}</div>${p.dose?`<div class="notice">Eigen invoer: ${esc(p.dose)}</div>`:''}</div><div style="display:flex;gap:5px;align-items:center;flex-wrap:wrap;justify-content:flex-end"><span class="badge ${cls}">${label||'GEPLAND'}</span>${dueToday(p)?`<button class="btn ok" onclick="logProtocol('${p.id}')">✓ GEDAAN</button>`:''}<button class="btn" onclick="openProtocol('${p.id}')">Aanpassen</button></div></div>`}
+function stockHTML(x){const cls=x.stock<=0?'due':x.stock<=2?'soon':'';return `<div class="product-row"><div><b>${esc(x.name)}</b><div class="bar"><i style="width:${Math.min(100,Math.max(3,Number(x.stock)*10))}%"></i></div></div><div style="display:flex;gap:5px;align-items:center"><div class="qty"><button onclick="adjustStock('${x.id}',-1)">−</button><b>${x.stock}</b><button onclick="adjustStock('${x.id}',1)">+</button></div><button class="btn" onclick="openStock('${x.id}')">Edit</button></div></div>`}
+function logHTML(l){const p=product(l.productId),c=customer(l.customerId);return `<div class="product-row"><div><b>${esc(l.text||l.name||p?.name||'Log')}</b><div class="notice">${new Date(l.date).toLocaleString('nl-BE')}${l.use?` · ${l.use}`:''}</div></div><span class="badge blue">LOG</span></div>`}
+function render(){
+ const due=data.protocols.filter(dueToday);const dueCustomers=data.customers.filter(c=>dayDiff(todayISO(),c.next)<=0);document.getElementById('sDue').textContent=due.length+dueCustomers.length;document.getElementById('sCustomers').textContent=data.customers.length;
+ document.getElementById('dashboardAlerts').innerHTML=(due.length+dueCustomers.length)?`<div class="duebox"><h3>🔴 ACTIE NODIG</h3><div>${due.length+dueCustomers.length} item${due.length+dueCustomers.length===1?'':'s'} vraagt vandaag aandacht.</div></div>`:'';
+ document.getElementById('today').innerHTML=due.length?due.map(p=>{const pr=product(p.productId);return `<div class="duebox"><h3>⚠ ${esc(p.label||pr?.name||'Injectie')}</h3><div>${esc(pr?.strength||'')} · ${esc(p.time||'')}${p.dose?' · '+esc(p.dose):''}</div><div class="row"><button class="btn ok" onclick="logProtocol('${p.id}')">✓ GEDAAN / LOG</button></div></div>`}).join(''):'<div class="empty">Geen eigen injectie gepland voor vandaag.</div>';
+ document.getElementById('customerDash').innerHTML=dueCustomers.length?dueCustomers.slice(0,4).map(customerHTML).join(''):(data.customers.length?data.customers.slice().sort((a,b)=>a.next.localeCompare(b.next)).slice(0,3).map(customerHTML).join(''):'<div class="empty">Nog geen klanten.</div>');
+ document.getElementById('stockDash').innerHTML=data.products.length?data.products.slice(0,6).map(stockHTML).join(''):'<div class="empty">Nog geen voorraad.</div>';
+ document.getElementById('protocolList').innerHTML=data.protocols.length?data.protocols.map(protocolHTML).join(''):'<div class="empty">Voeg je eerste eigen injectie toe.</div>';
+ document.getElementById('customerList').innerHTML=data.customers.length?data.customers.slice().sort((a,b)=>a.next.localeCompare(b.next)).map(customerHTML).join(''):'<div class="empty">Voeg je eerste klant toe.</div>';
+ document.getElementById('stockList').innerHTML=data.products.length?data.products.map(stockHTML).join(''):'<div class="empty">Voeg je eerste product toe.</div>';
+}
+render();
+</script>
+</body>
+</html>
