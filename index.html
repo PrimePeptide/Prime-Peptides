@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="nl">
 <head>
@@ -235,7 +234,13 @@ let data = load();
 function fresh(){
   return {
     customers:[],
-    products:[],
+    products:[
+      ...['Retatrutide','Tirzepatide'].flatMap(name =>
+        [10,20,30,40,50].map(mg => ({
+          id:crypto.randomUUID(), name:name, strength:mg+' mg'
+        }))
+      )
+    ],
     protocols:[],
     logs:[],
     settings:{customerInterval:30}
@@ -249,6 +254,25 @@ function load(){
 
     saved.customers = saved.customers || [];
     saved.products = saved.products || [];
+
+    // Voeg ontbrekende varianten toe zonder bestaande producten te verwijderen.
+    for(const name of ['Retatrutide','Tirzepatide']){
+      for(const mg of [10,20,30,40,50]){
+        const strength=mg+' mg';
+        const exists=saved.products.some(p =>
+          String(p.name||'').trim().toLowerCase()===name.toLowerCase() &&
+          String(p.strength||'').trim().toLowerCase()===strength.toLowerCase()
+        );
+        if(!exists){
+          saved.products.push({
+            id:crypto.randomUUID(),
+            name:name,
+            strength:strength
+          });
+        }
+      }
+    }
+
     saved.protocols = saved.protocols || [];
     saved.logs = saved.logs || [];
     saved.settings = Object.assign(
@@ -362,25 +386,8 @@ function openCustomer(editId=null){
           <option value="">Geen product</option>
           ${productOptions}
         </select>
-      </div>
-      <div class="field">
-        <label>VERBRUIK / AANTAL</label>
-        <input id="cfUse" type="number" min="0" step="0.01"
-          value="${esc(c?.use??0)}">
-      </div>
-      <div class="field">
-        <label>EENHEID</label>
-        <select id="cfUnit">
-          ${['vial','ml','IU','mg','eenheid'].map(u=>
-            `<option value="${u}" ${
-              (c?.unit||'vial')===u?'selected':''
-            }>${u}</option>`
-          ).join('')}
-        </select>
       </div>`
-    : `<input id="cfProduct" type="hidden" value=""> 
-       <input id="cfUse" type="hidden" value="${esc(c?.use??0)}">
-       <input id="cfUnit" type="hidden" value="${esc(c?.unit||'vial')}">
+    : `<input id="cfProduct" type="hidden" value="">
        <div class="field full">
          <label>PRODUCT</label>
          <input id="cfProductName" value="${esc(c?.productName||'')}"
@@ -457,11 +464,6 @@ function saveCustomer(id){
     ? selectedProduct.name
     : (document.getElementById('cfProductName')?.value.trim()||'');
 
-  const use=Math.max(
-    0,Number(document.getElementById('cfUse').value||0)
-  );
-
-  const unit=document.getElementById('cfUnit').value;
   const old=id?customer(id):null;
 
   const c={
@@ -472,8 +474,6 @@ function saveCustomer(id){
     interval:interval,
     productId:productId||old?.productId||'',
     productName:productName,
-    use:use,
-    unit:unit,
     note:document.getElementById('cfNote').value.trim(),
     next:addDays(date,interval)
   };
@@ -496,12 +496,10 @@ function markCustomerDone(id){
 
   if(!confirm('Opvolging voor '+c.name+' registreren?')) return;
 
-  // Verplaats de bezoekdatum naar de geplande opvolgdatum.
   const visitDate=c.next||todayISO();
   c.date=visitDate;
   c.next=addDays(visitDate,Math.max(1,Number(c.interval||30)));
 
-  // Bestaande logs behouden; alleen een nieuwe opvolgregistratie toevoegen.
   data.logs.unshift({
     id:crypto.randomUUID(),
     type:'followup',
@@ -527,7 +525,10 @@ function customerHTML(c){
   const p=product(c.productId);
   const [cls,label]=dueLabel(c.next);
 
-  const productName=p?.name||c.productName||'Geen product';
+  const productName=p
+    ? p.name+(p.strength?' · '+p.strength:'')
+    : (c.productName||'Geen product');
+
   const diff=c.next?dayDiff(todayISO(),c.next):null;
 
   return `
@@ -546,11 +547,6 @@ function customerHTML(c){
             ${esc(productName)}
             <br>Bezoek: ${esc(formatDate(c.date))}
             <br>Volgende: ${esc(formatDate(c.next))}
-          </div>
-
-          <div class="customer-info">
-            Interval: ${esc(c.interval||30)} dagen
-            ${c.use?` · Verbruik: ${esc(c.use)} ${esc(c.unit||'')}`:''}
           </div>
 
           ${c.note?`
@@ -573,8 +569,7 @@ function customerHTML(c){
           </button>
         `:''}
 
-        <button class="btn danger"
-          onclick="deleteCustomer('${esc(c.id)}')">
+        <button class="btn danger" onclick="deleteCustomer('${esc(c.id)}')">
           Wis
         </button>
       </div>
