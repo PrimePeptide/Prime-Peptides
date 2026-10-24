@@ -2,633 +2,1110 @@
 <html lang="nl">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#070b12">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="manifest" href="manifest.webmanifest">
-<link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png">
-<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
-<title>Prime Protocol · Klanten</title>
-
+<title>Prime Protocol · Klanten & Beheer</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{
-  --bg:#070b12;
-  --panel:#101a2a;
-  --line:#154b66;
-  --cyan:#18d7ff;
-  --purple:#7567ff;
-  --text:#f5f8ff;
-  --muted:#8492a6;
-  --green:#00d79d;
-  --amber:#ffb21c;
-  --red:#ff5364;
-  --shadow:0 8px 24px rgba(0,0,0,.18)
+:root {
+  --bg: #070b12;
+  --panel: #101a2a;
+  --line: #154b66;
+  --cyan: #18d7ff;
+  --purple: #7567ff;
+  --text: #f5f8ff;
+  --muted: #8492a6;
+  --green: #00d79d;
+  --amber: #ffb21c;
+  --red: #ff5364;
+  --shadow: 0 8px 32px rgba(0, 0, 0, 0.37);
 }
-*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html{background:var(--bg);scroll-behavior:smooth}
-body{
-  margin:0;min-height:100dvh;
-  background:radial-gradient(circle at 92% -5%,#102b45 0,transparent 34%),var(--bg);
-  color:var(--text);
-  font-family:Inter,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-  overflow-x:hidden
+
+* {
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
 }
-button,input,select,textarea{font:inherit}
-button{cursor:pointer}
-.app{
-  width:min(100%,600px);margin:0 auto;
-  padding:calc(env(safe-area-inset-top) + 18px) 12px calc(25px + env(safe-area-inset-bottom))
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: radial-gradient(circle at 92% -5%, #102b45 0%, transparent 34%), var(--bg);
+  color: var(--text);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  overflow-x: hidden;
 }
-.top{
-  border:1px solid #15506a;
-  background:linear-gradient(145deg,#111b2d,#0c1422);
-  border-radius:16px;padding:15px;
-  display:flex;align-items:center;justify-content:space-between;
-  gap:10px;box-shadow:var(--shadow)
+
+/* Custom Scrollbar */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: #070b12; }
+::-webkit-scrollbar-thumb { background: #1c4a63; border-radius: 99px; }
+::-webkit-scrollbar-thumb:hover { background: #18d7ff; }
+
+.app-container {
+  width: min(100%, 720px);
+  margin: 0 auto;
+  padding: calc(env(safe-area-inset-top) + 16px) 14px calc(80px + env(safe-area-inset-bottom));
 }
-.brand{display:flex;align-items:center;gap:10px;min-width:0}
-.logo{font-size:27px}
-.brand h1{
-  font-size:18px;line-height:1.1;letter-spacing:1.6px;
-  margin:0;color:#2dd5fa
+
+.top-bar {
+  border: 1px solid rgba(24, 215, 255, 0.2);
+  background: linear-gradient(145deg, #111b2d, #0c1422);
+  border-radius: 20px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(8px);
 }
-.brand small{
-  display:block;color:#7f8da2;margin-top:5px;
-  letter-spacing:.8px;font-size:10px
+
+.btn-custom {
+  border: 1px solid #1c5a75;
+  background: #0d1b2b;
+  color: #fff;
+  border-radius: 12px;
+  padding: 9px 15px;
+  font-weight: 700;
+  font-size: 13px;
+  white-space: nowrap;
+  min-height: 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.2s ease;
 }
-.btn{
-  border:1px solid #1c5a75;background:#0d1b2b;color:#fff;
-  border-radius:10px;padding:10px 13px;font-weight:800;
-  font-size:12px;white-space:nowrap;min-height:40px
+
+.btn-custom:active { transform: scale(0.97); }
+
+.btn-custom.primary {
+  background: linear-gradient(105deg, #09cbed, #7868ff);
+  border: none;
+  box-shadow: 0 4px 15px rgba(9, 203, 237, 0.3);
 }
-.btn.primary{background:linear-gradient(105deg,#09cbed,#7868ff);border:0}
-.btn.danger{border-color:#71303a;color:#ff7580}
-.btn.ok{border-color:#08795e;color:#00e3a4}
-.summary{
-  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:9px;margin-top:12px
+
+.btn-custom.danger { border-color: #71303a; color: #ff7580; background: #221016; }
+.btn-custom.danger:hover { background: #3b141d; }
+
+.btn-custom.ok { border-color: #08795e; color: #00e3a4; background: #09241f; }
+.btn-custom.ok:hover { background: #0c382f; }
+
+.stat-card {
+  background: linear-gradient(145deg, #101a2b, #0c1421);
+  border: 1px solid #15465c;
+  border-radius: 16px;
+  padding: 14px;
+  transition: transform 0.2s ease;
 }
-.stat{
-  background:linear-gradient(145deg,#101a2b,#0c1421);
-  border:1px solid #15465c;border-radius:13px;padding:13px;
-  min-height:85px
+
+.customer-card {
+  padding: 15px;
+  border: 1px solid #1d4055;
+  border-radius: 16px;
+  background: #0a111b;
+  margin-top: 10px;
+  transition: border-color 0.2s ease, transform 0.15s ease;
 }
-.stat label{
-  display:block;color:#8391a6;font-size:10px;
-  font-weight:850;letter-spacing:1px
+
+.customer-card:hover {
+  border-color: #266587;
 }
-.stat b{display:block;font-size:28px;margin-top:8px;color:var(--cyan)}
-.card{
-  margin-top:12px;
-  background:linear-gradient(145deg,#0f192a,#0b1422);
-  border:1px solid #15465c;border-radius:15px;
-  padding:13px;box-shadow:var(--shadow)
+
+.customer-card.due {
+  border-color: var(--red);
+  background: linear-gradient(135deg, rgba(255, 83, 100, 0.08), #0a111b 60%);
 }
-.section-head{
-  display:flex;align-items:center;justify-content:space-between;
-  gap:8px;margin-bottom:12px
+
+.customer-card.soon {
+  border-color: #9a6a12;
+  background: linear-gradient(135deg, rgba(255, 178, 28, 0.06), #0a111b 60%);
 }
-.section-head h2{
-  margin:0;color:#25d9fa;font-size:15px;letter-spacing:1.2px
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid #1d826c;
+  color: #00dba0;
+  background: rgba(0, 219, 160, 0.1);
+  border-radius: 999px;
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 800;
+  white-space: nowrap;
+  letter-spacing: 0.5px;
 }
-.search{margin-bottom:10px}
-.search input{
-  width:100%;background:#0a111c;color:#f4f7fb;
-  border:1px solid #234155;border-radius:10px;
-  padding:13px;font-size:16px;outline:none
+
+.badge.due { border-color: var(--red); color: #ff7884; background: rgba(255, 83, 100, 0.15); }
+.badge.soon { border-color: #a86e00; color: #ffbd2e; background: rgba(255, 178, 28, 0.15); }
+
+/* Bottom Nav Bar */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(10, 17, 27, 0.92);
+  backdrop-filter: blur(12px);
+  border-top: 1px solid #16364a;
+  z-index: 40;
+  padding-bottom: env(safe-area-inset-bottom);
 }
-.search input:focus,.field input:focus,.field select:focus,.field textarea:focus{
-  border-color:var(--cyan)
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 8px 0;
+  color: #7f8da2;
+  font-size: 11px;
+  font-weight: 600;
+  transition: color 0.2s ease;
 }
-.notice{color:#8e9bae;font-size:12px;line-height:1.5;margin:7px 0 12px}
-.empty{
-  padding:24px 12px;text-align:center;color:#7f8ca0;
-  border:1px dashed #263544;border-radius:11px;font-size:13px
+
+.nav-item.active {
+  color: #18d7ff;
 }
-.customer-card{
-  padding:13px;border:1px solid #1d4055;border-radius:12px;
-  background:#0a111b;margin-top:9px;overflow-wrap:anywhere
+
+/* Modals */
+.modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(4, 7, 13, 0.82);
+  backdrop-filter: blur(5px);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 14px;
+  z-index: 50;
+  opacity: 0;
+  transition: opacity 0.2s ease;
 }
-.customer-card.due{
-  border-color:var(--red);
-  background:linear-gradient(120deg,#291018,#0a111b)
+
+.modal.show {
+  display: flex;
+  opacity: 1;
 }
-.customer-card.soon{border-color:#9a6a12}
-.customer-name{font-size:18px;font-weight:800;overflow-wrap:anywhere}
-.customer-info{color:#8e9bae;font-size:12px;line-height:1.55;margin-top:6px}
-.customer-top{
-  display:flex;justify-content:space-between;
-  align-items:flex-start;gap:10px
+
+.modalbox {
+  width: min(560px, 100%);
+  max-height: 88vh;
+  overflow-y: auto;
+  background: #0d1624;
+  border: 1px solid #1b536b;
+  border-radius: 20px;
+  padding: 20px;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+  transform: translateY(15px);
+  transition: transform 0.2s ease;
 }
-.badge{
-  display:inline-block;border:1px solid #1d826c;color:#00dba0;
-  border-radius:999px;padding:5px 8px;font-size:10px;
-  font-weight:850;white-space:nowrap
+
+.modal.show .modalbox {
+  transform: translateY(0);
 }
-.badge.due{border-color:var(--red);color:#ff7884;background:#32131a}
-.badge.soon{border-color:#a86e00;color:#ffbd2e}
-.badge.blue{border-color:#1b6684;color:#72dfff;background:#0a1e2a}
-.row{
-  display:flex;gap:7px;justify-content:flex-end;
-  margin-top:12px;flex-wrap:wrap
+
+.field input, .field select, .field textarea {
+  width: 100%;
+  background: #070d17;
+  color: #f4f7fb;
+  border: 1px solid #203f54;
+  border-radius: 10px;
+  padding: 11px 13px;
+  outline: none;
+  font-size: 15px;
+  transition: border-color 0.2s;
 }
-.modal{
-  position:fixed;inset:0;background:rgba(0,0,0,.76);
-  display:none;align-items:flex-end;justify-content:center;
-  padding:10px;z-index:30;overflow:auto
+
+.field input:focus, .field select:focus, .field textarea:focus {
+  border-color: var(--cyan);
+  box-shadow: 0 0 0 2px rgba(24, 215, 255, 0.15);
 }
-.modal.show{display:flex}
-.modalbox{
-  width:min(560px,100%);max-height:90dvh;overflow:auto;
-  background:#0d1624;border:1px solid #1b536b;
-  border-radius:17px;padding:16px;margin:auto
+
+/* Toast System */
+#toast-container {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  pointer-events: none;
+  width: min(90%, 400px);
 }
-.modalbox h2{margin:0 0 15px;font-size:19px}
-.formgrid{
-  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
-  gap:12px;min-width:0
+
+.toast {
+  background: #102133;
+  border: 1px solid #18d7ff;
+  color: #fff;
+  padding: 12px 18px;
+  border-radius: 12px;
+  font-size: 13px;
+  font-weight: 600;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  animation: slideDown 0.3s ease forwards;
 }
-.field{min-width:0}
-.field label{
-  display:block;color:#8a98aa;font-size:10px;
-  font-weight:850;margin-bottom:6px;letter-spacing:.5px
+
+@keyframes slideDown {
+  from { opacity: 0; transform: translateY(-20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
-.field input,.field select,.field textarea{
-  width:100%;min-width:0;display:block;
-  background:#0a111c;color:#f4f7fb;
-  border:1px solid #234155;border-radius:9px;
-  padding:11px;outline:none;font-size:16px
+
+.filter-chip {
+  padding: 6px 14px;
+  border-radius: 99px;
+  border: 1px solid #1c4359;
+  font-size: 12px;
+  font-weight: 700;
+  color: #8492a6;
+  background: #0b1422;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
-.field textarea{min-height:80px;resize:vertical}
-.full{grid-column:1/-1}
-@media(max-width:380px){
-  .app{padding-left:9px;padding-right:9px}
-  .brand h1{font-size:15px}
-  .brand small{font-size:8px}
-  .top{padding:11px}
-  .card{padding:10px}
-  .formgrid{gap:9px}
-  .customer-card{padding:10px}
+
+.filter-chip.active {
+  background: rgba(24, 215, 255, 0.15);
+  border-color: #18d7ff;
+  color: #18d7ff;
 }
 </style>
 </head>
 
 <body>
-<div class="app">
 
-  <header class="top">
+<div id="toast-container"></div>
+
+<div class="app-container">
+
+  <!-- Header -->
+  <header class="top-bar mb-4">
     <div class="brand">
-      <span class="logo">⚡</span>
-      <div>
-        <h1>PRIME PROTOCOL</h1>
-        <small>KLANTENBEHEER · LOCAL DATA</small>
+      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-indigo-600 flex items-center justify-center text-xl shadow-lg shadow-cyan-500/20">
+        ⚡
+      </div>
+      <div class="ml-2">
+        <h1 class="text-base font-extrabold tracking-wider text-cyan-400 leading-tight">PRIME PROTOCOL</h1>
+        <small class="text-slate-400 font-semibold text-[10px] tracking-widest block uppercase">Klanten & Proefbeheer</small>
       </div>
     </div>
-    <button class="btn primary" onclick="openCustomer()">+ Klant</button>
+    <button class="btn-custom primary" onclick="openCustomerModal()">
+      <span>+ Klant</span>
+    </button>
   </header>
 
-  <div class="summary">
-    <div class="stat">
-      <label>TOTAAL KLANTEN</label>
-      <b id="totalCustomers">0</b>
-    </div>
-    <div class="stat">
-      <label>OPVOLGING NODIG</label>
-      <b id="dueCustomers">0</b>
-    </div>
-  </div>
-
-  <section class="card">
-    <div class="section-head">
-      <h2>👤 KLANTEN</h2>
-      <button class="btn" onclick="exportCustomers()">Exporteren</button>
-    </div>
-
-    <div class="search">
-      <input id="searchInput" type="search"
-        placeholder="🔎 Zoek op naam, product of contact..."
-        oninput="render()">
-    </div>
-
-    <div class="notice">
-      Beheer je klanten, bezoekdatums en opvolging.
-    </div>
-
-    <div id="customerList"></div>
-  </section>
+  <!-- Dynamic Views -->
+  <main id="mainContent">
+    <!-- Rendered via JS based on currentTab -->
+  </main>
 
 </div>
 
+<!-- Navigation Bar -->
+<nav class="bottom-nav">
+  <div class="max-w-xl mx-auto grid grid-cols-4 px-2">
+    <button onclick="switchTab('customers')" id="nav-customers" class="nav-item active">
+      <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+      <span>Klanten</span>
+    </button>
+    <button onclick="switchTab('products')" id="nav-products" class="nav-item">
+      <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
+      <span>Producten</span>
+    </button>
+    <button onclick="switchTab('logs')" id="nav-logs" class="nav-item">
+      <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
+      <span>Historiek</span>
+    </button>
+    <button onclick="switchTab('settings')" id="nav-settings" class="nav-item">
+      <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+      <span>Beheer</span>
+    </button>
+  </div>
+</nav>
+
+<!-- Modals System -->
 <div class="modal" id="modal">
   <div class="modalbox" id="modalbox"></div>
 </div>
+
+<!-- Custom Dialog Modal -->
+<div class="modal" id="confirmModal">
+  <div class="modalbox max-w-sm text-center">
+    <div class="text-3xl mb-2" id="confirmIcon">⚠️</div>
+    <h3 class="text-lg font-bold text-white mb-2" id="confirmTitle">Bevestig actie</h3>
+    <p class="text-xs text-slate-400 mb-6 leading-relaxed" id="confirmMessage">Weet u dit zeker?</p>
+    <div class="flex gap-2 justify-center">
+      <button class="btn-custom flex-1" onclick="closeConfirmModal(false)">Annuleren</button>
+      <button class="btn-custom danger flex-1" id="confirmBtnAction">Uitvoeren</button>
+    </div>
+  </div>
+</div>
+
+<input type="file" id="importFile" accept=".json" class="hidden" onchange="handleImportFile(event)">
 
 <script>
 'use strict';
 
 const KEY = 'primeProtocolMobileV6';
 
-let data = load();
+let data = loadData();
+let currentTab = 'customers';
+let activeFilter = 'all'; // 'all', 'due', 'soon'
+let confirmCallback = null;
 
-function fresh(){
+// Initial Setup & Migration
+function freshData() {
   return {
-    customers:[],
-    products:[
-      ...['Retatrutide','Tirzepatide'].flatMap(name =>
-        [10,20,30,40,50].map(mg => ({
-          id:crypto.randomUUID(), name:name, strength:mg+' mg'
+    customers: [],
+    products: [
+      ...['Retatrutide', 'Tirzepatide', 'Semaglutide'].flatMap(name =>
+        [10, 20, 30, 40, 50].map(mg => ({
+          id: crypto.randomUUID(), name: name, strength: mg + ' mg'
         }))
       )
     ],
-    protocols:[],
-    logs:[],
-    settings:{customerInterval:30}
+    logs: [],
+    settings: { customerInterval: 30 }
   };
 }
 
-function load(){
-  try{
+function loadData() {
+  try {
     const saved = JSON.parse(localStorage.getItem(KEY));
-    if(!saved) return fresh();
+    if (!saved) return freshData();
 
     saved.customers = saved.customers || [];
     saved.products = saved.products || [];
 
-    // Voeg ontbrekende varianten toe zonder bestaande producten te verwijderen.
-    for(const name of ['Retatrutide','Tirzepatide']){
-      for(const mg of [10,20,30,40,50]){
-        const strength=mg+' mg';
-        const exists=saved.products.some(p =>
-          String(p.name||'').trim().toLowerCase()===name.toLowerCase() &&
-          String(p.strength||'').trim().toLowerCase()===strength.toLowerCase()
+    // Ensure initial default products exist
+    for (const name of ['Retatrutide', 'Tirzepatide']) {
+      for (const mg of [10, 20, 30, 40, 50]) {
+        const strength = mg + ' mg';
+        const exists = saved.products.some(p =>
+          String(p.name || '').trim().toLowerCase() === name.toLowerCase() &&
+          String(p.strength || '').trim().toLowerCase() === strength.toLowerCase()
         );
-        if(!exists){
+        if (!exists) {
           saved.products.push({
-            id:crypto.randomUUID(),
-            name:name,
-            strength:strength
+            id: crypto.randomUUID(),
+            name: name,
+            strength: strength
           });
         }
       }
     }
 
-    saved.protocols = saved.protocols || [];
     saved.logs = saved.logs || [];
-    saved.settings = Object.assign(
-      {customerInterval:30},saved.settings || {}
-    );
+    saved.settings = Object.assign({ customerInterval: 30 }, saved.settings || {});
 
     return saved;
-  }catch(e){
-    console.error('Gegevens konden niet worden gelezen:',e);
-    return fresh();
+  } catch (e) {
+    console.error('Data corrupted, returning fresh template:', e);
+    return freshData();
   }
 }
 
-function save(){
-  try{
-    localStorage.setItem(KEY,JSON.stringify(data));
-    render();
-  }catch(e){
-    alert('Opslaan mislukt. Controleer de beschikbare browseropslag.');
+function saveData() {
+  try {
+    localStorage.setItem(KEY, JSON.stringify(data));
+    renderCurrentTab();
+  } catch (e) {
+    showToast('Opslaan mislukt. Browseropslag vol of uitgeschakeld.');
     console.error(e);
   }
 }
 
-function esc(value){
-  return String(value ?? '').replace(/[&<>"']/g,m=>({
-    '&':'&amp;',
-    '<':'&lt;',
-    '>':'&gt;',
-    '"':'&quot;',
-    "'":'&#39;'
+// Helpers
+function esc(value) {
+  return String(value ?? '').replace(/[&<>"']/g, m => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
   }[m]));
 }
 
-function todayISO(){
-  const d=new Date();
-  d.setMinutes(d.getMinutes()-d.getTimezoneOffset());
-  return d.toISOString().slice(0,10);
+function todayISO() {
+  const d = new Date();
+  d.setMinutes(d.getMinutes() - d.getTimezoneOffset());
+  return d.toISOString().slice(0, 10);
 }
 
-function addDays(date,n){
-  const d=new Date(date+'T12:00:00');
-  d.setDate(d.getDate()+Number(n));
-  return d.getFullYear()+'-'+
-    String(d.getMonth()+1).padStart(2,'0')+'-'+
-    String(d.getDate()).padStart(2,'0');
+function addDays(dateStr, n) {
+  const d = new Date(dateStr + 'T12:00:00');
+  d.setDate(d.getDate() + Number(n));
+  return d.getFullYear() + '-' +
+    String(d.getMonth() + 1).padStart(2, '0') + '-' +
+    String(d.getDate()).padStart(2, '0');
 }
 
-function dayDiff(a,b){
-  return Math.round(
-    (new Date(b+'T12:00:00')-new Date(a+'T12:00:00'))/86400000
-  );
+function dayDiff(a, b) {
+  return Math.round((new Date(b + 'T12:00:00') - new Date(a + 'T12:00:00')) / 86400000);
 }
 
-function formatDate(date){
-  if(!date) return 'Niet ingesteld';
-  const parts=date.split('-');
-  if(parts.length!==3) return date;
-  return parts[2]+'-'+parts[1]+'-'+parts[0];
+function formatDate(dateStr) {
+  if (!dateStr) return 'Niet ingesteld';
+  const parts = dateStr.split('-');
+  if (parts.length !== 3) return dateStr;
+  return `${parts[2]}-${parts[1]}-${parts[0]}`;
 }
 
-function product(id){
-  return data.products.find(p=>p.id===id);
+function formatDateTime(isoStr) {
+  if (!isoStr) return '';
+  const d = new Date(isoStr);
+  return d.toLocaleDateString('nl-BE', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
 }
 
-function customer(id){
-  return data.customers.find(c=>c.id===id);
+function getProduct(id) {
+  return data.products.find(p => p.id === id);
 }
 
-function dueLabel(date){
-  if(!date) return ['','GEPLAND'];
-  const diff=dayDiff(todayISO(),date);
-  if(diff<0) return ['due','TE LAAT'];
-  if(diff===0) return ['due','VANDAAG'];
-  if(diff<=7) return ['soon','BINNEN '+diff+' DAGEN'];
-  return ['','GEPLAND'];
+function getCustomer(id) {
+  return data.customers.find(c => c.id === id);
 }
 
-function openModal(html){
-  document.getElementById('modalbox').innerHTML=html;
+function dueStatus(dateStr) {
+  if (!dateStr) return { cls: '', label: 'GEPLAND', diff: 999 };
+  const diff = dayDiff(todayISO(), dateStr);
+  if (diff < 0) return { cls: 'due', label: `TE LAAT (${Math.abs(diff)}d)`, diff };
+  if (diff === 0) return { cls: 'due', label: 'VANDAAG', diff };
+  if (diff <= 7) return { cls: 'soon', label: `BINNEN ${diff}d`, diff };
+  return { cls: '', label: `IN ${diff}d`, diff };
+}
+
+// UI Feedback Controls
+function showToast(msg) {
+  const container = document.getElementById('toast-container');
+  const toast = document.createElement('div');
+  toast.className = 'toast';
+  toast.innerHTML = `<span>${esc(msg)}</span>`;
+  container.appendChild(toast);
+  setTimeout(() => {
+    toast.style.opacity = '0';
+    toast.style.transition = 'opacity 0.3s ease';
+    setTimeout(() => toast.remove(), 300);
+  }, 2500);
+}
+
+function customConfirm(title, message, icon, onConfirm) {
+  document.getElementById('confirmTitle').textContent = title;
+  document.getElementById('confirmMessage').textContent = message;
+  document.getElementById('confirmIcon').textContent = icon || '⚠️';
+  
+  const actionBtn = document.getElementById('confirmBtnAction');
+  actionBtn.onclick = () => {
+    closeConfirmModal();
+    onConfirm();
+  };
+  
+  document.getElementById('confirmModal').classList.add('show');
+}
+
+function closeConfirmModal() {
+  document.getElementById('confirmModal').classList.remove('show');
+}
+
+// Navigation Handler
+function switchTab(tab) {
+  currentTab = tab;
+  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+  const activeNav = document.getElementById(`nav-${tab}`);
+  if (activeNav) activeNav.classList.add('active');
+  renderCurrentTab();
+}
+
+function setFilter(filter) {
+  activeFilter = filter;
+  renderCurrentTab();
+}
+
+function renderCurrentTab() {
+  const container = document.getElementById('mainContent');
+  if (currentTab === 'customers') renderCustomersView(container);
+  else if (currentTab === 'products') renderProductsView(container);
+  else if (currentTab === 'logs') renderLogsView(container);
+  else if (currentTab === 'settings') renderSettingsView(container);
+}
+
+// --- VIEW 1: CUSTOMERS ---
+function renderCustomersView(container) {
+  const dueCount = data.customers.filter(c => c.next && dayDiff(todayISO(), c.next) <= 0).length;
+  const soonCount = data.customers.filter(c => {
+    const d = c.next ? dayDiff(todayISO(), c.next) : 999;
+    return d > 0 && d <= 7;
+  }).length;
+
+  container.innerHTML = `
+    <!-- Quick Stats -->
+    <div class="grid grid-cols-2 gap-3 mb-4">
+      <div class="stat-card">
+        <span class="block text-[#8391a6] text-[10px] font-extrabold tracking-wider">TOTAAL KLANTEN</span>
+        <b class="block text-3xl font-extrabold mt-1 text-cyan-400">${data.customers.length}</b>
+      </div>
+      <div class="stat-card">
+        <span class="block text-[#8391a6] text-[10px] font-extrabold tracking-wider">OPVOLGING NODIG</span>
+        <b class="block text-3xl font-extrabold mt-1 ${dueCount > 0 ? 'text-red-400' : 'text-emerald-400'}">${dueCount}</b>
+      </div>
+    </div>
+
+    <!-- Main Card -->
+    <div class="bg-gradient-to-b from-[#0f192a] to-[#0b1422] border border-[#15465c] rounded-2xl p-4 shadow-xl">
+      <div class="flex items-center justify-between mb-3">
+        <h2 class="text-sm font-bold tracking-wider text-cyan-400 flex items-center gap-2">
+          <span>👤</span> KLANTEN OVERZICHT
+        </h2>
+      </div>
+
+      <!-- Search Input -->
+      <div class="relative mb-3">
+        <input id="searchInput" type="search"
+          placeholder="🔎 Zoek op naam, product of telefoonnr..."
+          oninput="renderCustomerList()"
+          class="w-full bg-[#0a111c] text-white border border-[#234155] rounded-xl px-4 py-3 text-sm focus:border-cyan-400 outline-none">
+      </div>
+
+      <!-- Filters -->
+      <div class="flex gap-2 mb-4 overflow-x-auto pb-1">
+        <button onclick="setFilter('all')" class="filter-chip ${activeFilter === 'all' ? 'active' : ''}">Alles (${data.customers.length})</button>
+        <button onclick="setFilter('due')" class="filter-chip ${activeFilter === 'due' ? 'active' : ''}">⚠️ Te laat (${dueCount})</button>
+        <button onclick="setFilter('soon')" class="filter-chip ${activeFilter === 'soon' ? 'active' : ''}">⏳ Binnen 7d (${soonCount})</button>
+      </div>
+
+      <!-- List -->
+      <div id="customerList"></div>
+    </div>
+  `;
+  renderCustomerList();
+}
+
+function renderCustomerList() {
+  const query = (document.getElementById('searchInput')?.value || '').trim().toLowerCase();
+  
+  const filtered = data.customers.filter(c => {
+    const p = getProduct(c.productId);
+    const text = [c.name, c.contact, c.note, c.productName, p?.name].join(' ').toLowerCase();
+    const matchesSearch = text.includes(query);
+    
+    const diff = c.next ? dayDiff(todayISO(), c.next) : 999;
+    if (activeFilter === 'due') return matchesSearch && diff <= 0;
+    if (activeFilter === 'soon') return matchesSearch && diff > 0 && diff <= 7;
+    return matchesSearch;
+  }).sort((a, b) => (a.next || '9999-12-31').localeCompare(b.next || '9999-12-31'));
+
+  const listEl = document.getElementById('customerList');
+  if (!listEl) return;
+
+  if (filtered.length === 0) {
+    listEl.innerHTML = `
+      <div class="p-8 text-center text-slate-400 border border-dashed border-slate-700/60 rounded-xl text-xs">
+        Geen klanten gevonden.
+      </div>`;
+    return;
+  }
+
+  listEl.innerHTML = filtered.map(c => {
+    const p = getProduct(c.productId);
+    const status = dueStatus(c.next);
+    const productName = p ? `${p.name} ${p.strength ? '· ' + p.strength : ''}` : (c.productName || 'Geen specifieke kit');
+    const isCleanPhone = c.contact && /^[0-9+ ]+$/.test(c.contact.trim());
+
+    return `
+      <article class="customer-card ${status.cls}">
+        <div class="flex justify-between items-start gap-3">
+          <div class="min-w-0 flex-1">
+            <div class="flex items-center gap-2">
+              <h3 class="text-base font-extrabold text-white truncate">${esc(c.name)}</h3>
+            </div>
+
+            ${c.contact ? `
+              <div class="text-xs text-slate-400 mt-1 flex items-center gap-2">
+                <span>📞 ${esc(c.contact)}</span>
+                ${isCleanPhone ? `
+                  <a href="https://wa.me/${c.contact.replace(/[^0-9]/g, '')}" target="_blank" rel="noopener" class="text-emerald-400 hover:underline font-semibold text-[11px]">💬 WhatsApp</a>
+                ` : ''}
+              </div>
+            ` : ''}
+
+            <div class="text-xs text-slate-300 mt-2 space-y-0.5 bg-[#070d17]/60 p-2 rounded-lg border border-slate-800">
+              <div>📦 <span class="font-semibold text-cyan-300">${esc(productName)}</span></div>
+              <div class="text-slate-400">📅 Laatste bezoek: <span class="text-slate-200">${esc(formatDate(c.date))}</span></div>
+              <div class="text-slate-400">🔄 Volgende opvolging: <span class="text-slate-200 font-semibold">${esc(formatDate(c.next))}</span> (${c.interval} dagen interval)</div>
+            </div>
+
+            ${c.note ? `
+              <div class="text-xs text-amber-200/90 mt-2 italic bg-amber-950/20 border border-amber-900/30 p-2 rounded-lg">
+                📝 ${esc(c.note)}
+              </div>
+            ` : ''}
+          </div>
+
+          <span class="badge ${status.cls}">${esc(status.label)}</span>
+        </div>
+
+        <div class="flex gap-2 justify-end mt-3 pt-2 border-t border-slate-800/80">
+          <button class="btn-custom" onclick="openCustomerModal('${esc(c.id)}')">
+            <span>✏️ Aanpassen</span>
+          </button>
+
+          ${status.diff <= 0 ? `
+            <button class="btn-custom ok" onclick="markFollowUpDone('${esc(c.id)}')">
+              <span>✓ Opgevolgd</span>
+            </button>
+          ` : ''}
+
+          <button class="btn-custom danger" onclick="deleteCustomerConfirm('${esc(c.id)}')">
+            <span>🗑️</span>
+          </button>
+        </div>
+      </article>
+    `;
+  }).join('');
+}
+
+// --- VIEW 2: PRODUCTS ---
+function renderProductsView(container) {
+  container.innerHTML = `
+    <div class="bg-gradient-to-b from-[#0f192a] to-[#0b1422] border border-[#15465c] rounded-2xl p-4 shadow-xl">
+      <div class="flex items-center justify-between mb-4">
+        <div>
+          <h2 class="text-sm font-bold tracking-wider text-cyan-400">📦 PRODUCTEN BEHEER</h2>
+          <p class="text-xs text-slate-400">Beheer je beschikbare varianten en doseringen.</p>
+        </div>
+        <button class="btn-custom primary" onclick="openProductModal()">+ Product</button>
+      </div>
+
+      <div class="space-y-2">
+        ${data.products.map(p => `
+          <div class="flex items-center justify-between p-3 bg-[#0a111b] border border-[#1d4055] rounded-xl">
+            <div>
+              <div class="font-bold text-sm text-white">${esc(p.name)}</div>
+              <div class="text-xs text-cyan-400 font-medium">${esc(p.strength || 'Standaard')}</div>
+            </div>
+            <div class="flex gap-2">
+              <button class="btn-custom" onclick="openProductModal('${esc(p.id)}')">✏️</button>
+              <button class="btn-custom danger" onclick="deleteProductConfirm('${esc(p.id)}')">🗑️</button>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+    </div>
+  `;
+}
+
+// --- VIEW 3: LOGS ---
+function renderLogsView(container) {
+  container.innerHTML = `
+    <div class="bg-gradient-to-b from-[#0f192a] to-[#0b1422] border border-[#15465c] rounded-2xl p-4 shadow-xl">
+      <div class="flex items-center justify-between mb-3">
+        <h2 class="text-sm font-bold tracking-wider text-cyan-400">📋 ACTIVITEITEN HISTORIEK</h2>
+        ${data.logs.length > 0 ? `<button class="btn-custom danger" onclick="clearLogsConfirm()">Wis Historiek</button>` : ''}
+      </div>
+
+      ${data.logs.length === 0 ? `
+        <div class="p-8 text-center text-slate-400 border border-dashed border-slate-700/60 rounded-xl text-xs">
+          Nog geen geregistreerde activiteiten.
+        </div>
+      ` : `
+        <div class="space-y-2">
+          ${data.logs.map(log => `
+            <div class="p-3 bg-[#0a111b] border border-slate-800 rounded-xl text-xs flex justify-between items-center">
+              <div>
+                <div class="text-slate-200 font-semibold">${esc(log.text)}</div>
+                <div class="text-[10px] text-slate-500 mt-0.5">${esc(formatDateTime(log.date))}</div>
+              </div>
+              <span class="text-xs bg-cyan-950/60 text-cyan-400 border border-cyan-800/50 px-2 py-0.5 rounded-full font-semibold">Opvolging</span>
+            </div>
+          `).join('')}
+        </div>
+      `}
+    </div>
+  `;
+}
+
+// --- VIEW 4: SETTINGS ---
+function renderSettingsView(container) {
+  container.innerHTML = `
+    <div class="bg-gradient-to-b from-[#0f192a] to-[#0b1422] border border-[#15465c] rounded-2xl p-4 shadow-xl space-y-5">
+      <div>
+        <h2 class="text-sm font-bold tracking-wider text-cyan-400 mb-1">⚙️ INSTELLINGEN & BACKUP</h2>
+        <p class="text-xs text-slate-400">Beheer standaard intervals en gegevensbeheer.</p>
+      </div>
+
+      <div class="field">
+        <label class="block text-xs font-bold text-slate-400 mb-1">STANDAARD OPVOLGINTERVAL (DAGEN)</label>
+        <div class="flex gap-2">
+          <input id="settingInterval" type="number" value="${data.settings.customerInterval || 30}" class="flex-1">
+          <button class="btn-custom primary" onclick="saveSettings()">Opslaan</button>
+        </div>
+      </div>
+
+      <hr class="border-slate-800">
+
+      <div>
+        <h3 class="text-xs font-bold text-slate-300 mb-2 uppercase tracking-wider">📦 Gegevens Exporteren & Importeren</h3>
+        <div class="grid grid-cols-2 gap-3">
+          <button class="btn-custom" onclick="exportCustomers()">
+            <span>📥 Exporteren (JSON)</span>
+          </button>
+          <button class="btn-custom" onclick="importCustomers()">
+            <span>📤 Importeren</span>
+          </button>
+        </div>
+      </div>
+
+      <hr class="border-slate-800">
+
+      <div class="bg-red-950/20 border border-red-900/40 p-3 rounded-xl">
+        <h3 class="text-xs font-bold text-red-400 mb-1">⚠️ Gevarenzone</h3>
+        <p class="text-[11px] text-slate-400 mb-3">Verwijder alle lokale gegevens en reset de applicatie naar de beginstand.</p>
+        <button class="btn-custom danger w-full" onclick="resetAllConfirm()">Wis Alle Gegevens</button>
+      </div>
+    </div>
+  `;
+}
+
+// Modals Trigger Handlers
+function openModal(html) {
+  const modalBox = document.getElementById('modalbox');
+  modalBox.innerHTML = html;
   document.getElementById('modal').classList.add('show');
 }
 
-function closeModal(){
+function closeModal() {
   document.getElementById('modal').classList.remove('show');
 }
 
-document.getElementById('modal').addEventListener('click',e=>{
-  if(e.target.id==='modal') closeModal();
+document.getElementById('modal').addEventListener('click', e => {
+  if (e.target.id === 'modal') closeModal();
 });
 
-document.addEventListener('keydown',e=>{
-  if(e.key==='Escape') closeModal();
-});
+// --- CUSTOMER ACTIONS ---
+function openCustomerModal(editId = null) {
+  const c = editId ? getCustomer(editId) : null;
+  const interval = c?.interval || data.settings.customerInterval || 30;
 
-function openCustomer(editId=null){
-  const c=editId?customer(editId):null;
-  const interval=c?.interval || data.settings.customerInterval || 30;
-
-  const productOptions=data.products.map(p=>
-    `<option value="${esc(p.id)}" ${
-      c?.productId===p.id?'selected':''
-    }>${esc(p.name)}${
-      p.strength?' · '+esc(p.strength):''
-    }</option>`
+  const productOptions = data.products.map(p =>
+    `<option value="${esc(p.id)}" ${c?.productId === p.id ? 'selected' : ''}>${esc(p.name)} ${p.strength ? '· ' + esc(p.strength) : ''}</option>`
   ).join('');
 
-  const productField=data.products.length
-    ? `<div class="field">
-        <label>PRODUCT</label>
+  openModal(`
+    <h2 class="text-lg font-bold text-white mb-4">${c ? '✏️ Klant Bewerken' : '👤 Nieuwe Klant Toevoegen'}</h2>
+
+    <div class="formgrid space-y-3">
+      <div class="field">
+        <label class="block text-[11px] font-bold text-slate-400 mb-1">NAAM *</label>
+        <input id="cfName" value="${esc(c?.name || '')}" placeholder="Volledige naam" autocomplete="name">
+      </div>
+
+      <div class="field">
+        <label class="block text-[11px] font-bold text-slate-400 mb-1">CONTACT / TELEFOONNR</label>
+        <input id="cfContact" value="${esc(c?.contact || '')}" placeholder="bijv. +32 470 12 34 56">
+      </div>
+
+      <div class="grid grid-cols-2 gap-3">
+        <div class="field">
+          <label class="block text-[11px] font-bold text-slate-400 mb-1">DATUM BEZOEK</label>
+          <input id="cfDate" type="date" value="${esc(c?.date || todayISO())}">
+        </div>
+
+        <div class="field">
+          <label class="block text-[11px] font-bold text-slate-400 mb-1">HERHALING (DAGEN)</label>
+          <input id="cfInterval" type="number" min="1" value="${esc(interval)}">
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="block text-[11px] font-bold text-slate-400 mb-1">PRODUCT / DOSERING</label>
         <select id="cfProduct">
-          <option value="">Geen product</option>
+          <option value="">Geen gekoppeld product</option>
           ${productOptions}
         </select>
-      </div>`
-    : `<input id="cfProduct" type="hidden" value="">
-       <div class="field full">
-         <label>PRODUCT</label>
-         <input id="cfProductName" value="${esc(c?.productName||'')}"
-           placeholder="Product of referentie">
-       </div>`;
-
-  openModal(`
-    <h2>${c?'Klant aanpassen':'Nieuwe klant'}</h2>
-
-    <div class="formgrid">
-      <div class="field">
-        <label>NAAM *</label>
-        <input id="cfName" value="${esc(c?.name||'')}"
-          placeholder="Naam" autocomplete="name">
       </div>
 
       <div class="field">
-        <label>CONTACT / REFERENTIE</label>
-        <input id="cfContact" value="${esc(c?.contact||'')}"
-          placeholder="Optioneel">
-      </div>
-
-      <div class="field">
-        <label>DATUM BEZOEK</label>
-        <input id="cfDate" type="date"
-          value="${esc(c?.date||todayISO())}">
-      </div>
-
-      <div class="field">
-        <label>TERUGKOMEN NA (DAGEN)</label>
-        <input id="cfInterval" type="number" min="1"
-          value="${esc(interval)}">
-      </div>
-
-      ${productField}
-
-      <div class="field full">
-        <label>NOTITIE</label>
-        <textarea id="cfNote"
-          placeholder="Optionele notities">${esc(c?.note||'')}</textarea>
+        <label class="block text-[11px] font-bold text-slate-400 mb-1">OPMERKINGEN / NOTITIES</label>
+        <textarea id="cfNote" rows="3" placeholder="Bijzonderheden of opvolgingsnotities...">${esc(c?.note || '')}</textarea>
       </div>
     </div>
 
-    <div class="notice">
-      De volgende opvolgdatum wordt berekend op basis van de bezoekdatum
-      en het ingestelde interval.
-    </div>
-
-    <div class="row">
-      <button class="btn" onclick="closeModal()">Annuleren</button>
-      <button class="btn primary"
-        onclick="saveCustomer('${esc(editId||'')}')">Opslaan</button>
+    <div class="flex gap-2 justify-end mt-5 pt-3 border-t border-slate-800">
+      <button class="btn-custom" onclick="closeModal()">Annuleren</button>
+      <button class="btn-custom primary" onclick="saveCustomer('${esc(editId || '')}')">Opslaan</button>
     </div>
   `);
 }
 
-function saveCustomer(id){
-  const name=document.getElementById('cfName').value.trim();
+function saveCustomer(id) {
+  const name = document.getElementById('cfName').value.trim();
 
-  if(!name){
-    alert('Vul een klantnaam in.');
+  if (!name) {
+    showToast('⚠️ Vul een geldige klantnaam in.');
     return;
   }
 
-  const date=document.getElementById('cfDate').value||todayISO();
-  const interval=Math.max(
-    1,Number(document.getElementById('cfInterval').value||30)
-  );
+  const date = document.getElementById('cfDate').value || todayISO();
+  const interval = Math.max(1, Number(document.getElementById('cfInterval').value || 30));
+  const productId = document.getElementById('cfProduct').value;
+  const selectedProd = getProduct(productId);
 
-  const productId=document.getElementById('cfProduct').value;
-  const selectedProduct=product(productId);
-
-  const productName=selectedProduct
-    ? selectedProduct.name
-    : (document.getElementById('cfProductName')?.value.trim()||'');
-
-  const old=id?customer(id):null;
-
-  const c={
-    id:id||crypto.randomUUID(),
-    name:name,
-    contact:document.getElementById('cfContact').value.trim(),
-    date:date,
-    interval:interval,
-    productId:productId||old?.productId||'',
-    productName:productName,
-    note:document.getElementById('cfNote').value.trim(),
-    next:addDays(date,interval)
+  const c = {
+    id: id || crypto.randomUUID(),
+    name: name,
+    contact: document.getElementById('cfContact').value.trim(),
+    date: date,
+    interval: interval,
+    productId: productId || '',
+    productName: selectedProd ? selectedProd.name : '',
+    note: document.getElementById('cfNote').value.trim(),
+    next: addDays(date, interval)
   };
 
-  const index=data.customers.findIndex(x=>x.id===c.id);
-
-  if(index>=0){
-    data.customers[index]=c;
-  }else{
+  const idx = data.customers.findIndex(x => x.id === c.id);
+  if (idx >= 0) {
+    data.customers[idx] = c;
+    showToast('Klant succesvol bijgewerkt');
+  } else {
     data.customers.push(c);
+    showToast('Nieuwe klant toegevoegd');
   }
 
-  save();
+  saveData();
   closeModal();
 }
 
-function markCustomerDone(id){
-  const c=customer(id);
-  if(!c) return;
+function markFollowUpDone(id) {
+  const c = getCustomer(id);
+  if (!c) return;
 
-  if(!confirm('Opvolging voor '+c.name+' registreren?')) return;
+  customConfirm(
+    'Opvolging registreren',
+    `Wilt u de opvolging voor ${c.name} markeren als voltooid? De nieuwe herhalingsdatum wordt automatisch berekend.`,
+    '✅',
+    () => {
+      const visitDate = c.next || todayISO();
+      c.date = visitDate;
+      c.next = addDays(visitDate, Math.max(1, Number(c.interval || 30)));
 
-  const visitDate=c.next||todayISO();
-  c.date=visitDate;
-  c.next=addDays(visitDate,Math.max(1,Number(c.interval||30)));
+      data.logs.unshift({
+        id: crypto.randomUUID(),
+        type: 'followup',
+        customerId: id,
+        date: new Date().toISOString(),
+        text: `${c.name} · Opvolging succesvol afgerond`
+      });
 
-  data.logs.unshift({
-    id:crypto.randomUUID(),
-    type:'followup',
-    customerId:id,
-    date:new Date().toISOString(),
-    text:c.name+' · opvolging geregistreerd'
-  });
-
-  save();
+      saveData();
+      showToast('Opvolging geregistreerd!');
+    }
+  );
 }
 
-function deleteCustomer(id){
-  const c=customer(id);
-  if(!c) return;
+function deleteCustomerConfirm(id) {
+  const c = getCustomer(id);
+  if (!c) return;
 
-  if(!confirm('Klant '+c.name+' definitief verwijderen?')) return;
-
-  data.customers=data.customers.filter(x=>x.id!==id);
-  save();
+  customConfirm(
+    'Klant Verwijderen',
+    `Weet u zeker dat u ${c.name} definitief wilt verwijderen?`,
+    '🗑️',
+    () => {
+      data.customers = data.customers.filter(x => x.id !== id);
+      saveData();
+      showToast('Klant verwijderd.');
+    }
+  );
 }
 
-function customerHTML(c){
-  const p=product(c.productId);
-  const [cls,label]=dueLabel(c.next);
+// --- PRODUCT ACTIONS ---
+function openProductModal(editId = null) {
+  const p = editId ? getProduct(editId) : null;
 
-  const productName=p
-    ? p.name+(p.strength?' · '+p.strength:'')
-    : (c.productName||'Geen product');
+  openModal(`
+    <h2 class="text-lg font-bold text-white mb-4">${p ? '✏️ Product Bewerken' : '📦 Nieuw Product'}</h2>
 
-  const diff=c.next?dayDiff(todayISO(),c.next):null;
-
-  return `
-    <article class="customer-card ${
-      cls==='due'?'due':cls==='soon'?'soon':''
-    }">
-      <div class="customer-top">
-        <div style="min-width:0;flex:1">
-          <div class="customer-name">${esc(c.name)}</div>
-
-          ${c.contact?`
-            <div class="customer-info">Contact: ${esc(c.contact)}</div>
-          `:''}
-
-          <div class="customer-info">
-            ${esc(productName)}
-            <br>Bezoek: ${esc(formatDate(c.date))}
-            <br>Volgende: ${esc(formatDate(c.next))}
-          </div>
-
-          ${c.note?`
-            <div class="customer-info">📝 ${esc(c.note)}</div>
-          `:''}
-        </div>
-
-        <span class="badge ${cls}">${esc(label)}</span>
+    <div class="space-y-3">
+      <div class="field">
+        <label class="block text-[11px] font-bold text-slate-400 mb-1">PRODUCTNAAM *</label>
+        <input id="pfName" value="${esc(p?.name || '')}" placeholder="bijv. Retatrutide">
       </div>
 
-      <div class="row">
-        <button class="btn" onclick="openCustomer('${esc(c.id)}')">
-          Aanpassen
-        </button>
-
-        ${diff!==null&&diff<=0?`
-          <button class="btn ok"
-            onclick="markCustomerDone('${esc(c.id)}')">
-            ✓ Opgevolgd
-          </button>
-        `:''}
-
-        <button class="btn danger" onclick="deleteCustomer('${esc(c.id)}')">
-          Wis
-        </button>
+      <div class="field">
+        <label class="block text-[11px] font-bold text-slate-400 mb-1">DOSERING / STERKTE</label>
+        <input id="pfStrength" value="${esc(p?.strength || '')}" placeholder="bijv. 20 mg">
       </div>
-    </article>
-  `;
+    </div>
+
+    <div class="flex gap-2 justify-end mt-5 pt-3 border-t border-slate-800">
+      <button class="btn-custom" onclick="closeModal()">Annuleren</button>
+      <button class="btn-custom primary" onclick="saveProduct('${esc(editId || '')}')">Opslaan</button>
+    </div>
+  `);
 }
 
-function render(){
-  const query=(document.getElementById('searchInput')?.value||'')
-    .trim().toLocaleLowerCase('nl-BE');
+function saveProduct(id) {
+  const name = document.getElementById('pfName').value.trim();
+  const strength = document.getElementById('pfStrength').value.trim();
 
-  const due=data.customers.filter(c=>
-    c.next&&dayDiff(todayISO(),c.next)<=0
-  );
+  if (!name) {
+    showToast('⚠️ Vul een productnaam in.');
+    return;
+  }
 
-  document.getElementById('totalCustomers').textContent=
-    data.customers.length;
+  const p = {
+    id: id || crypto.randomUUID(),
+    name: name,
+    strength: strength
+  };
 
-  document.getElementById('dueCustomers').textContent=due.length;
+  const idx = data.products.findIndex(x => x.id === p.id);
+  if (idx >= 0) {
+    data.products[idx] = p;
+  } else {
+    data.products.push(p);
+  }
 
-  const filtered=data.customers.filter(c=>{
-    const p=product(c.productId);
-    const text=[
-      c.name,c.contact,c.note,c.productName,p?.name
-    ].join(' ').toLocaleLowerCase('nl-BE');
-
-    return text.includes(query);
-  }).sort((a,b)=>
-    (a.next||'9999-12-31').localeCompare(b.next||'9999-12-31')
-  );
-
-  document.getElementById('customerList').innerHTML=filtered.length
-    ?filtered.map(customerHTML).join('')
-    :`<div class="empty">${
-      query
-        ?'Geen klanten gevonden voor deze zoekopdracht.'
-        :'Nog geen klanten. Voeg je eerste klant toe.'
-    }</div>`;
+  saveData();
+  closeModal();
+  showToast('Product opgeslagen');
 }
 
-function exportCustomers(){
-  const content=JSON.stringify({
-    exportedAt:new Date().toISOString(),
-    customers:data.customers
-  },null,2);
+function deleteProductConfirm(id) {
+  const p = getProduct(id);
+  if (!p) return;
 
-  const blob=new Blob([content],{type:'application/json'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');
+  customConfirm(
+    'Product Verwijderen',
+    `Wilt u ${p.name} (${p.strength || ''}) verwijderen uit de catalogus?`,
+    '📦',
+    () => {
+      data.products = data.products.filter(x => x.id !== id);
+      saveData();
+      showToast('Product verwijderd');
+    }
+  );
+}
 
-  a.href=url;
-  a.download='prime-protocol-klanten-backup.json';
+// --- LOG ACTIONS ---
+function clearLogsConfirm() {
+  customConfirm(
+    'Historiek Wissen',
+    'Weet u zeker dat u alle logboeken wilt opschonen?',
+    '🧹',
+    () => {
+      data.logs = [];
+      saveData();
+      showToast('Historiek gewist.');
+    }
+  );
+}
+
+// --- SETTINGS ACTIONS ---
+function saveSettings() {
+  const val = Number(document.getElementById('settingInterval').value);
+  if (val > 0) {
+    data.settings.customerInterval = val;
+    saveData();
+    showToast('Instellingen opgeslagen');
+  }
+}
+
+function resetAllConfirm() {
+  customConfirm(
+    'Volledige Reset',
+    'Weet u absoluut zeker dat u ALLE gegevens wilt wissen? Dit kan niet ongedaan gemaakt worden.',
+    '⚠️',
+    () => {
+      localStorage.removeItem(KEY);
+      data = freshData();
+      saveData();
+      showToast('Systeem gereset');
+    }
+  );
+}
+
+// Import / Export
+function exportCustomers() {
+  const content = JSON.stringify({
+    exportedAt: new Date().toISOString(),
+    customers: data.customers,
+    products: data.products,
+    settings: data.settings,
+    logs: data.logs
+  }, null, 2);
+
+  const blob = new Blob([content], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+
+  a.href = url;
+  a.download = `prime-protocol-backup-${todayISO()}.json`;
   document.body.appendChild(a);
   a.click();
   a.remove();
   URL.revokeObjectURL(url);
+  showToast('Backup-bestand gedownload');
 }
 
-render();
+function importCustomers() {
+  document.getElementById('importFile').click();
+}
+
+function handleImportFile(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const imported = JSON.parse(e.target.result);
+      if (imported && (Array.isArray(imported.customers) || Array.isArray(imported.products))) {
+        customConfirm(
+          'Gegevens Importeren',
+          `Wilt u ${imported.customers?.length || 0} klanten en ${imported.products?.length || 0} producten importeren?`,
+          '📥',
+          () => {
+            if (Array.isArray(imported.customers)) {
+              const existingIds = new Set(data.customers.map(c => c.id));
+              for (const c of imported.customers) {
+                if (!existingIds.has(c.id)) data.customers.push(c);
+              }
+            }
+            if (Array.isArray(imported.products)) {
+              const existingProdIds = new Set(data.products.map(p => p.id));
+              for (const p of imported.products) {
+                if (!existingProdIds.has(p.id)) data.products.push(p);
+              }
+            }
+            saveData();
+            showToast('Gegevens succesvol geïmporteerd!');
+          }
+        );
+      } else {
+        showToast('⚠️ Ongeldig backup-bestand.');
+      }
+    } catch (err) {
+      showToast('⚠️ Fout bij het inlezen van het bestand.');
+      console.error(err);
+    }
+  };
+  reader.readAsText(file);
+}
+
+// Global Keyboard Shortcuts
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') closeModal();
+});
+
+// App Startup
+renderCurrentTab();
 </script>
 </body>
 </html>
