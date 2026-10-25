@@ -2,18 +2,43 @@
 <html lang="nl">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#070b12">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="apple-mobile-web-app-title" content="Prime Protocol">
+<title>Prime Protocol · Klanten</title>
 
-<!-- Inline Manifest Data-URI -->
-<link rel="manifest" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22Prime%20Protocol%22%2C%22short_name%22%3A%22Prime%20Protocol%22%2C%22start_url%22%3A%22.%2F%22%2C%22scope%22%3A%22.%2F%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23070b12%22%2C%22theme_color%22%3A%22%23070b12%22%2C%22lang%22%3A%22nl%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22icon-192.png%22%2C%22sizes%22%3A%22192x192%22%2C%22type%22%3A%22image%2Fpng%22%2C%22purpose%22%3A%22any%20maskable%22%7D%2C%7B%22src%22%3A%22icon-512.png%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fpng%22%2C%22purpose%22%3A%22any%20maskable%22%7D%5D%7D">
+<!-- Dynamic Inline Web Manifest -->
+<script id="pwa-manifest" type="application/json">
+{
+  "name": "Prime Protocol",
+  "short_name": "Prime Protocol",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#070b12",
+  "theme_color": "#070b12",
+  "lang": "nl",
+  "icons": [
+    {"src":"icon-192.png","sizes":"192x192","type":"image/png","purpose":"any maskable"},
+    {"src":"icon-512.png","sizes":"512x512","type":"image/png","purpose":"any maskable"}
+  ]
+}
+</script>
+<script>
+  (function() {
+    const manifestEl = document.getElementById('pwa-manifest');
+    if (manifestEl) {
+      const blob = new Blob([manifestEl.textContent], {type: 'application/json'});
+      const manifestUrl = URL.createObjectURL(blob);
+      const link = document.createElement('link');
+      link.rel = 'manifest';
+      link.href = manifestUrl;
+      document.head.appendChild(link);
+    }
+  })();
+</script>
 
-<title>Prime Protocol · Klanten & App</title>
-<script src="https://cdn.tailwindcss.com"></script>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 :root {
   --bg: #070b12;
@@ -26,405 +51,358 @@
   --green: #00d79d;
   --amber: #ffb21c;
   --red: #ff5364;
-  --shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  --shadow: 0 8px 24px rgba(0,0,0,.35);
 }
 
-* {
-  box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
-}
-
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html { background: var(--bg); scroll-behavior: smooth; }
 body {
   margin: 0;
-  min-height: 100vh;
-  background: radial-gradient(circle at 92% -5%, #102b45 0%, transparent 35%), var(--bg);
+  min-height: 100dvh;
+  background: radial-gradient(circle at 92% -5%, #102b45 0, transparent 34%), var(--bg);
   color: var(--text);
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: Inter, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   overflow-x: hidden;
-  user-select: none;
+  padding-bottom: 80px;
 }
 
-/* Scrollbar Customization */
-::-webkit-scrollbar { width: 5px; height: 5px; }
-::-webkit-scrollbar-track { background: #070b12; }
-::-webkit-scrollbar-thumb { background: #1c4a63; border-radius: 99px; }
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; border: none; outline: none; }
 
-.app-container {
-  width: min(100%, 720px);
+.app {
+  width: min(100%, 600px);
   margin: 0 auto;
-  padding: calc(env(safe-area-inset-top) + 14px) 14px calc(90px + env(safe-area-inset-bottom));
+  padding: calc(env(safe-area-inset-top) + 14px) 14px 20px;
 }
 
-.top-bar {
-  border: 1px solid rgba(24, 215, 255, 0.25);
+/* Header */
+.top {
+  border: 1px solid #15506a;
   background: linear-gradient(145deg, #111b2d, #0c1422);
-  border-radius: 20px;
+  border-radius: 16px;
   padding: 14px 16px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 12px;
+  gap: 10px;
   box-shadow: var(--shadow);
 }
-
-.btn-custom {
-  border: 1px solid #1c5a75;
-  background: #0d1b2b;
-  color: #fff;
-  border-radius: 12px;
-  padding: 9px 15px;
-  font-weight: 700;
-  font-size: 13px;
-  white-space: nowrap;
-  min-height: 42px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  transition: all 0.2s ease;
+.brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
+.logo { font-size: 24px; }
+.brand h1 {
+  font-size: 17px; line-height: 1.1; letter-spacing: 1.5px;
+  margin: 0; color: #2dd5fa; font-weight: 800;
+}
+.brand small {
+  display: block; color: #7f8da2; margin-top: 4px;
+  letter-spacing: .8px; font-size: 9px; font-weight: 700;
 }
 
-.btn-custom:active { transform: scale(0.96); }
-
-.btn-custom.primary {
-  background: linear-gradient(105deg, #09cbed, #7868ff);
-  border: none;
-  box-shadow: 0 4px 18px rgba(9, 203, 237, 0.35);
+/* Buttons */
+.btn {
+  border: 1px solid #1c5a75; background: #0d1b2b; color: #fff;
+  border-radius: 10px; padding: 10px 14px; font-weight: 700;
+  font-size: 13px; display: inline-flex; align-items: center; justify-content: center;
+  gap: 6px; min-height: 42px; transition: all .15s ease;
 }
+.btn:active { transform: scale(0.97); }
+.btn.primary { background: linear-gradient(105deg, #09cbed, #7868ff); border: 0; box-shadow: 0 4px 14px rgba(9,203,237,.3); }
+.btn.danger { border-color: #71303a; color: #ff7580; background: rgba(113,48,58,.2); }
+.btn.ok { border-color: #08795e; color: #00e3a4; background: rgba(8,121,94,.2); }
+.btn.sm { padding: 6px 10px; min-height: 32px; font-size: 11px; border-radius: 8px; }
 
-.btn-custom.danger { border-color: #71303a; color: #ff7580; background: #221016; }
-.btn-custom.ok { border-color: #08795e; color: #00e3a4; background: #09241f; }
-
-.stat-card {
+/* Stats grid */
+.summary {
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px; margin-top: 12px;
+}
+.stat {
   background: linear-gradient(145deg, #101a2b, #0c1421);
-  border: 1px solid #15465c;
-  border-radius: 16px;
-  padding: 14px;
+  border: 1px solid #15465c; border-radius: 13px; padding: 12px 14px;
+}
+.stat label {
+  display: block; color: #8391a6; font-size: 10px;
+  font-weight: 850; letter-spacing: 1px;
+}
+.stat b { display: block; font-size: 26px; margin-top: 4px; color: var(--cyan); font-weight: 800; }
+
+/* Main Card */
+.card {
+  margin-top: 12px;
+  background: linear-gradient(145deg, #0f192a, #0b1422);
+  border: 1px solid #15465c; border-radius: 16px;
+  padding: 14px; box-shadow: var(--shadow);
+}
+.section-head {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 8px; margin-bottom: 12px;
+}
+.section-head h2 { margin: 0; color: #25d9fa; font-size: 15px; letter-spacing: 1.2px; font-weight: 800; }
+
+/* Search & Filters */
+.search { margin-bottom: 10px; }
+.search input {
+  width: 100%; background: #0a111c; color: #f4f7fb;
+  border: 1px solid #234155; border-radius: 10px;
+  padding: 12px 14px; font-size: 15px; outline: none;
+  transition: border-color .2s ease;
+}
+.search input:focus, .field input:focus, .field select:focus, .field textarea:focus {
+  border-color: var(--cyan);
 }
 
+.filters { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 6px; margin-bottom: 10px; }
+.chip {
+  background: #0a111c; border: 1px solid #1e394b; color: #8a98aa;
+  padding: 6px 12px; border-radius: 20px; font-size: 11px; font-weight: 700;
+  white-space: nowrap; cursor: pointer;
+}
+.chip.active { background: rgba(24, 215, 255, 0.15); border-color: var(--cyan); color: var(--cyan); }
+
+.notice { color: #8e9bae; font-size: 12px; line-height: 1.4; margin: 6px 0 12px; }
+.empty {
+  padding: 28px 14px; text-align: center; color: #7f8ca0;
+  border: 1px dashed #263544; border-radius: 12px; font-size: 13px;
+}
+
+/* Customer Card */
 .customer-card {
-  padding: 15px;
-  border: 1px solid #1d4055;
-  border-radius: 16px;
-  background: #0a111b;
-  margin-top: 10px;
-  transition: border-color 0.2s ease;
+  padding: 14px; border: 1px solid #1d4055; border-radius: 13px;
+  background: #0a111b; margin-top: 10px; overflow-wrap: anywhere;
+  transition: border-color .2s ease;
 }
-
-.customer-card.due {
-  border-color: var(--red);
-  background: linear-gradient(135deg, rgba(255, 83, 100, 0.08), #0a111b 65%);
-}
-
-.customer-card.soon {
-  border-color: #9a6a12;
-  background: linear-gradient(135deg, rgba(255, 178, 28, 0.06), #0a111b 65%);
-}
+.customer-card.due { border-color: var(--red); background: linear-gradient(120deg, #240c13, #0a111b); }
+.customer-card.soon { border-color: #9a6a12; }
+.customer-top { display: flex; justify-content: space-between; align-items: flex-start; gap: 10px; }
+.customer-name { font-size: 17px; font-weight: 800; color: #fff; }
+.customer-info { color: #8e9bae; font-size: 12px; line-height: 1.55; margin-top: 6px; }
 
 .badge {
-  display: inline-flex;
-  align-items: center;
-  border: 1px solid #1d826c;
-  color: #00dba0;
-  background: rgba(0, 219, 160, 0.1);
-  border-radius: 999px;
-  padding: 4px 10px;
-  font-size: 10px;
-  font-weight: 800;
-  white-space: nowrap;
-  letter-spacing: 0.5px;
+  display: inline-block; border: 1px solid #1d826c; color: #00dba0;
+  border-radius: 999px; padding: 4px 8px; font-size: 10px;
+  font-weight: 850; white-space: nowrap; background: rgba(0,219,160,.1);
+}
+.badge.due { border-color: var(--red); color: #ff7884; background: rgba(255,83,100,.15); }
+.badge.soon { border-color: #a86e00; color: #ffbd2e; background: rgba(255,178,28,.1); }
+
+.quick-actions { display: flex; gap: 8px; margin-top: 10px; }
+.action-link {
+  display: inline-flex; align-items: center; gap: 4px;
+  color: #84a6c0; font-size: 11px; text-decoration: none;
+  background: #0e1a29; border: 1px solid #1b3a50; border-radius: 6px;
+  padding: 4px 8px; font-weight: 600;
 }
 
-.badge.due { border-color: var(--red); color: #ff7884; background: rgba(255, 83, 100, 0.15); }
-.badge.soon { border-color: #a86e00; color: #ffbd2e; background: rgba(255, 178, 28, 0.15); }
+.row { display: flex; gap: 8px; justify-content: flex-end; margin-top: 12px; flex-wrap: wrap; }
 
-/* Bottom Fixed Navigation */
+/* Navigation bar */
 .bottom-nav {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: rgba(10, 17, 27, 0.94);
-  backdrop-filter: blur(14px);
-  border-top: 1px solid #16364a;
-  z-index: 40;
-  padding-bottom: env(safe-area-inset-bottom);
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: rgba(13, 22, 36, 0.95); backdrop-filter: blur(12px);
+  border-top: 1px solid #1b4b63; display: flex; justify-content: space-around;
+  padding: 8px 0 calc(6px + env(safe-area-inset-bottom)); z-index: 20;
 }
-
 .nav-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 10px 0;
-  color: #7f8da2;
-  font-size: 11px;
-  font-weight: 600;
-  transition: color 0.2s ease;
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  color: #687993; font-size: 10px; font-weight: 700; text-decoration: none;
+  background: transparent; border: 0; padding: 6px 12px; width: 33%;
 }
+.nav-item.active { color: var(--cyan); }
+.nav-icon { font-size: 18px; }
 
-.nav-item.active { color: #18d7ff; }
-
-/* Modals & Dialogs */
+/* Modal & Form Grid Fixes */
 .modal {
-  position: fixed;
-  inset: 0;
-  background: rgba(4, 7, 13, 0.84);
-  backdrop-filter: blur(6px);
-  display: none;
-  align-items: center;
-  justify-content: center;
-  padding: 14px;
-  z-index: 50;
-  opacity: 0;
-  transition: opacity 0.2s ease;
+  position: fixed; inset: 0; background: rgba(3, 7, 13, 0.82);
+  backdrop-filter: blur(6px); display: none; align-items: center; justify-content: center;
+  padding: 12px; z-index: 50; overflow-y: auto;
 }
-
-.modal.show { display: flex; opacity: 1; }
-
+.modal.show { display: flex; }
 .modalbox {
-  width: min(560px, 100%);
-  max-height: 88vh;
-  overflow-y: auto;
-  background: #0d1624;
-  border: 1px solid #1b536b;
-  border-radius: 20px;
-  padding: 20px;
-  box-shadow: 0 20px 50px rgba(0,0,0,0.6);
-  transform: translateY(15px);
-  transition: transform 0.2s ease;
+  width: min(560px, 100%); max-height: 90dvh; overflow-y: auto;
+  background: #0d1624; border: 1px solid #1b536b;
+  border-radius: 18px; padding: 18px; margin: auto; box-shadow: 0 12px 32px rgba(0,0,0,.6);
+}
+.modalbox h2 { margin: 0 0 16px; font-size: 18px; color: #fff; font-weight: 800; }
+
+/* GEWOON 1 KOLOM VOOR FORMULIEREN OP MOBIEL -> DIT LOST DE OVERLAPPING OP! */
+.formgrid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+  min-width: 0;
 }
 
-.modal.show .modalbox { transform: translateY(0); }
+/* Desktop layout past 2 kolommen toe op grotere schermen */
+@media (min-width: 500px) {
+  .formgrid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
 
+.field { min-width: 0; width: 100%; }
+.field.full { grid-column: 1 / -1; }
+.field label {
+  display: block; color: #8a98aa; font-size: 10px;
+  font-weight: 850; margin-bottom: 6px; letter-spacing: .5px; text-transform: uppercase;
+}
 .field input, .field select, .field textarea {
-  width: 100%;
-  background: #070d17;
-  color: #f4f7fb;
-  border: 1px solid #203f54;
-  border-radius: 10px;
-  padding: 11px 13px;
-  outline: none;
-  font-size: 15px;
+  width: 100%; min-width: 0; display: block;
+  background: #0a111c; color: #f4f7fb;
+  border: 1px solid #234155; border-radius: 10px;
+  padding: 12px; outline: none; font-size: 15px;
+  -webkit-appearance: none; appearance: none;
 }
-
-.field input:focus, .field select:focus, .field textarea:focus {
-  border-color: var(--cyan);
-  box-shadow: 0 0 0 2px rgba(24, 215, 255, 0.15);
+.field select {
+  background-image: url("data:image/svg+xml;utf8,<svg fill='%238a98aa' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='7 10l5 5 5-5z'/></svg>");
+  background-repeat: no-repeat; background-position: right 10px center; padding-right: 32px;
 }
-
-/* Toast System */
-#toast-container {
-  position: fixed;
-  top: 16px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 100;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  pointer-events: none;
-  width: min(92%, 400px);
+.field input[type="date"] {
+  min-height: 46px;
+  line-height: 1.2;
 }
+.field textarea { min-height: 85px; resize: vertical; }
 
+/* Log items */
+.log-item {
+  padding: 10px 12px; border-bottom: 1px solid #172b3c; font-size: 12px;
+  display: flex; justify-content: space-between; align-items: center;
+}
+.log-item:last-child { border-bottom: none; }
+.log-date { color: #61748d; font-size: 10px; }
+
+/* Notification Toast */
 .toast {
-  background: #102133;
-  border: 1px solid #18d7ff;
-  color: #fff;
-  padding: 12px 18px;
-  border-radius: 14px;
-  font-size: 13px;
-  font-weight: 600;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-  animation: slideDown 0.3s ease forwards;
+  position: fixed; top: 20px; left: 50%; transform: translateX(-50%) translateY(-100px);
+  background: #112538; border: 1px solid var(--cyan); color: #fff;
+  padding: 10px 18px; border-radius: 20px; font-size: 12px; font-weight: 700;
+  box-shadow: 0 8px 20px rgba(0,0,0,.5); opacity: 0; transition: all .3s ease; z-index: 100;
+  pointer-events: none;
 }
-
-@keyframes slideDown {
-  from { opacity: 0; transform: translateY(-20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.filter-chip {
-  padding: 6px 14px;
-  border-radius: 99px;
-  border: 1px solid #1c4359;
-  font-size: 12px;
-  font-weight: 700;
-  color: #8492a6;
-  background: #0b1422;
-  white-space: nowrap;
-}
-
-.filter-chip.active {
-  background: rgba(24, 215, 255, 0.15);
-  border-color: #18d7ff;
-  color: #18d7ff;
-}
+.toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
 </style>
 </head>
 
 <body>
+<div id="toast" class="toast"></div>
 
-<!-- Notification Toast Area -->
-<div id="toast-container"></div>
+<div class="app">
 
-<div class="app-container">
-
-  <!-- Header Banner -->
-  <header class="top-bar mb-4">
-    <div class="flex items-center">
-      <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-indigo-600 flex items-center justify-center text-xl shadow-lg shadow-cyan-500/20">
-        ⚡
-      </div>
-      <div class="ml-3">
-        <h1 class="text-base font-extrabold tracking-wider text-cyan-400 leading-tight">PRIME PROTOCOL</h1>
-        <small class="text-slate-400 font-semibold text-[10px] tracking-widest block uppercase">PWA Mobile Edition</small>
+  <header class="top">
+    <div class="brand">
+      <span class="logo">⚡</span>
+      <div>
+        <h1>PRIME PROTOCOL</h1>
+        <small>KLANTENBEHEER · PWA READY</small>
       </div>
     </div>
-    <button class="btn-custom primary" onclick="openCustomerModal()">
-      <span>+ Klant</span>
-    </button>
+    <button class="btn primary" onclick="openCustomer()">+ Klant</button>
   </header>
 
-  <!-- PWA Install Prompt Banner -->
-  <div id="pwaInstallBanner" class="hidden mb-4 bg-gradient-to-r from-cyan-950/80 to-indigo-950/80 border border-cyan-500/40 p-3.5 rounded-2xl flex items-center justify-between gap-3 shadow-xl">
-    <div class="flex items-center gap-3">
-      <div class="text-2xl">📱</div>
-      <div>
-        <div class="text-xs font-bold text-white">Installeer als App</div>
-        <div class="text-[11px] text-slate-300" id="installMsg">Voeg Prime Protocol toe aan je startscherm.</div>
+  <!-- TAB 1: KLANTEN -->
+  <main id="tab-customers">
+    <div class="summary">
+      <div class="stat">
+        <label>TOTAAL KLANTEN</label>
+        <b id="totalCustomers">0</b>
+      </div>
+      <div class="stat">
+        <label>OPVOLGING NODIG</label>
+        <b id="dueCustomers">0</b>
       </div>
     </div>
-    <button id="pwaInstallBtn" onclick="triggerPwaInstall()" class="btn-custom primary text-xs py-1.5 px-3">
-      Installeren
-    </button>
-  </div>
 
-  <!-- Dynamic Views -->
-  <main id="mainContent"></main>
+    <section class="card">
+      <div class="section-head">
+        <h2>👤 KLANTEN OVERZICHT</h2>
+      </div>
+
+      <div class="search">
+        <input id="searchInput" type="search" placeholder="🔎 Zoek op naam, nummer, product..." oninput="render()">
+      </div>
+
+      <div class="filters">
+        <button class="chip active" onclick="setFilter('all', this)">Alles</button>
+        <button class="chip" onclick="setFilter('due', this)">⚠️ Opvolging nodig</button>
+        <button class="chip" onclick="setFilter('soon', this)">⏳ Binnen 7 dagen</button>
+      </div>
+
+      <div id="customerList"></div>
+    </section>
+  </main>
+
+  <!-- TAB 2: PRODUCTEN -->
+  <main id="tab-products" style="display:none;">
+    <section class="card">
+      <div class="section-head">
+        <h2>💊 PRODUCTEN & DOSERINGEN</h2>
+        <button class="btn primary sm" onclick="openProductModal()">+ Product</button>
+      </div>
+      <div class="notice">
+        Beheer hier de beschikbare varianten (bijv. Retatrutide, Tirzepatide).
+      </div>
+      <div id="productList"></div>
+    </section>
+  </main>
+
+  <!-- TAB 3: LOGS & INSTELLINGEN -->
+  <main id="tab-settings" style="display:none;">
+    <section class="card">
+      <div class="section-head">
+        <h2>📜 OPVOLGINGSHISTORIEK</h2>
+      </div>
+      <div id="logList"></div>
+    </section>
+
+    <section class="card" style="margin-top:14px;">
+      <div class="section-head">
+        <h2>⚙️ INSTELLINGEN & BACKUP</h2>
+      </div>
+      <div class="notice">
+        Exporteer je gegevens als JSON-bestand om een veiligheidskopie te bewaren.
+      </div>
+      <div class="row" style="justify-content:flex-start;">
+        <button class="btn" onclick="exportCustomers()">📥 Backup Exporteren</button>
+        <button class="btn" onclick="triggerImport()">📤 Backup Importeren</button>
+        <input type="file" id="importFile" accept=".json" style="display:none;" onchange="importCustomers(event)">
+      </div>
+    </section>
+  </main>
 
 </div>
 
-<!-- App Navigation Bar -->
+<!-- BOTTOM NAV -->
 <nav class="bottom-nav">
-  <div class="max-w-xl mx-auto grid grid-cols-4 px-2">
-    <button onclick="switchTab('customers')" id="nav-customers" class="nav-item active">
-      <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
-      <span>Klanten</span>
-    </button>
-    <button onclick="switchTab('products')" id="nav-products" class="nav-item">
-      <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"></path></svg>
-      <span>Producten</span>
-    </button>
-    <button onclick="switchTab('logs')" id="nav-logs" class="nav-item">
-      <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path></svg>
-      <span>Historiek</span>
-    </button>
-    <button onclick="switchTab('settings')" id="nav-settings" class="nav-item">
-      <svg class="w-5 h-5 mb-1" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
-      <span>Beheer</span>
-    </button>
-  </div>
+  <button class="nav-item active" onclick="switchTab('customers', this)">
+    <span class="nav-icon">👤</span>
+    <span>Klanten</span>
+  </button>
+  <button class="nav-item" onclick="switchTab('products', this)">
+    <span class="nav-icon">💊</span>
+    <span>Producten</span>
+  </button>
+  <button class="nav-item" onclick="switchTab('settings', this)">
+    <span class="nav-icon">⚙️</span>
+    <span>Historiek</span>
+  </button>
 </nav>
 
-<!-- Dialog Modals -->
-<div class="modal" id="modal"><div class="modalbox" id="modalbox"></div></div>
-
-<div class="modal" id="confirmModal">
-  <div class="modalbox max-w-sm text-center">
-    <div class="text-3xl mb-2" id="confirmIcon">⚠️</div>
-    <h3 class="text-lg font-bold text-white mb-2" id="confirmTitle">Bevestig actie</h3>
-    <p class="text-xs text-slate-400 mb-6 leading-relaxed" id="confirmMessage">Weet u dit zeker?</p>
-    <div class="flex gap-2 justify-center">
-      <button class="btn-custom flex-1" onclick="closeConfirmModal()">Annuleren</button>
-      <button class="btn-custom danger flex-1" id="confirmBtnAction">Uitvoeren</button>
-    </div>
-  </div>
+<!-- MODAL CONTAINER -->
+<div class="modal" id="modal">
+  <div class="modalbox" id="modalbox"></div>
 </div>
-
-<input type="file" id="importFile" accept=".json" class="hidden" onchange="handleImportFile(event)">
 
 <script>
 'use strict';
 
-// -------------------------------------------------------------
-// 1. INLINE SERVICE WORKER & PWA REGISTRATION
-// -------------------------------------------------------------
-if ('serviceWorker' in navigator) {
-  const swCode = `
-    const CACHE_NAME = 'prime-protocol-pwa-v6';
-    self.addEventListener('install', e => {
-      self.skipWaiting();
-    });
-    self.addEventListener('activate', e => {
-      e.waitUntil(clients.claim());
-    });
-    self.addEventListener('fetch', e => {
-      e.respondWith(
-        fetch(e.request).catch(() => caches.match(e.request))
-      );
-    });
-  `;
-  const blob = new Blob([swCode], { type: 'application/javascript' });
-  const swUrl = URL.createObjectURL(blob);
-
-  navigator.serviceWorker.register(swUrl)
-    .then(() => console.log('PWA Service Worker Actief'))
-    .catch(err => console.error('SW Registratie Fout:', err));
-}
-
-let deferredPrompt = null;
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-  const banner = document.getElementById('pwaInstallBanner');
-  if (banner) banner.classList.remove('hidden');
-});
-
-// Safari iOS Detection
-const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-const isStandalone = window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
-
-if (isIOS && !isStandalone) {
-  window.addEventListener('DOMContentLoaded', () => {
-    const banner = document.getElementById('pwaInstallBanner');
-    const msg = document.getElementById('installMsg');
-    const btn = document.getElementById('pwaInstallBtn');
-    if (banner && msg && btn) {
-      banner.classList.remove('hidden');
-      msg.textContent = 'Tik in Safari op "Delen" ➔ "Zet op beginชerm"';
-      btn.style.display = 'none';
-    }
-  });
-}
-
-function triggerPwaInstall() {
-  if (deferredPrompt) {
-    deferredPrompt.prompt();
-    deferredPrompt.userChoice.then((choiceResult) => {
-      if (choiceResult.outcome === 'accepted') {
-        document.getElementById('pwaInstallBanner')?.classList.add('hidden');
-      }
-      deferredPrompt = null;
-    });
-  }
-}
-
-// -------------------------------------------------------------
-// 2. APP STATE & PERSISTENCE
-// -------------------------------------------------------------
 const KEY = 'primeProtocolMobileV6';
-let data = loadData();
-let currentTab = 'customers';
-let activeFilter = 'all';
+let currentFilter = 'all';
+let data = load();
 
-function freshData() {
+function fresh() {
   return {
     customers: [],
     products: [
-      ...['Retatrutide', 'Tirzepatide', 'Semaglutide'].flatMap(name =>
-        [10, 20, 30, 40, 50].map(mg => ({
-          id: crypto.randomUUID(), name: name, strength: mg + ' mg'
+      ...['Retatrutide','Tirzepatide'].flatMap(name =>
+        [10,20,30,40,50].map(mg => ({
+          id: crypto.randomUUID(), name: name, strength: mg+' mg'
         }))
       )
     ],
@@ -433,49 +411,40 @@ function freshData() {
   };
 }
 
-function loadData() {
+function load() {
   try {
     const saved = JSON.parse(localStorage.getItem(KEY));
-    if (!saved) return freshData();
-
+    if (!saved) return fresh();
     saved.customers = saved.customers || [];
     saved.products = saved.products || [];
-
-    for (const name of ['Retatrutide', 'Tirzepatide']) {
-      for (const mg of [10, 20, 30, 40, 50]) {
-        const strength = mg + ' mg';
-        const exists = saved.products.some(p =>
-          String(p.name || '').trim().toLowerCase() === name.toLowerCase() &&
-          String(p.strength || '').trim().toLowerCase() === strength.toLowerCase()
-        );
-        if (!exists) {
-          saved.products.push({ id: crypto.randomUUID(), name, strength });
-        }
-      }
-    }
-
     saved.logs = saved.logs || [];
     saved.settings = Object.assign({ customerInterval: 30 }, saved.settings || {});
     return saved;
-  } catch (e) {
-    console.error(e);
-    return freshData();
+  } catch(e) {
+    console.error('Fout bij het laden:', e);
+    return fresh();
   }
 }
 
-function saveData() {
+function save() {
   try {
     localStorage.setItem(KEY, JSON.stringify(data));
-    renderCurrentTab();
-  } catch (e) {
+    render();
+  } catch(e) {
     showToast('Opslaan mislukt. Browseropslag vol.');
   }
 }
 
-// Helpers
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
 function esc(val) {
   return String(val ?? '').replace(/[&<>"']/g, m => ({
-    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
   }[m]));
 }
 
@@ -500,540 +469,344 @@ function dayDiff(a, b) {
 function formatDate(dateStr) {
   if (!dateStr) return 'Niet ingesteld';
   const parts = dateStr.split('-');
-  return parts.length === 3 ? `${parts[2]}-${parts[1]}-${parts[0]}` : dateStr;
+  if (parts.length !== 3) return dateStr;
+  return parts[2] + '-' + parts[1] + '-' + parts[0];
 }
 
-function formatDateTime(isoStr) {
-  if (!isoStr) return '';
-  const d = new Date(isoStr);
-  return d.toLocaleDateString('nl-BE', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
-}
+function product(id) { return data.products.find(p => p.id === id); }
+function customer(id) { return data.customers.find(c => c.id === id); }
 
-function getProduct(id) { return data.products.find(p => p.id === id); }
-function getCustomer(id) { return data.customers.find(c => c.id === id); }
-
-function dueStatus(dateStr) {
-  if (!dateStr) return { cls: '', label: 'GEPLAND', diff: 999 };
+function dueLabel(dateStr) {
+  if (!dateStr) return ['', 'GEPLAND'];
   const diff = dayDiff(todayISO(), dateStr);
-  if (diff < 0) return { cls: 'due', label: `TE LAAT (${Math.abs(diff)}d)`, diff };
-  if (diff === 0) return { cls: 'due', label: 'VANDAAG', diff };
-  if (diff <= 7) return { cls: 'soon', label: `BINNEN ${diff}d`, diff };
-  return { cls: '', label: `IN ${diff}d`, diff };
+  if (diff < 0) return ['due', 'TE LAAT (' + Math.abs(diff) + 'd)'];
+  if (diff === 0) return ['due', 'VANDAAG'];
+  if (diff <= 7) return ['soon', 'BINNEN ' + diff + ' DAGEN'];
+  return ['', 'GEPLAND'];
 }
 
-// Feedback Modals
-function showToast(msg) {
-  const container = document.getElementById('toast-container');
-  const toast = document.createElement('div');
-  toast.className = 'toast';
-  toast.innerHTML = `<span>${esc(msg)}</span>`;
-  container.appendChild(toast);
-  setTimeout(() => {
-    toast.style.opacity = '0';
-    toast.style.transition = 'opacity 0.3s ease';
-    setTimeout(() => toast.remove(), 300);
-  }, 2500);
-}
-
-function customConfirm(title, message, icon, onConfirm) {
-  document.getElementById('confirmTitle').textContent = title;
-  document.getElementById('confirmMessage').textContent = message;
-  document.getElementById('confirmIcon').textContent = icon || '⚠️';
-  
-  const actionBtn = document.getElementById('confirmBtnAction');
-  actionBtn.onclick = () => {
-    closeConfirmModal();
-    onConfirm();
-  };
-  
-  document.getElementById('confirmModal').classList.add('show');
-}
-
-function closeConfirmModal() {
-  document.getElementById('confirmModal').classList.remove('show');
-}
-
-// Navigation Controls
-function switchTab(tab) {
-  currentTab = tab;
-  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-  document.getElementById(`nav-${tab}`)?.classList.add('active');
-  renderCurrentTab();
-}
-
-function setFilter(filter) {
-  activeFilter = filter;
-  renderCurrentTab();
-}
-
-function renderCurrentTab() {
-  const container = document.getElementById('mainContent');
-  if (currentTab === 'customers') renderCustomersView(container);
-  else if (currentTab === 'products') renderProductsView(container);
-  else if (currentTab === 'logs') renderLogsView(container);
-  else if (currentTab === 'settings') renderSettingsView(container);
-}
-
-// -------------------------------------------------------------
-// 3. TAB VIEWS
-// -------------------------------------------------------------
-function renderCustomersView(container) {
-  const dueCount = data.customers.filter(c => c.next && dayDiff(todayISO(), c.next) <= 0).length;
-  const soonCount = data.customers.filter(c => {
-    const d = c.next ? dayDiff(todayISO(), c.next) : 999;
-    return d > 0 && d <= 7;
-  }).length;
-
-  container.innerHTML = `
-    <div class="grid grid-cols-2 gap-3 mb-4">
-      <div class="stat-card">
-        <span class="block text-[#8391a6] text-[10px] font-extrabold tracking-wider">TOTAAL KLANTEN</span>
-        <b class="block text-3xl font-extrabold mt-1 text-cyan-400">${data.customers.length}</b>
-      </div>
-      <div class="stat-card">
-        <span class="block text-[#8391a6] text-[10px] font-extrabold tracking-wider">OPVOLGING NODIG</span>
-        <b class="block text-3xl font-extrabold mt-1 ${dueCount > 0 ? 'text-red-400' : 'text-emerald-400'}">${dueCount}</b>
-      </div>
-    </div>
-
-    <div class="bg-gradient-to-b from-[#0f192a] to-[#0b1422] border border-[#15465c] rounded-2xl p-4 shadow-xl">
-      <div class="flex items-center justify-between mb-3">
-        <h2 class="text-sm font-bold tracking-wider text-cyan-400 flex items-center gap-2">
-          <span>👤</span> KLANTEN OVERZICHT
-        </h2>
-      </div>
-
-      <div class="relative mb-3">
-        <input id="searchInput" type="search"
-          placeholder="🔎 Zoek op naam, product of telefoonnr..."
-          oninput="renderCustomerList()"
-          class="w-full bg-[#0a111c] text-white border border-[#234155] rounded-xl px-4 py-3 text-sm focus:border-cyan-400 outline-none">
-      </div>
-
-      <div class="flex gap-2 mb-4 overflow-x-auto pb-1">
-        <button onclick="setFilter('all')" class="filter-chip ${activeFilter === 'all' ? 'active' : ''}">Alles (${data.customers.length})</button>
-        <button onclick="setFilter('due')" class="filter-chip ${activeFilter === 'due' ? 'active' : ''}">⚠️ Te laat (${dueCount})</button>
-        <button onclick="setFilter('soon')" class="filter-chip ${activeFilter === 'soon' ? 'active' : ''}">⏳ Binnen 7d (${soonCount})</button>
-      </div>
-
-      <div id="customerList"></div>
-    </div>
-  `;
-  renderCustomerList();
-}
-
-function renderCustomerList() {
-  const query = (document.getElementById('searchInput')?.value || '').trim().toLowerCase();
-  
-  const filtered = data.customers.filter(c => {
-    const p = getProduct(c.productId);
-    const text = [c.name, c.contact, c.note, c.productName, p?.name].join(' ').toLowerCase();
-    const matchesSearch = text.includes(query);
-    
-    const diff = c.next ? dayDiff(todayISO(), c.next) : 999;
-    if (activeFilter === 'due') return matchesSearch && diff <= 0;
-    if (activeFilter === 'soon') return matchesSearch && diff > 0 && diff <= 7;
-    return matchesSearch;
-  }).sort((a, b) => (a.next || '9999-12-31').localeCompare(b.next || '9999-12-31'));
-
-  const listEl = document.getElementById('customerList');
-  if (!listEl) return;
-
-  if (filtered.length === 0) {
-    listEl.innerHTML = `<div class="p-8 text-center text-slate-400 border border-dashed border-slate-700/60 rounded-xl text-xs">Geen klanten gevonden.</div>`;
-    return;
-  }
-
-  listEl.innerHTML = filtered.map(c => {
-    const p = getProduct(c.productId);
-    const status = dueStatus(c.next);
-    const productName = p ? `${p.name} ${p.strength ? '· ' + p.strength : ''}` : (c.productName || 'Geen specifieke kit');
-    const isCleanPhone = c.contact && /^[0-9+ ]+$/.test(c.contact.trim());
-
-    return `
-      <article class="customer-card ${status.cls}">
-        <div class="flex justify-between items-start gap-3">
-          <div class="min-w-0 flex-1">
-            <h3 class="text-base font-extrabold text-white truncate">${esc(c.name)}</h3>
-
-            ${c.contact ? `
-              <div class="text-xs text-slate-400 mt-1 flex items-center gap-2">
-                <span>📞 ${esc(c.contact)}</span>
-                ${isCleanPhone ? `
-                  <a href="https://wa.me/${c.contact.replace(/[^0-9]/g, '')}" target="_blank" rel="noopener" class="text-emerald-400 font-semibold text-[11px]">💬 WhatsApp</a>
-                ` : ''}
-              </div>
-            ` : ''}
-
-            <div class="text-xs text-slate-300 mt-2 space-y-0.5 bg-[#070d17]/60 p-2.5 rounded-lg border border-slate-800">
-              <div>📦 <span class="font-semibold text-cyan-300">${esc(productName)}</span></div>
-              <div class="text-slate-400">📅 Bezoek: <span class="text-slate-200">${esc(formatDate(c.date))}</span></div>
-              <div class="text-slate-400">🔄 Volgende: <span class="text-slate-200 font-semibold">${esc(formatDate(c.next))}</span> (${c.interval}d interval)</div>
-            </div>
-
-            ${c.note ? `
-              <div class="text-xs text-amber-200/90 mt-2 italic bg-amber-950/20 border border-amber-900/30 p-2 rounded-lg">
-                📝 ${esc(c.note)}
-              </div>
-            ` : ''}
-          </div>
-
-          <span class="badge ${status.cls}">${esc(status.label)}</span>
-        </div>
-
-        <div class="flex gap-2 justify-end mt-3 pt-2 border-t border-slate-800/80">
-          <button class="btn-custom" onclick="openCustomerModal('${esc(c.id)}')">✏️ Bewerken</button>
-          ${status.diff <= 0 ? `
-            <button class="btn-custom ok" onclick="markFollowUpDone('${esc(c.id)}')">✓ Opgevolgd</button>
-          ` : ''}
-          <button class="btn-custom danger" onclick="deleteCustomerConfirm('${esc(c.id)}')">🗑️</button>
-        </div>
-      </article>
-    `;
-  }).join('');
-}
-
-function renderProductsView(container) {
-  container.innerHTML = `
-    <div class="bg-gradient-to-b from-[#0f192a] to-[#0b1422] border border-[#15465c] rounded-2xl p-4 shadow-xl">
-      <div class="flex items-center justify-between mb-4">
-        <div>
-          <h2 class="text-sm font-bold tracking-wider text-cyan-400">📦 PRODUCTEN BEHEER</h2>
-          <p class="text-xs text-slate-400">Beheer je beschikbare varianten en doseringen.</p>
-        </div>
-        <button class="btn-custom primary" onclick="openProductModal()">+ Product</button>
-      </div>
-
-      <div class="space-y-2">
-        ${data.products.map(p => `
-          <div class="flex items-center justify-between p-3 bg-[#0a111b] border border-[#1d4055] rounded-xl">
-            <div>
-              <div class="font-bold text-sm text-white">${esc(p.name)}</div>
-              <div class="text-xs text-cyan-400 font-medium">${esc(p.strength || 'Standaard')}</div>
-            </div>
-            <div class="flex gap-2">
-              <button class="btn-custom" onclick="openProductModal('${esc(p.id)}')">✏️</button>
-              <button class="btn-custom danger" onclick="deleteProductConfirm('${esc(p.id)}')">🗑️</button>
-            </div>
-          </div>
-        `).join('')}
-      </div>
-    </div>
-  `;
-}
-
-function renderLogsView(container) {
-  container.innerHTML = `
-    <div class="bg-gradient-to-b from-[#0f192a] to-[#0b1422] border border-[#15465c] rounded-2xl p-4 shadow-xl">
-      <div class="flex items-center justify-between mb-3">
-        <h2 class="text-sm font-bold tracking-wider text-cyan-400">📋 ACTIVITEITEN HISTORIEK</h2>
-        ${data.logs.length > 0 ? `<button class="btn-custom danger" onclick="clearLogsConfirm()">Wis Log</button>` : ''}
-      </div>
-
-      ${data.logs.length === 0 ? `
-        <div class="p-8 text-center text-slate-400 border border-dashed border-slate-700/60 rounded-xl text-xs">Geen geregistreerde activiteiten.</div>
-      ` : `
-        <div class="space-y-2">
-          ${data.logs.map(log => `
-            <div class="p-3 bg-[#0a111b] border border-slate-800 rounded-xl text-xs flex justify-between items-center">
-              <div>
-                <div class="text-slate-200 font-semibold">${esc(log.text)}</div>
-                <div class="text-[10px] text-slate-500 mt-0.5">${esc(formatDateTime(log.date))}</div>
-              </div>
-              <span class="text-[10px] bg-cyan-950 text-cyan-400 border border-cyan-800/60 px-2 py-0.5 rounded-full font-bold">Opvolging</span>
-            </div>
-          `).join('')}
-        </div>
-      `}
-    </div>
-  `;
-}
-
-function renderSettingsView(container) {
-  container.innerHTML = `
-    <div class="bg-gradient-to-b from-[#0f192a] to-[#0b1422] border border-[#15465c] rounded-2xl p-4 shadow-xl space-y-5">
-      <div>
-        <h2 class="text-sm font-bold tracking-wider text-cyan-400 mb-1">⚙️ INSTELLINGEN & BACKUP</h2>
-        <p class="text-xs text-slate-400">Beheer standaard intervals en database synchronisatie.</p>
-      </div>
-
-      <div class="field">
-        <label class="block text-xs font-bold text-slate-400 mb-1">STANDAARD OPVOLGINTERVAL (DAGEN)</label>
-        <div class="flex gap-2">
-          <input id="settingInterval" type="number" value="${data.settings.customerInterval || 30}" class="flex-1">
-          <button class="btn-custom primary" onclick="saveSettings()">Opslaan</button>
-        </div>
-      </div>
-
-      <hr class="border-slate-800">
-
-      <div>
-        <h3 class="text-xs font-bold text-slate-300 mb-2 uppercase tracking-wider">📦 Backup Beheer</h3>
-        <div class="grid grid-cols-2 gap-3">
-          <button class="btn-custom" onclick="exportCustomers()">📥 Export JSON</button>
-          <button class="btn-custom" onclick="importCustomers()">📤 Import JSON</button>
-        </div>
-      </div>
-
-      <hr class="border-slate-800">
-
-      <div class="bg-red-950/20 border border-red-900/40 p-3.5 rounded-xl">
-        <h3 class="text-xs font-bold text-red-400 mb-1">⚠️ Gevarenzone</h3>
-        <p class="text-[11px] text-slate-400 mb-3">Verwijder alle lokale gegevens en herstel de fabrieksinstellingen.</p>
-        <button class="btn-custom danger w-full" onclick="resetAllConfirm()">Alles Wissen</button>
-      </div>
-    </div>
-  `;
-}
-
-// -------------------------------------------------------------
-// 4. ACTION HANDLERS
-// -------------------------------------------------------------
 function openModal(html) {
   document.getElementById('modalbox').innerHTML = html;
   document.getElementById('modal').classList.add('show');
 }
-
-function closeModal() {
-  document.getElementById('modal').classList.remove('show');
-}
+function closeModal() { document.getElementById('modal').classList.remove('show'); }
 
 document.getElementById('modal').addEventListener('click', e => {
   if (e.target.id === 'modal') closeModal();
 });
 
-function openCustomerModal(editId = null) {
-  const c = editId ? getCustomer(editId) : null;
+/* Tabs Navigation */
+function switchTab(tabName, btn) {
+  document.querySelectorAll('main').forEach(el => el.style.display = 'none');
+  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+  document.getElementById('tab-' + tabName).style.display = 'block';
+  btn.classList.add('active');
+}
+
+function setFilter(filter, chip) {
+  currentFilter = filter;
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  chip.classList.add('active');
+  render();
+}
+
+/* Modal formulier voor klant toevoegen/bewerken */
+function openCustomer(editId = null) {
+  const c = editId ? customer(editId) : null;
   const interval = c?.interval || data.settings.customerInterval || 30;
 
   const productOptions = data.products.map(p =>
-    `<option value="${esc(p.id)}" ${c?.productId === p.id ? 'selected' : ''}>${esc(p.name)} ${p.strength ? '· ' + esc(p.strength) : ''}</option>`
+    `<option value="${esc(p.id)}" ${c?.productId === p.id ? 'selected' : ''}>
+      ${esc(p.name)}${p.strength ? ' · ' + esc(p.strength) : ''}
+    </option>`
   ).join('');
 
   openModal(`
-    <h2 class="text-lg font-bold text-white mb-4">${c ? '✏️ Klant Bewerken' : '👤 Nieuwe Klant'}</h2>
-    <div class="space-y-3">
+    <h2>${c ? '👤 Klant Aanpassen' : '👤 Nieuwe Klant'}</h2>
+    <div class="formgrid">
       <div class="field">
-        <label class="block text-[11px] font-bold text-slate-400 mb-1">NAAM *</label>
-        <input id="cfName" value="${esc(c?.name || '')}" placeholder="Klantnaam" autocomplete="name">
+        <label>NAAM *</label>
+        <input id="cfName" value="${esc(c?.name||'')}" placeholder="Klantnaam" autocomplete="name">
       </div>
+
       <div class="field">
-        <label class="block text-[11px] font-bold text-slate-400 mb-1">CONTACT / TELEFOONNR</label>
-        <input id="cfContact" value="${esc(c?.contact || '')}" placeholder="+32 ...">
+        <label>CONTACT / TELEFOONNR</label>
+        <input id="cfContact" value="${esc(c?.contact||'')}" placeholder="+32 ...">
       </div>
-      <div class="grid grid-cols-2 gap-3">
-        <div class="field">
-          <label class="block text-[11px] font-bold text-slate-400 mb-1">DATUM BEZOEK</label>
-          <input id="cfDate" type="date" value="${esc(c?.date || todayISO())}">
-        </div>
-        <div class="field">
-          <label class="block text-[11px] font-bold text-slate-400 mb-1">INTERVAL (DAGEN)</label>
-          <input id="cfInterval" type="number" min="1" value="${esc(interval)}">
-        </div>
-      </div>
+
       <div class="field">
-        <label class="block text-[11px] font-bold text-slate-400 mb-1">PRODUCT / DOSERING</label>
+        <label>DATUM BEZOEK</label>
+        <input id="cfDate" type="date" value="${esc(c?.date||todayISO())}">
+      </div>
+
+      <div class="field">
+        <label>INTERVAL (DAGEN)</label>
+        <input id="cfInterval" type="number" min="1" value="${esc(interval)}">
+      </div>
+
+      <div class="field full">
+        <label>PRODUCT / DOSERING</label>
         <select id="cfProduct">
           <option value="">Geen product gekoppeld</option>
           ${productOptions}
         </select>
       </div>
-      <div class="field">
-        <label class="block text-[11px] font-bold text-slate-400 mb-1">NOTITIES</label>
-        <textarea id="cfNote" rows="3" placeholder="Optionele notitie...">${esc(c?.note || '')}</textarea>
+
+      <div class="field full">
+        <label>NOTITIES</label>
+        <textarea id="cfNote" placeholder="Optionele notitie...">${esc(c?.note||'')}</textarea>
       </div>
     </div>
-    <div class="flex gap-2 justify-end mt-5 pt-3 border-t border-slate-800">
-      <button class="btn-custom" onclick="closeModal()">Annuleren</button>
-      <button class="btn-custom primary" onclick="saveCustomer('${esc(editId || '')}')">Opslaan</button>
+
+    <div class="row" style="margin-top:16px;">
+      <button class="btn" onclick="closeModal()">Annuleren</button>
+      <button class="btn primary" onclick="saveCustomer('${esc(editId||'')}')">Opslaan</button>
     </div>
   `);
 }
 
 function saveCustomer(id) {
   const name = document.getElementById('cfName').value.trim();
-  if (!name) return showToast('⚠️ Vul een naam in.');
+  if (!name) { showToast('Vul a.u.b. een klantnaam in'); return; }
 
   const date = document.getElementById('cfDate').value || todayISO();
   const interval = Math.max(1, Number(document.getElementById('cfInterval').value || 30));
   const productId = document.getElementById('cfProduct').value;
-  const selectedProd = getProduct(productId);
+  const p = product(productId);
 
   const c = {
     id: id || crypto.randomUUID(),
-    name,
+    name: name,
     contact: document.getElementById('cfContact').value.trim(),
-    date,
-    interval,
-    productId: productId || '',
-    productName: selectedProd ? selectedProd.name : '',
+    date: date,
+    interval: interval,
+    productId: productId,
+    productName: p ? p.name : '',
     note: document.getElementById('cfNote').value.trim(),
     next: addDays(date, interval)
   };
 
-  const idx = data.customers.findIndex(x => x.id === c.id);
-  if (idx >= 0) data.customers[idx] = c;
+  const index = data.customers.findIndex(x => x.id === c.id);
+  if (index >= 0) data.customers[index] = c;
   else data.customers.push(c);
 
-  saveData();
+  save();
   closeModal();
   showToast('Klant opgeslagen!');
 }
 
-function markFollowUpDone(id) {
-  const c = getCustomer(id);
+function markCustomerDone(id) {
+  const c = customer(id);
   if (!c) return;
 
-  customConfirm('Opvolging Registreren', `Registreer opvolging voor ${c.name}?`, '✅', () => {
-    const visitDate = c.next || todayISO();
-    c.date = visitDate;
-    c.next = addDays(visitDate, Math.max(1, Number(c.interval || 30)));
+  const visitDate = c.next || todayISO();
+  c.date = visitDate;
+  c.next = addDays(visitDate, Math.max(1, Number(c.interval || 30)));
 
-    data.logs.unshift({
-      id: crypto.randomUUID(),
-      type: 'followup',
-      customerId: id,
-      date: new Date().toISOString(),
-      text: `${c.name} · Opvolging geregistreerd`
-    });
-
-    saveData();
-    showToast('Opvolging afgerond!');
+  data.logs.unshift({
+    id: crypto.randomUUID(),
+    customerId: id,
+    customerName: c.name,
+    date: new Date().toISOString(),
+    text: 'Opvolging afgerond. Volgende datum ingesteld op ' + formatDate(c.next)
   });
+
+  save();
+  showToast('Opvolging geregistreerd for ' + c.name);
 }
 
-function deleteCustomerConfirm(id) {
-  const c = getCustomer(id);
+function deleteCustomer(id) {
+  const c = customer(id);
   if (!c) return;
 
-  customConfirm('Klant Verwijderen', `Verwijder ${c.name} definitief?`, '🗑️', () => {
-    data.customers = data.customers.filter(x => x.id !== id);
-    saveData();
-    showToast('Klant verwijderd.');
-  });
-}
-
-function openProductModal(editId = null) {
-  const p = editId ? getProduct(editId) : null;
   openModal(`
-    <h2 class="text-lg font-bold text-white mb-4">${p ? '✏️ Product Bewerken' : '📦 Nieuw Product'}</h2>
-    <div class="space-y-3">
-      <div class="field">
-        <label class="block text-[11px] font-bold text-slate-400 mb-1">PRODUCTNAAM *</label>
-        <input id="pfName" value="${esc(p?.name || '')}" placeholder="bijv. Retatrutide">
-      </div>
-      <div class="field">
-        <label class="block text-[11px] font-bold text-slate-400 mb-1">DOSERING / STERKTE</label>
-        <input id="pfStrength" value="${esc(p?.strength || '')}" placeholder="bijv. 20 mg">
-      </div>
-    </div>
-    <div class="flex gap-2 justify-end mt-5 pt-3 border-t border-slate-800">
-      <button class="btn-custom" onclick="closeModal()">Annuleren</button>
-      <button class="btn-custom primary" onclick="saveProduct('${esc(editId || '')}')">Opslaan</button>
+    <h2>⚠️ Klant Verwijderen</h2>
+    <p class="notice">Weet je zeker dat je <b>${esc(c.name)}</b> wilt verwijderen?</p>
+    <div class="row">
+      <button class="btn" onclick="closeModal()">Annuleren</button>
+      <button class="btn danger" onclick="confirmDeleteCustomer('${esc(id)}')">Ja, Verwijderen</button>
     </div>
   `);
 }
 
-function saveProduct(id) {
+function confirmDeleteCustomer(id) {
+  data.customers = data.customers.filter(x => x.id !== id);
+  save();
+  closeModal();
+  showToast('Klant verwijderd.');
+}
+
+/* Product functionaliteiten */
+function openProductModal() {
+  openModal(`
+    <h2>💊 Nieuw Product</h2>
+    <div class="formgrid">
+      <div class="field">
+        <label>NAAM *</label>
+        <input id="pfName" placeholder="bijv. Retatrutide">
+      </div>
+      <div class="field">
+        <label>STERKTE / DOSERING</label>
+        <input id="pfStrength" placeholder="bijv. 20 mg">
+      </div>
+    </div>
+    <div class="row" style="margin-top:16px;">
+      <button class="btn" onclick="closeModal()">Annuleren</button>
+      <button class="btn primary" onclick="saveProduct()">Opslaan</button>
+    </div>
+  `);
+}
+
+function saveProduct() {
   const name = document.getElementById('pfName').value.trim();
   const strength = document.getElementById('pfStrength').value.trim();
+  if (!name) { showToast('Vul een productnaam in'); return; }
 
-  if (!name) return showToast('⚠️ Vul een naam in.');
-
-  const p = { id: id || crypto.randomUUID(), name, strength };
-  const idx = data.products.findIndex(x => x.id === p.id);
-  if (idx >= 0) data.products[idx] = p;
-  else data.products.push(p);
-
-  saveData();
+  data.products.push({ id: crypto.randomUUID(), name, strength });
+  save();
   closeModal();
-  showToast('Product opgeslagen');
+  showToast('Product toegevoegd');
 }
 
-function deleteProductConfirm(id) {
-  const p = getProduct(id);
-  if (!p) return;
-
-  customConfirm('Product Verwijderen', `Verwijder ${p.name}?`, '📦', () => {
-    data.products = data.products.filter(x => x.id !== id);
-    saveData();
-    showToast('Product verwijderd');
-  });
+function deleteProduct(id) {
+  data.products = data.products.filter(p => p.id !== id);
+  save();
+  showToast('Product verwijderd');
 }
 
-function clearLogsConfirm() {
-  customConfirm('Historiek Wissen', 'Wilt u het logboek leegmaken?', '🧹', () => {
-    data.logs = [];
-    saveData();
-    showToast('Historiek gewist.');
-  });
+/* UI Rendering */
+function customerHTML(c) {
+  const p = product(c.productId);
+  const [cls, label] = dueLabel(c.next);
+  const prodLabel = p ? p.name + (p.strength ? ' · ' + p.strength : '') : (c.productName || 'Geen product');
+  const cleanPhone = (c.contact || '').replace(/[^0-9+]/g, '');
+
+  return `
+    <article class="customer-card ${cls}">
+      <div class="customer-top">
+        <div style="min-width:0;flex:1">
+          <div class="customer-name">${esc(c.name)}</div>
+          
+          ${cleanPhone ? `
+            <div class="quick-actions">
+              <a href="https://wa.me/${cleanPhone.replace('+','')}" target="_blank" class="action-link">💬 WhatsApp</a>
+              <a href="tel:${cleanPhone}" class="action-link">📞 Bellen</a>
+            </div>
+          ` : ''}
+
+          <div class="customer-info">
+            <b>Product:</b> ${esc(prodLabel)}
+            <br><b>Laatste Bezoek:</b> ${esc(formatDate(c.date))}
+            <br><b>Volgende Opvolging:</b> ${esc(formatDate(c.next))}
+          </div>
+
+          ${c.note ? `<div class="customer-info">📝 <i>${esc(c.note)}</i></div>` : ''}
+        </div>
+        <span class="badge ${cls}">${esc(label)}</span>
+      </div>
+
+      <div class="row">
+        <button class="btn sm" onclick="openCustomer('${esc(c.id)}')">Aanpassen</button>
+        <button class="btn ok sm" onclick="markCustomerDone('${esc(c.id)}')">✓ Opgevolgd</button>
+        <button class="btn danger sm" onclick="deleteCustomer('${esc(c.id)}')">Wis</button>
+      </div>
+    </article>
+  `;
 }
 
-function saveSettings() {
-  const val = Number(document.getElementById('settingInterval').value);
-  if (val > 0) {
-    data.settings.customerInterval = val;
-    saveData();
-    showToast('Instellingen opgeslagen');
-  }
+function render() {
+  const query = (document.getElementById('searchInput')?.value || '').trim().toLowerCase();
+  const due = data.customers.filter(c => c.next && dayDiff(todayISO(), c.next) <= 0);
+
+  document.getElementById('totalCustomers').textContent = data.customers.length;
+  document.getElementById('dueCustomers').textContent = due.length;
+
+  const filtered = data.customers.filter(c => {
+    const p = product(c.productId);
+    const text = [c.name, c.contact, c.note, c.productName, p?.name].join(' ').toLowerCase();
+    const matchesSearch = text.includes(query);
+
+    if (!matchesSearch) return false;
+    const diff = c.next ? dayDiff(todayISO(), c.next) : 999;
+    if (currentFilter === 'due') return diff <= 0;
+    if (currentFilter === 'soon') return diff <= 7;
+    return true;
+  }).sort((a,b) => (a.next || '9999').localeCompare(b.next || '9999'));
+
+  document.getElementById('customerList').innerHTML = filtered.length
+    ? filtered.map(customerHTML).join('')
+    : `<div class="empty">Geen klanten gevonden.</div>`;
+
+  // Render Products Tab
+  document.getElementById('productList').innerHTML = data.products.map(p => `
+    <div class="log-item">
+      <div><b>${esc(p.name)}</b> ${p.strength ? `<span style="color:#8a98aa">(${esc(p.strength)})</span>` : ''}</div>
+      <button class="btn danger sm" onclick="deleteProduct('${p.id}')">Verwijder</button>
+    </div>
+  `).join('');
+
+  // Render Logs Tab
+  document.getElementById('logList').innerHTML = data.logs.length ? data.logs.map(l => `
+    <div class="log-item">
+      <div><b>${esc(l.customerName || 'Klant')}</b>: ${esc(l.text)}</div>
+      <div class="log-date">${new Date(l.date).toLocaleDateString('nl-BE')}</div>
+    </div>
+  `).join('') : `<div class="empty">Nog geen historiek aanwezig.</div>`;
 }
 
-function resetAllConfirm() {
-  customConfirm('Volledige Reset', 'Wis alle opgeslagen gegevens?', '⚠️', () => {
-    localStorage.removeItem(KEY);
-    data = freshData();
-    saveData();
-    showToast('Gegevens gereset.');
-  });
-}
-
+/* Backup Import / Export */
 function exportCustomers() {
   const content = JSON.stringify(data, null, 2);
-  const blob = new Blob([content], { type: 'application/json' });
+  const blob = new Blob([content], {type: 'application/json'});
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
   a.href = url;
-  a.download = `prime-protocol-backup-${todayISO()}.json`;
+  a.download = 'prime-protocol-backup-' + todayISO() + '.json';
   a.click();
   URL.revokeObjectURL(url);
-  showToast('Backup gedownload!');
+  showToast('Backup gedownload');
 }
 
-function importCustomers() { document.getElementById('importFile').click(); }
-
-function handleImportFile(event) {
-  const file = event.target.files[0];
+function triggerImport() { document.getElementById('importFile').click(); }
+function importCustomers(e) {
+  const file = e.target.files[0];
   if (!file) return;
-
   const reader = new FileReader();
-  reader.onload = function(e) {
+  reader.onload = function(evt) {
     try {
-      const imported = JSON.parse(e.target.result);
-      if (imported && (Array.isArray(imported.customers) || Array.isArray(imported.products))) {
-        customConfirm('Gegevens Importeren', 'Wilt u de gegevens samenvoegen met uw huidige databank?', '📥', () => {
-          if (Array.isArray(imported.customers)) {
-            const ids = new Set(data.customers.map(c => c.id));
-            imported.customers.forEach(c => { if (!ids.has(c.id)) data.customers.push(c); });
-          }
-          if (Array.isArray(imported.products)) {
-            const pIds = new Set(data.products.map(p => p.id));
-            imported.products.forEach(p => { if (!pIds.has(p.id)) data.products.push(p); });
-          }
-          saveData();
-          showToast('Gegevens geïmporteerd!');
-        });
+      const imported = JSON.parse(evt.target.result);
+      if (imported.customers) {
+        data = imported;
+        save();
+        showToast('Gegevens succesvol ingevoerd!');
+      } else {
+        showToast('Ongeldig backup bestand');
       }
-    } catch (err) {
-      showToast('⚠️ Ongeldig bestand.');
+    } catch(err) {
+      showToast('Fout bij het lezen van bestand');
     }
   };
   reader.readAsText(file);
 }
 
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+// Inline Service Worker Register
+if ('serviceWorker' in navigator) {
+  const swCode = `
+    const CACHE = 'prime-protocol-v6';
+    self.addEventListener('install', e => self.skipWaiting());
+    self.addEventListener('activate', e => e.waitUntil(self.clients.claim()));
+    self.addEventListener('fetch', e => {
+      if (e.request.method !== 'GET') return;
+      e.respondWith(
+        fetch(e.request).catch(() => caches.match(e.request))
+      );
+    });
+  `;
+  const blob = new Blob([swCode], {type: 'application/javascript'});
+  navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(() => {});
+}
 
-// Launch App
-renderCurrentTab();
+render();
 </script>
 </body>
 </html>
