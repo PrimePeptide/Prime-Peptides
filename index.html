@@ -6,7 +6,12 @@
 <meta name="theme-color" content="#070b12">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<title>Prime Protocol · Klanten & Beheer</title>
+<meta name="apple-mobile-web-app-title" content="Prime Protocol">
+
+<!-- Inline Manifest Data-URI -->
+<link rel="manifest" href="data:application/manifest+json;charset=utf-8,%7B%22name%22%3A%22Prime%20Protocol%22%2C%22short_name%22%3A%22Prime%20Protocol%22%2C%22start_url%22%3A%22.%2F%22%2C%22scope%22%3A%22.%2F%22%2C%22display%22%3A%22standalone%22%2C%22background_color%22%3A%22%23070b12%22%2C%22theme_color%22%3A%22%23070b12%22%2C%22lang%22%3A%22nl%22%2C%22icons%22%3A%5B%7B%22src%22%3A%22icon-192.png%22%2C%22sizes%22%3A%22192x192%22%2C%22type%22%3A%22image%2Fpng%22%2C%22purpose%22%3A%22any%20maskable%22%7D%2C%7B%22src%22%3A%22icon-512.png%22%2C%22sizes%22%3A%22512x512%22%2C%22type%22%3A%22image%2Fpng%22%2C%22purpose%22%3A%22any%20maskable%22%7D%5D%7D">
+
+<title>Prime Protocol · Klanten & App</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -21,7 +26,7 @@
   --green: #00d79d;
   --amber: #ffb21c;
   --red: #ff5364;
-  --shadow: 0 8px 32px rgba(0, 0, 0, 0.37);
+  --shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
 }
 
 * {
@@ -32,35 +37,34 @@
 body {
   margin: 0;
   min-height: 100vh;
-  background: radial-gradient(circle at 92% -5%, #102b45 0%, transparent 34%), var(--bg);
+  background: radial-gradient(circle at 92% -5%, #102b45 0%, transparent 35%), var(--bg);
   color: var(--text);
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   overflow-x: hidden;
+  user-select: none;
 }
 
-/* Custom Scrollbar */
-::-webkit-scrollbar { width: 6px; height: 6px; }
+/* Scrollbar Customization */
+::-webkit-scrollbar { width: 5px; height: 5px; }
 ::-webkit-scrollbar-track { background: #070b12; }
 ::-webkit-scrollbar-thumb { background: #1c4a63; border-radius: 99px; }
-::-webkit-scrollbar-thumb:hover { background: #18d7ff; }
 
 .app-container {
   width: min(100%, 720px);
   margin: 0 auto;
-  padding: calc(env(safe-area-inset-top) + 16px) 14px calc(80px + env(safe-area-inset-bottom));
+  padding: calc(env(safe-area-inset-top) + 14px) 14px calc(90px + env(safe-area-inset-bottom));
 }
 
 .top-bar {
-  border: 1px solid rgba(24, 215, 255, 0.2);
+  border: 1px solid rgba(24, 215, 255, 0.25);
   background: linear-gradient(145deg, #111b2d, #0c1422);
   border-radius: 20px;
-  padding: 16px;
+  padding: 14px 16px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
   box-shadow: var(--shadow);
-  backdrop-filter: blur(8px);
 }
 
 .btn-custom {
@@ -80,26 +84,22 @@ body {
   transition: all 0.2s ease;
 }
 
-.btn-custom:active { transform: scale(0.97); }
+.btn-custom:active { transform: scale(0.96); }
 
 .btn-custom.primary {
   background: linear-gradient(105deg, #09cbed, #7868ff);
   border: none;
-  box-shadow: 0 4px 15px rgba(9, 203, 237, 0.3);
+  box-shadow: 0 4px 18px rgba(9, 203, 237, 0.35);
 }
 
 .btn-custom.danger { border-color: #71303a; color: #ff7580; background: #221016; }
-.btn-custom.danger:hover { background: #3b141d; }
-
 .btn-custom.ok { border-color: #08795e; color: #00e3a4; background: #09241f; }
-.btn-custom.ok:hover { background: #0c382f; }
 
 .stat-card {
   background: linear-gradient(145deg, #101a2b, #0c1421);
   border: 1px solid #15465c;
   border-radius: 16px;
   padding: 14px;
-  transition: transform 0.2s ease;
 }
 
 .customer-card {
@@ -108,21 +108,17 @@ body {
   border-radius: 16px;
   background: #0a111b;
   margin-top: 10px;
-  transition: border-color 0.2s ease, transform 0.15s ease;
-}
-
-.customer-card:hover {
-  border-color: #266587;
+  transition: border-color 0.2s ease;
 }
 
 .customer-card.due {
   border-color: var(--red);
-  background: linear-gradient(135deg, rgba(255, 83, 100, 0.08), #0a111b 60%);
+  background: linear-gradient(135deg, rgba(255, 83, 100, 0.08), #0a111b 65%);
 }
 
 .customer-card.soon {
   border-color: #9a6a12;
-  background: linear-gradient(135deg, rgba(255, 178, 28, 0.06), #0a111b 60%);
+  background: linear-gradient(135deg, rgba(255, 178, 28, 0.06), #0a111b 65%);
 }
 
 .badge {
@@ -133,7 +129,7 @@ body {
   background: rgba(0, 219, 160, 0.1);
   border-radius: 999px;
   padding: 4px 10px;
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 800;
   white-space: nowrap;
   letter-spacing: 0.5px;
@@ -142,14 +138,14 @@ body {
 .badge.due { border-color: var(--red); color: #ff7884; background: rgba(255, 83, 100, 0.15); }
 .badge.soon { border-color: #a86e00; color: #ffbd2e; background: rgba(255, 178, 28, 0.15); }
 
-/* Bottom Nav Bar */
+/* Bottom Fixed Navigation */
 .bottom-nav {
   position: fixed;
   bottom: 0;
   left: 0;
   right: 0;
-  background: rgba(10, 17, 27, 0.92);
-  backdrop-filter: blur(12px);
+  background: rgba(10, 17, 27, 0.94);
+  backdrop-filter: blur(14px);
   border-top: 1px solid #16364a;
   z-index: 40;
   padding-bottom: env(safe-area-inset-bottom);
@@ -160,23 +156,21 @@ body {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 8px 0;
+  padding: 10px 0;
   color: #7f8da2;
   font-size: 11px;
   font-weight: 600;
   transition: color 0.2s ease;
 }
 
-.nav-item.active {
-  color: #18d7ff;
-}
+.nav-item.active { color: #18d7ff; }
 
-/* Modals */
+/* Modals & Dialogs */
 .modal {
   position: fixed;
   inset: 0;
-  background: rgba(4, 7, 13, 0.82);
-  backdrop-filter: blur(5px);
+  background: rgba(4, 7, 13, 0.84);
+  backdrop-filter: blur(6px);
   display: none;
   align-items: center;
   justify-content: center;
@@ -186,10 +180,7 @@ body {
   transition: opacity 0.2s ease;
 }
 
-.modal.show {
-  display: flex;
-  opacity: 1;
-}
+.modal.show { display: flex; opacity: 1; }
 
 .modalbox {
   width: min(560px, 100%);
@@ -204,9 +195,7 @@ body {
   transition: transform 0.2s ease;
 }
 
-.modal.show .modalbox {
-  transform: translateY(0);
-}
+.modal.show .modalbox { transform: translateY(0); }
 
 .field input, .field select, .field textarea {
   width: 100%;
@@ -217,7 +206,6 @@ body {
   padding: 11px 13px;
   outline: none;
   font-size: 15px;
-  transition: border-color 0.2s;
 }
 
 .field input:focus, .field select:focus, .field textarea:focus {
@@ -228,7 +216,7 @@ body {
 /* Toast System */
 #toast-container {
   position: fixed;
-  top: 20px;
+  top: 16px;
   left: 50%;
   transform: translateX(-50%);
   z-index: 100;
@@ -236,7 +224,7 @@ body {
   flex-direction: column;
   gap: 8px;
   pointer-events: none;
-  width: min(90%, 400px);
+  width: min(92%, 400px);
 }
 
 .toast {
@@ -244,13 +232,10 @@ body {
   border: 1px solid #18d7ff;
   color: #fff;
   padding: 12px 18px;
-  border-radius: 12px;
+  border-radius: 14px;
   font-size: 13px;
   font-weight: 600;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.4);
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
   animation: slideDown 0.3s ease forwards;
 }
 
@@ -267,8 +252,7 @@ body {
   font-weight: 700;
   color: #8492a6;
   background: #0b1422;
-  cursor: pointer;
-  transition: all 0.2s ease;
+  white-space: nowrap;
 }
 
 .filter-chip.active {
@@ -281,19 +265,20 @@ body {
 
 <body>
 
+<!-- Notification Toast Area -->
 <div id="toast-container"></div>
 
 <div class="app-container">
 
-  <!-- Header -->
+  <!-- Header Banner -->
   <header class="top-bar mb-4">
-    <div class="brand">
+    <div class="flex items-center">
       <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-cyan-500 to-indigo-600 flex items-center justify-center text-xl shadow-lg shadow-cyan-500/20">
         ⚡
       </div>
-      <div class="ml-2">
+      <div class="ml-3">
         <h1 class="text-base font-extrabold tracking-wider text-cyan-400 leading-tight">PRIME PROTOCOL</h1>
-        <small class="text-slate-400 font-semibold text-[10px] tracking-widest block uppercase">Klanten & Proefbeheer</small>
+        <small class="text-slate-400 font-semibold text-[10px] tracking-widest block uppercase">PWA Mobile Edition</small>
       </div>
     </div>
     <button class="btn-custom primary" onclick="openCustomerModal()">
@@ -301,14 +286,26 @@ body {
     </button>
   </header>
 
+  <!-- PWA Install Prompt Banner -->
+  <div id="pwaInstallBanner" class="hidden mb-4 bg-gradient-to-r from-cyan-950/80 to-indigo-950/80 border border-cyan-500/40 p-3.5 rounded-2xl flex items-center justify-between gap-3 shadow-xl">
+    <div class="flex items-center gap-3">
+      <div class="text-2xl">📱</div>
+      <div>
+        <div class="text-xs font-bold text-white">Installeer als App</div>
+        <div class="text-[11px] text-slate-300" id="installMsg">Voeg Prime Protocol toe aan je startscherm.</div>
+      </div>
+    </div>
+    <button id="pwaInstallBtn" onclick="triggerPwaInstall()" class="btn-custom primary text-xs py-1.5 px-3">
+      Installeren
+    </button>
+  </div>
+
   <!-- Dynamic Views -->
-  <main id="mainContent">
-    <!-- Rendered via JS based on currentTab -->
-  </main>
+  <main id="mainContent"></main>
 
 </div>
 
-<!-- Navigation Bar -->
+<!-- App Navigation Bar -->
 <nav class="bottom-nav">
   <div class="max-w-xl mx-auto grid grid-cols-4 px-2">
     <button onclick="switchTab('customers')" id="nav-customers" class="nav-item active">
@@ -330,19 +327,16 @@ body {
   </div>
 </nav>
 
-<!-- Modals System -->
-<div class="modal" id="modal">
-  <div class="modalbox" id="modalbox"></div>
-</div>
+<!-- Dialog Modals -->
+<div class="modal" id="modal"><div class="modalbox" id="modalbox"></div></div>
 
-<!-- Custom Dialog Modal -->
 <div class="modal" id="confirmModal">
   <div class="modalbox max-w-sm text-center">
     <div class="text-3xl mb-2" id="confirmIcon">⚠️</div>
     <h3 class="text-lg font-bold text-white mb-2" id="confirmTitle">Bevestig actie</h3>
     <p class="text-xs text-slate-400 mb-6 leading-relaxed" id="confirmMessage">Weet u dit zeker?</p>
     <div class="flex gap-2 justify-center">
-      <button class="btn-custom flex-1" onclick="closeConfirmModal(false)">Annuleren</button>
+      <button class="btn-custom flex-1" onclick="closeConfirmModal()">Annuleren</button>
       <button class="btn-custom danger flex-1" id="confirmBtnAction">Uitvoeren</button>
     </div>
   </div>
@@ -353,14 +347,77 @@ body {
 <script>
 'use strict';
 
-const KEY = 'primeProtocolMobileV6';
+// -------------------------------------------------------------
+// 1. INLINE SERVICE WORKER & PWA REGISTRATION
+// -------------------------------------------------------------
+if ('serviceWorker' in navigator) {
+  const swCode = `
+    const CACHE_NAME = 'prime-protocol-pwa-v6';
+    self.addEventListener('install', e => {
+      self.skipWaiting();
+    });
+    self.addEventListener('activate', e => {
+      e.waitUntil(clients.claim());
+    });
+    self.addEventListener('fetch', e => {
+      e.respondWith(
+        fetch(e.request).catch(() => caches.match(e.request))
+      );
+    });
+  `;
+  const blob = new Blob([swCode], { type: 'application/javascript' });
+  const swUrl = URL.createObjectURL(blob);
 
+  navigator.serviceWorker.register(swUrl)
+    .then(() => console.log('PWA Service Worker Actief'))
+    .catch(err => console.error('SW Registratie Fout:', err));
+}
+
+let deferredPrompt = null;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  const banner = document.getElementById('pwaInstallBanner');
+  if (banner) banner.classList.remove('hidden');
+});
+
+// Safari iOS Detection
+const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+const isStandalone = window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
+
+if (isIOS && !isStandalone) {
+  window.addEventListener('DOMContentLoaded', () => {
+    const banner = document.getElementById('pwaInstallBanner');
+    const msg = document.getElementById('installMsg');
+    const btn = document.getElementById('pwaInstallBtn');
+    if (banner && msg && btn) {
+      banner.classList.remove('hidden');
+      msg.textContent = 'Tik in Safari op "Delen" ➔ "Zet op beginชerm"';
+      btn.style.display = 'none';
+    }
+  });
+}
+
+function triggerPwaInstall() {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then((choiceResult) => {
+      if (choiceResult.outcome === 'accepted') {
+        document.getElementById('pwaInstallBanner')?.classList.add('hidden');
+      }
+      deferredPrompt = null;
+    });
+  }
+}
+
+// -------------------------------------------------------------
+// 2. APP STATE & PERSISTENCE
+// -------------------------------------------------------------
+const KEY = 'primeProtocolMobileV6';
 let data = loadData();
 let currentTab = 'customers';
-let activeFilter = 'all'; // 'all', 'due', 'soon'
-let confirmCallback = null;
+let activeFilter = 'all';
 
-// Initial Setup & Migration
 function freshData() {
   return {
     customers: [],
@@ -384,7 +441,6 @@ function loadData() {
     saved.customers = saved.customers || [];
     saved.products = saved.products || [];
 
-    // Ensure initial default products exist
     for (const name of ['Retatrutide', 'Tirzepatide']) {
       for (const mg of [10, 20, 30, 40, 50]) {
         const strength = mg + ' mg';
@@ -393,21 +449,16 @@ function loadData() {
           String(p.strength || '').trim().toLowerCase() === strength.toLowerCase()
         );
         if (!exists) {
-          saved.products.push({
-            id: crypto.randomUUID(),
-            name: name,
-            strength: strength
-          });
+          saved.products.push({ id: crypto.randomUUID(), name, strength });
         }
       }
     }
 
     saved.logs = saved.logs || [];
     saved.settings = Object.assign({ customerInterval: 30 }, saved.settings || {});
-
     return saved;
   } catch (e) {
-    console.error('Data corrupted, returning fresh template:', e);
+    console.error(e);
     return freshData();
   }
 }
@@ -417,19 +468,14 @@ function saveData() {
     localStorage.setItem(KEY, JSON.stringify(data));
     renderCurrentTab();
   } catch (e) {
-    showToast('Opslaan mislukt. Browseropslag vol of uitgeschakeld.');
-    console.error(e);
+    showToast('Opslaan mislukt. Browseropslag vol.');
   }
 }
 
 // Helpers
-function esc(value) {
-  return String(value ?? '').replace(/[&<>"']/g, m => ({
-    '&': '&amp;',
-    '<': '&lt;',
-    '>': '&gt;',
-    '"': '&quot;',
-    "'": '&#39;'
+function esc(val) {
+  return String(val ?? '').replace(/[&<>"']/g, m => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
   }[m]));
 }
 
@@ -454,8 +500,7 @@ function dayDiff(a, b) {
 function formatDate(dateStr) {
   if (!dateStr) return 'Niet ingesteld';
   const parts = dateStr.split('-');
-  if (parts.length !== 3) return dateStr;
-  return `${parts[2]}-${parts[1]}-${parts[0]}`;
+  return parts.length === 3 ? `${parts[2]}-${parts[1]}-${parts[0]}` : dateStr;
 }
 
 function formatDateTime(isoStr) {
@@ -464,13 +509,8 @@ function formatDateTime(isoStr) {
   return d.toLocaleDateString('nl-BE', { day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit' });
 }
 
-function getProduct(id) {
-  return data.products.find(p => p.id === id);
-}
-
-function getCustomer(id) {
-  return data.customers.find(c => c.id === id);
-}
+function getProduct(id) { return data.products.find(p => p.id === id); }
+function getCustomer(id) { return data.customers.find(c => c.id === id); }
 
 function dueStatus(dateStr) {
   if (!dateStr) return { cls: '', label: 'GEPLAND', diff: 999 };
@@ -481,7 +521,7 @@ function dueStatus(dateStr) {
   return { cls: '', label: `IN ${diff}d`, diff };
 }
 
-// UI Feedback Controls
+// Feedback Modals
 function showToast(msg) {
   const container = document.getElementById('toast-container');
   const toast = document.createElement('div');
@@ -513,12 +553,11 @@ function closeConfirmModal() {
   document.getElementById('confirmModal').classList.remove('show');
 }
 
-// Navigation Handler
+// Navigation Controls
 function switchTab(tab) {
   currentTab = tab;
   document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-  const activeNav = document.getElementById(`nav-${tab}`);
-  if (activeNav) activeNav.classList.add('active');
+  document.getElementById(`nav-${tab}`)?.classList.add('active');
   renderCurrentTab();
 }
 
@@ -535,7 +574,9 @@ function renderCurrentTab() {
   else if (currentTab === 'settings') renderSettingsView(container);
 }
 
-// --- VIEW 1: CUSTOMERS ---
+// -------------------------------------------------------------
+// 3. TAB VIEWS
+// -------------------------------------------------------------
 function renderCustomersView(container) {
   const dueCount = data.customers.filter(c => c.next && dayDiff(todayISO(), c.next) <= 0).length;
   const soonCount = data.customers.filter(c => {
@@ -544,7 +585,6 @@ function renderCustomersView(container) {
   }).length;
 
   container.innerHTML = `
-    <!-- Quick Stats -->
     <div class="grid grid-cols-2 gap-3 mb-4">
       <div class="stat-card">
         <span class="block text-[#8391a6] text-[10px] font-extrabold tracking-wider">TOTAAL KLANTEN</span>
@@ -556,7 +596,6 @@ function renderCustomersView(container) {
       </div>
     </div>
 
-    <!-- Main Card -->
     <div class="bg-gradient-to-b from-[#0f192a] to-[#0b1422] border border-[#15465c] rounded-2xl p-4 shadow-xl">
       <div class="flex items-center justify-between mb-3">
         <h2 class="text-sm font-bold tracking-wider text-cyan-400 flex items-center gap-2">
@@ -564,7 +603,6 @@ function renderCustomersView(container) {
         </h2>
       </div>
 
-      <!-- Search Input -->
       <div class="relative mb-3">
         <input id="searchInput" type="search"
           placeholder="🔎 Zoek op naam, product of telefoonnr..."
@@ -572,14 +610,12 @@ function renderCustomersView(container) {
           class="w-full bg-[#0a111c] text-white border border-[#234155] rounded-xl px-4 py-3 text-sm focus:border-cyan-400 outline-none">
       </div>
 
-      <!-- Filters -->
       <div class="flex gap-2 mb-4 overflow-x-auto pb-1">
         <button onclick="setFilter('all')" class="filter-chip ${activeFilter === 'all' ? 'active' : ''}">Alles (${data.customers.length})</button>
         <button onclick="setFilter('due')" class="filter-chip ${activeFilter === 'due' ? 'active' : ''}">⚠️ Te laat (${dueCount})</button>
         <button onclick="setFilter('soon')" class="filter-chip ${activeFilter === 'soon' ? 'active' : ''}">⏳ Binnen 7d (${soonCount})</button>
       </div>
 
-      <!-- List -->
       <div id="customerList"></div>
     </div>
   `;
@@ -604,10 +640,7 @@ function renderCustomerList() {
   if (!listEl) return;
 
   if (filtered.length === 0) {
-    listEl.innerHTML = `
-      <div class="p-8 text-center text-slate-400 border border-dashed border-slate-700/60 rounded-xl text-xs">
-        Geen klanten gevonden.
-      </div>`;
+    listEl.innerHTML = `<div class="p-8 text-center text-slate-400 border border-dashed border-slate-700/60 rounded-xl text-xs">Geen klanten gevonden.</div>`;
     return;
   }
 
@@ -621,23 +654,21 @@ function renderCustomerList() {
       <article class="customer-card ${status.cls}">
         <div class="flex justify-between items-start gap-3">
           <div class="min-w-0 flex-1">
-            <div class="flex items-center gap-2">
-              <h3 class="text-base font-extrabold text-white truncate">${esc(c.name)}</h3>
-            </div>
+            <h3 class="text-base font-extrabold text-white truncate">${esc(c.name)}</h3>
 
             ${c.contact ? `
               <div class="text-xs text-slate-400 mt-1 flex items-center gap-2">
                 <span>📞 ${esc(c.contact)}</span>
                 ${isCleanPhone ? `
-                  <a href="https://wa.me/${c.contact.replace(/[^0-9]/g, '')}" target="_blank" rel="noopener" class="text-emerald-400 hover:underline font-semibold text-[11px]">💬 WhatsApp</a>
+                  <a href="https://wa.me/${c.contact.replace(/[^0-9]/g, '')}" target="_blank" rel="noopener" class="text-emerald-400 font-semibold text-[11px]">💬 WhatsApp</a>
                 ` : ''}
               </div>
             ` : ''}
 
-            <div class="text-xs text-slate-300 mt-2 space-y-0.5 bg-[#070d17]/60 p-2 rounded-lg border border-slate-800">
+            <div class="text-xs text-slate-300 mt-2 space-y-0.5 bg-[#070d17]/60 p-2.5 rounded-lg border border-slate-800">
               <div>📦 <span class="font-semibold text-cyan-300">${esc(productName)}</span></div>
-              <div class="text-slate-400">📅 Laatste bezoek: <span class="text-slate-200">${esc(formatDate(c.date))}</span></div>
-              <div class="text-slate-400">🔄 Volgende opvolging: <span class="text-slate-200 font-semibold">${esc(formatDate(c.next))}</span> (${c.interval} dagen interval)</div>
+              <div class="text-slate-400">📅 Bezoek: <span class="text-slate-200">${esc(formatDate(c.date))}</span></div>
+              <div class="text-slate-400">🔄 Volgende: <span class="text-slate-200 font-semibold">${esc(formatDate(c.next))}</span> (${c.interval}d interval)</div>
             </div>
 
             ${c.note ? `
@@ -651,26 +682,17 @@ function renderCustomerList() {
         </div>
 
         <div class="flex gap-2 justify-end mt-3 pt-2 border-t border-slate-800/80">
-          <button class="btn-custom" onclick="openCustomerModal('${esc(c.id)}')">
-            <span>✏️ Aanpassen</span>
-          </button>
-
+          <button class="btn-custom" onclick="openCustomerModal('${esc(c.id)}')">✏️ Bewerken</button>
           ${status.diff <= 0 ? `
-            <button class="btn-custom ok" onclick="markFollowUpDone('${esc(c.id)}')">
-              <span>✓ Opgevolgd</span>
-            </button>
+            <button class="btn-custom ok" onclick="markFollowUpDone('${esc(c.id)}')">✓ Opgevolgd</button>
           ` : ''}
-
-          <button class="btn-custom danger" onclick="deleteCustomerConfirm('${esc(c.id)}')">
-            <span>🗑️</span>
-          </button>
+          <button class="btn-custom danger" onclick="deleteCustomerConfirm('${esc(c.id)}')">🗑️</button>
         </div>
       </article>
     `;
   }).join('');
 }
 
-// --- VIEW 2: PRODUCTS ---
 function renderProductsView(container) {
   container.innerHTML = `
     <div class="bg-gradient-to-b from-[#0f192a] to-[#0b1422] border border-[#15465c] rounded-2xl p-4 shadow-xl">
@@ -700,19 +722,16 @@ function renderProductsView(container) {
   `;
 }
 
-// --- VIEW 3: LOGS ---
 function renderLogsView(container) {
   container.innerHTML = `
     <div class="bg-gradient-to-b from-[#0f192a] to-[#0b1422] border border-[#15465c] rounded-2xl p-4 shadow-xl">
       <div class="flex items-center justify-between mb-3">
         <h2 class="text-sm font-bold tracking-wider text-cyan-400">📋 ACTIVITEITEN HISTORIEK</h2>
-        ${data.logs.length > 0 ? `<button class="btn-custom danger" onclick="clearLogsConfirm()">Wis Historiek</button>` : ''}
+        ${data.logs.length > 0 ? `<button class="btn-custom danger" onclick="clearLogsConfirm()">Wis Log</button>` : ''}
       </div>
 
       ${data.logs.length === 0 ? `
-        <div class="p-8 text-center text-slate-400 border border-dashed border-slate-700/60 rounded-xl text-xs">
-          Nog geen geregistreerde activiteiten.
-        </div>
+        <div class="p-8 text-center text-slate-400 border border-dashed border-slate-700/60 rounded-xl text-xs">Geen geregistreerde activiteiten.</div>
       ` : `
         <div class="space-y-2">
           ${data.logs.map(log => `
@@ -721,7 +740,7 @@ function renderLogsView(container) {
                 <div class="text-slate-200 font-semibold">${esc(log.text)}</div>
                 <div class="text-[10px] text-slate-500 mt-0.5">${esc(formatDateTime(log.date))}</div>
               </div>
-              <span class="text-xs bg-cyan-950/60 text-cyan-400 border border-cyan-800/50 px-2 py-0.5 rounded-full font-semibold">Opvolging</span>
+              <span class="text-[10px] bg-cyan-950 text-cyan-400 border border-cyan-800/60 px-2 py-0.5 rounded-full font-bold">Opvolging</span>
             </div>
           `).join('')}
         </div>
@@ -730,13 +749,12 @@ function renderLogsView(container) {
   `;
 }
 
-// --- VIEW 4: SETTINGS ---
 function renderSettingsView(container) {
   container.innerHTML = `
     <div class="bg-gradient-to-b from-[#0f192a] to-[#0b1422] border border-[#15465c] rounded-2xl p-4 shadow-xl space-y-5">
       <div>
         <h2 class="text-sm font-bold tracking-wider text-cyan-400 mb-1">⚙️ INSTELLINGEN & BACKUP</h2>
-        <p class="text-xs text-slate-400">Beheer standaard intervals en gegevensbeheer.</p>
+        <p class="text-xs text-slate-400">Beheer standaard intervals en database synchronisatie.</p>
       </div>
 
       <div class="field">
@@ -750,32 +768,29 @@ function renderSettingsView(container) {
       <hr class="border-slate-800">
 
       <div>
-        <h3 class="text-xs font-bold text-slate-300 mb-2 uppercase tracking-wider">📦 Gegevens Exporteren & Importeren</h3>
+        <h3 class="text-xs font-bold text-slate-300 mb-2 uppercase tracking-wider">📦 Backup Beheer</h3>
         <div class="grid grid-cols-2 gap-3">
-          <button class="btn-custom" onclick="exportCustomers()">
-            <span>📥 Exporteren (JSON)</span>
-          </button>
-          <button class="btn-custom" onclick="importCustomers()">
-            <span>📤 Importeren</span>
-          </button>
+          <button class="btn-custom" onclick="exportCustomers()">📥 Export JSON</button>
+          <button class="btn-custom" onclick="importCustomers()">📤 Import JSON</button>
         </div>
       </div>
 
       <hr class="border-slate-800">
 
-      <div class="bg-red-950/20 border border-red-900/40 p-3 rounded-xl">
+      <div class="bg-red-950/20 border border-red-900/40 p-3.5 rounded-xl">
         <h3 class="text-xs font-bold text-red-400 mb-1">⚠️ Gevarenzone</h3>
-        <p class="text-[11px] text-slate-400 mb-3">Verwijder alle lokale gegevens en reset de applicatie naar de beginstand.</p>
-        <button class="btn-custom danger w-full" onclick="resetAllConfirm()">Wis Alle Gegevens</button>
+        <p class="text-[11px] text-slate-400 mb-3">Verwijder alle lokale gegevens en herstel de fabrieksinstellingen.</p>
+        <button class="btn-custom danger w-full" onclick="resetAllConfirm()">Alles Wissen</button>
       </div>
     </div>
   `;
 }
 
-// Modals Trigger Handlers
+// -------------------------------------------------------------
+// 4. ACTION HANDLERS
+// -------------------------------------------------------------
 function openModal(html) {
-  const modalBox = document.getElementById('modalbox');
-  modalBox.innerHTML = html;
+  document.getElementById('modalbox').innerHTML = html;
   document.getElementById('modal').classList.add('show');
 }
 
@@ -787,7 +802,6 @@ document.getElementById('modal').addEventListener('click', e => {
   if (e.target.id === 'modal') closeModal();
 });
 
-// --- CUSTOMER ACTIONS ---
 function openCustomerModal(editId = null) {
   const c = editId ? getCustomer(editId) : null;
   const interval = c?.interval || data.settings.customerInterval || 30;
@@ -797,45 +811,38 @@ function openCustomerModal(editId = null) {
   ).join('');
 
   openModal(`
-    <h2 class="text-lg font-bold text-white mb-4">${c ? '✏️ Klant Bewerken' : '👤 Nieuwe Klant Toevoegen'}</h2>
-
-    <div class="formgrid space-y-3">
+    <h2 class="text-lg font-bold text-white mb-4">${c ? '✏️ Klant Bewerken' : '👤 Nieuwe Klant'}</h2>
+    <div class="space-y-3">
       <div class="field">
         <label class="block text-[11px] font-bold text-slate-400 mb-1">NAAM *</label>
-        <input id="cfName" value="${esc(c?.name || '')}" placeholder="Volledige naam" autocomplete="name">
+        <input id="cfName" value="${esc(c?.name || '')}" placeholder="Klantnaam" autocomplete="name">
       </div>
-
       <div class="field">
         <label class="block text-[11px] font-bold text-slate-400 mb-1">CONTACT / TELEFOONNR</label>
-        <input id="cfContact" value="${esc(c?.contact || '')}" placeholder="bijv. +32 470 12 34 56">
+        <input id="cfContact" value="${esc(c?.contact || '')}" placeholder="+32 ...">
       </div>
-
       <div class="grid grid-cols-2 gap-3">
         <div class="field">
           <label class="block text-[11px] font-bold text-slate-400 mb-1">DATUM BEZOEK</label>
           <input id="cfDate" type="date" value="${esc(c?.date || todayISO())}">
         </div>
-
         <div class="field">
-          <label class="block text-[11px] font-bold text-slate-400 mb-1">HERHALING (DAGEN)</label>
+          <label class="block text-[11px] font-bold text-slate-400 mb-1">INTERVAL (DAGEN)</label>
           <input id="cfInterval" type="number" min="1" value="${esc(interval)}">
         </div>
       </div>
-
       <div class="field">
         <label class="block text-[11px] font-bold text-slate-400 mb-1">PRODUCT / DOSERING</label>
         <select id="cfProduct">
-          <option value="">Geen gekoppeld product</option>
+          <option value="">Geen product gekoppeld</option>
           ${productOptions}
         </select>
       </div>
-
       <div class="field">
-        <label class="block text-[11px] font-bold text-slate-400 mb-1">OPMERKINGEN / NOTITIES</label>
-        <textarea id="cfNote" rows="3" placeholder="Bijzonderheden of opvolgingsnotities...">${esc(c?.note || '')}</textarea>
+        <label class="block text-[11px] font-bold text-slate-400 mb-1">NOTITIES</label>
+        <textarea id="cfNote" rows="3" placeholder="Optionele notitie...">${esc(c?.note || '')}</textarea>
       </div>
     </div>
-
     <div class="flex gap-2 justify-end mt-5 pt-3 border-t border-slate-800">
       <button class="btn-custom" onclick="closeModal()">Annuleren</button>
       <button class="btn-custom primary" onclick="saveCustomer('${esc(editId || '')}')">Opslaan</button>
@@ -845,11 +852,7 @@ function openCustomerModal(editId = null) {
 
 function saveCustomer(id) {
   const name = document.getElementById('cfName').value.trim();
-
-  if (!name) {
-    showToast('⚠️ Vul een geldige klantnaam in.');
-    return;
-  }
+  if (!name) return showToast('⚠️ Vul een naam in.');
 
   const date = document.getElementById('cfDate').value || todayISO();
   const interval = Math.max(1, Number(document.getElementById('cfInterval').value || 30));
@@ -858,10 +861,10 @@ function saveCustomer(id) {
 
   const c = {
     id: id || crypto.randomUUID(),
-    name: name,
+    name,
     contact: document.getElementById('cfContact').value.trim(),
-    date: date,
-    interval: interval,
+    date,
+    interval,
     productId: productId || '',
     productName: selectedProd ? selectedProd.name : '',
     note: document.getElementById('cfNote').value.trim(),
@@ -869,80 +872,61 @@ function saveCustomer(id) {
   };
 
   const idx = data.customers.findIndex(x => x.id === c.id);
-  if (idx >= 0) {
-    data.customers[idx] = c;
-    showToast('Klant succesvol bijgewerkt');
-  } else {
-    data.customers.push(c);
-    showToast('Nieuwe klant toegevoegd');
-  }
+  if (idx >= 0) data.customers[idx] = c;
+  else data.customers.push(c);
 
   saveData();
   closeModal();
+  showToast('Klant opgeslagen!');
 }
 
 function markFollowUpDone(id) {
   const c = getCustomer(id);
   if (!c) return;
 
-  customConfirm(
-    'Opvolging registreren',
-    `Wilt u de opvolging voor ${c.name} markeren als voltooid? De nieuwe herhalingsdatum wordt automatisch berekend.`,
-    '✅',
-    () => {
-      const visitDate = c.next || todayISO();
-      c.date = visitDate;
-      c.next = addDays(visitDate, Math.max(1, Number(c.interval || 30)));
+  customConfirm('Opvolging Registreren', `Registreer opvolging voor ${c.name}?`, '✅', () => {
+    const visitDate = c.next || todayISO();
+    c.date = visitDate;
+    c.next = addDays(visitDate, Math.max(1, Number(c.interval || 30)));
 
-      data.logs.unshift({
-        id: crypto.randomUUID(),
-        type: 'followup',
-        customerId: id,
-        date: new Date().toISOString(),
-        text: `${c.name} · Opvolging succesvol afgerond`
-      });
+    data.logs.unshift({
+      id: crypto.randomUUID(),
+      type: 'followup',
+      customerId: id,
+      date: new Date().toISOString(),
+      text: `${c.name} · Opvolging geregistreerd`
+    });
 
-      saveData();
-      showToast('Opvolging geregistreerd!');
-    }
-  );
+    saveData();
+    showToast('Opvolging afgerond!');
+  });
 }
 
 function deleteCustomerConfirm(id) {
   const c = getCustomer(id);
   if (!c) return;
 
-  customConfirm(
-    'Klant Verwijderen',
-    `Weet u zeker dat u ${c.name} definitief wilt verwijderen?`,
-    '🗑️',
-    () => {
-      data.customers = data.customers.filter(x => x.id !== id);
-      saveData();
-      showToast('Klant verwijderd.');
-    }
-  );
+  customConfirm('Klant Verwijderen', `Verwijder ${c.name} definitief?`, '🗑️', () => {
+    data.customers = data.customers.filter(x => x.id !== id);
+    saveData();
+    showToast('Klant verwijderd.');
+  });
 }
 
-// --- PRODUCT ACTIONS ---
 function openProductModal(editId = null) {
   const p = editId ? getProduct(editId) : null;
-
   openModal(`
     <h2 class="text-lg font-bold text-white mb-4">${p ? '✏️ Product Bewerken' : '📦 Nieuw Product'}</h2>
-
     <div class="space-y-3">
       <div class="field">
         <label class="block text-[11px] font-bold text-slate-400 mb-1">PRODUCTNAAM *</label>
         <input id="pfName" value="${esc(p?.name || '')}" placeholder="bijv. Retatrutide">
       </div>
-
       <div class="field">
         <label class="block text-[11px] font-bold text-slate-400 mb-1">DOSERING / STERKTE</label>
         <input id="pfStrength" value="${esc(p?.strength || '')}" placeholder="bijv. 20 mg">
       </div>
     </div>
-
     <div class="flex gap-2 justify-end mt-5 pt-3 border-t border-slate-800">
       <button class="btn-custom" onclick="closeModal()">Annuleren</button>
       <button class="btn-custom primary" onclick="saveProduct('${esc(editId || '')}')">Opslaan</button>
@@ -954,23 +938,12 @@ function saveProduct(id) {
   const name = document.getElementById('pfName').value.trim();
   const strength = document.getElementById('pfStrength').value.trim();
 
-  if (!name) {
-    showToast('⚠️ Vul een productnaam in.');
-    return;
-  }
+  if (!name) return showToast('⚠️ Vul een naam in.');
 
-  const p = {
-    id: id || crypto.randomUUID(),
-    name: name,
-    strength: strength
-  };
-
+  const p = { id: id || crypto.randomUUID(), name, strength };
   const idx = data.products.findIndex(x => x.id === p.id);
-  if (idx >= 0) {
-    data.products[idx] = p;
-  } else {
-    data.products.push(p);
-  }
+  if (idx >= 0) data.products[idx] = p;
+  else data.products.push(p);
 
   saveData();
   closeModal();
@@ -981,33 +954,21 @@ function deleteProductConfirm(id) {
   const p = getProduct(id);
   if (!p) return;
 
-  customConfirm(
-    'Product Verwijderen',
-    `Wilt u ${p.name} (${p.strength || ''}) verwijderen uit de catalogus?`,
-    '📦',
-    () => {
-      data.products = data.products.filter(x => x.id !== id);
-      saveData();
-      showToast('Product verwijderd');
-    }
-  );
+  customConfirm('Product Verwijderen', `Verwijder ${p.name}?`, '📦', () => {
+    data.products = data.products.filter(x => x.id !== id);
+    saveData();
+    showToast('Product verwijderd');
+  });
 }
 
-// --- LOG ACTIONS ---
 function clearLogsConfirm() {
-  customConfirm(
-    'Historiek Wissen',
-    'Weet u zeker dat u alle logboeken wilt opschonen?',
-    '🧹',
-    () => {
-      data.logs = [];
-      saveData();
-      showToast('Historiek gewist.');
-    }
-  );
+  customConfirm('Historiek Wissen', 'Wilt u het logboek leegmaken?', '🧹', () => {
+    data.logs = [];
+    saveData();
+    showToast('Historiek gewist.');
+  });
 }
 
-// --- SETTINGS ACTIONS ---
 function saveSettings() {
   const val = Number(document.getElementById('settingInterval').value);
   if (val > 0) {
@@ -1018,45 +979,27 @@ function saveSettings() {
 }
 
 function resetAllConfirm() {
-  customConfirm(
-    'Volledige Reset',
-    'Weet u absoluut zeker dat u ALLE gegevens wilt wissen? Dit kan niet ongedaan gemaakt worden.',
-    '⚠️',
-    () => {
-      localStorage.removeItem(KEY);
-      data = freshData();
-      saveData();
-      showToast('Systeem gereset');
-    }
-  );
+  customConfirm('Volledige Reset', 'Wis alle opgeslagen gegevens?', '⚠️', () => {
+    localStorage.removeItem(KEY);
+    data = freshData();
+    saveData();
+    showToast('Gegevens gereset.');
+  });
 }
 
-// Import / Export
 function exportCustomers() {
-  const content = JSON.stringify({
-    exportedAt: new Date().toISOString(),
-    customers: data.customers,
-    products: data.products,
-    settings: data.settings,
-    logs: data.logs
-  }, null, 2);
-
+  const content = JSON.stringify(data, null, 2);
   const blob = new Blob([content], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const a = document.createElement('a');
-
   a.href = url;
   a.download = `prime-protocol-backup-${todayISO()}.json`;
-  document.body.appendChild(a);
   a.click();
-  a.remove();
   URL.revokeObjectURL(url);
-  showToast('Backup-bestand gedownload');
+  showToast('Backup gedownload!');
 }
 
-function importCustomers() {
-  document.getElementById('importFile').click();
-}
+function importCustomers() { document.getElementById('importFile').click(); }
 
 function handleImportFile(event) {
   const file = event.target.files[0];
@@ -1067,44 +1010,29 @@ function handleImportFile(event) {
     try {
       const imported = JSON.parse(e.target.result);
       if (imported && (Array.isArray(imported.customers) || Array.isArray(imported.products))) {
-        customConfirm(
-          'Gegevens Importeren',
-          `Wilt u ${imported.customers?.length || 0} klanten en ${imported.products?.length || 0} producten importeren?`,
-          '📥',
-          () => {
-            if (Array.isArray(imported.customers)) {
-              const existingIds = new Set(data.customers.map(c => c.id));
-              for (const c of imported.customers) {
-                if (!existingIds.has(c.id)) data.customers.push(c);
-              }
-            }
-            if (Array.isArray(imported.products)) {
-              const existingProdIds = new Set(data.products.map(p => p.id));
-              for (const p of imported.products) {
-                if (!existingProdIds.has(p.id)) data.products.push(p);
-              }
-            }
-            saveData();
-            showToast('Gegevens succesvol geïmporteerd!');
+        customConfirm('Gegevens Importeren', 'Wilt u de gegevens samenvoegen met uw huidige databank?', '📥', () => {
+          if (Array.isArray(imported.customers)) {
+            const ids = new Set(data.customers.map(c => c.id));
+            imported.customers.forEach(c => { if (!ids.has(c.id)) data.customers.push(c); });
           }
-        );
-      } else {
-        showToast('⚠️ Ongeldig backup-bestand.');
+          if (Array.isArray(imported.products)) {
+            const pIds = new Set(data.products.map(p => p.id));
+            imported.products.forEach(p => { if (!pIds.has(p.id)) data.products.push(p); });
+          }
+          saveData();
+          showToast('Gegevens geïmporteerd!');
+        });
       }
     } catch (err) {
-      showToast('⚠️ Fout bij het inlezen van het bestand.');
-      console.error(err);
+      showToast('⚠️ Ongeldig bestand.');
     }
   };
   reader.readAsText(file);
 }
 
-// Global Keyboard Shortcuts
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') closeModal();
-});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
-// App Startup
+// Launch App
 renderCurrentTab();
 </script>
 </body>
